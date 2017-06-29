@@ -1,5 +1,5 @@
 'body':
-  # Goto Next Splitter (move between tabs) TESTTT
+  # Goto Next Splitter (move between tabs)
   'alt-tab': 'window:focus-next-pane'
   # Goto Splitter Splitter (move between tabs backwards)
   'alt-shift-tab': 'window:focus-previous-pane'
