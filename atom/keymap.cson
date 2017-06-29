@@ -1,0 +1,98 @@
+'body':
+  # Goto Next Splitter (move between tabs) TESTTT
+  'alt-tab': 'window:focus-next-pane'
+  # Goto Splitter Splitter (move between tabs backwards)
+  'alt-shift-tab': 'window:focus-previous-pane'
+
+
+
+'.platform-darwin atom-workspace':
+  # Find in path
+  'cmd-shift-f': 'project-find:show'
+  # Replace in path
+  'cmd-shift-r': 'project-find:show'
+
+  # Go to class
+  'cmd-o': 'fuzzy-finder:toggle-file-finder'
+  # Go to file
+  'cmd-shift-o': 'fuzzy-finder:toggle-file-finder'
+
+  # Find action
+  'cmd-shift-a': 'command-palette:toggle'
+
+  # Open corresponding tool window
+  'cmd-1': 'tree-view:toggle'
+
+  # Open project manager list projects
+  'cmd-shift-p': 'project-manager:list-projects'
+
+
+
+'.platform-darwin atom-workspace atom-text-editor:not([mini])':
+  # Create additional cursor above
+  'alt-a': 'multi-cursor:expandUp'
+  # Create additional cursor below
+  'alt-b': 'multi-cursor:expandDown'
+
+  # Duplicate current line or selected block
+  'cmd-d': 'editor:duplicate-lines'
+
+  # Move line up
+  'cmd-shift-up': 'editor:move-line-up'
+  # Move line down
+  'cmd-shift-down': 'editor:move-line-down'
+  # Move line up
+  'alt-shift-up': 'editor:move-line-up'
+  # Move line down
+  'alt-shift-down': 'editor:move-line-down'
+
+  # Reformat code
+  'cmd-shift-l': 'atom-beautify:beautify-editor'
+
+  # Replace
+  'cmd-r': 'find-and-replace:show'
+
+  # Go to line
+  'cmd-l': 'go-to-line:toggle'
+
+  # Recent files popup
+  'cmd-e': 'fuzzy-finder:toggle-buffer-finder'
+
+  # Reveal active file
+  'cmd-alt-shift-s': 'tree-view:reveal-active-file'
+
+  # Show bookmarks
+  'cmd-f3': 'bookmarks:view-all'
+  # Toggle bookmark
+  'f3': 'bookmarks:toggle-bookmark'
+
+  # Insert live templates
+  'cmd-j': 'snippets:available'
+
+  # Expand selection
+  'alt-up': 'expand-region:expand'
+  # Shrink selection
+  'alt-down': 'expand-region:shrink'
+
+  # Comments
+  'cmd-7': 'editor:toggle-line-comments'
+
+  # Delete line
+  'cmd-y': 'editor:delete-line'
+
+
+
+'.platform-darwin .tree-view':
+  # Move (rename) selected file in tree view
+  'cmd-alt-n': 'tree-view:move'
+  'f6': 'tree-view:move'
+  'shift-f6': 'tree-view:move'
+
+  # Close tree view
+  'cmd-1': 'tree-view:toggle'
+
+  # Create file
+  'cmd-n': 'tree-view:add-file'
+
+  # Copy full path of selected file
+  'cmd-shift-c': 'tree-view:copy-full-path'

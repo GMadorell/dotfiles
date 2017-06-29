@@ -1,0 +1,20 @@
+[
+  {
+    title: "Notes"
+    paths: [
+      "/Users/gerardmadorell/notes"
+    ]
+  }
+  {
+    title: "Redemption Codedeploy"
+    paths: [
+      "/Users/gerardmadorell/projects/rtn-redemption-codedeploy"
+    ]
+  }
+  {
+    title: "Notifications Codedeploy"
+    paths: [
+      "/Users/gerardmadorell/projects/notifications-codedeploy"
+    ]
+  }
+]

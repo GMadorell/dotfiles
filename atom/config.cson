@@ -1,0 +1,22 @@
+"*":
+  core:
+    telemetryConsent: "limited"
+    themes: [
+      "one-dark-ui"
+      "dracula-syntax"
+    ]
+  editor:
+    fontFamily: "inconsolata-g"
+    fontSize: 20
+    invisibles: {}
+    showInvisibles: true
+  "exception-reporting":
+    userId: "99013d38-c828-0207-0013-3ab9d183e871"
+  "expand-region": {}
+  "linter-ui-default":
+    panelHeight: 69
+  "package-sync":
+    createOnChange: true
+    forceOverwrite: true
+  welcome:
+    showOnStartup: false
