@@ -1,1 +1,29 @@
-/Users/gerardmadorell/Dropbox/Mackup/.gitconfig
+[user]
+	name = GMadorell
+	email = gmadorell@gmail.com
+[alias]
+	branches = branch -a
+	tags = tag
+	stashes = stash list
+	remotes = remote -v
+
+	unstash = stash pop
+	uncommit = reset --mixed HEAD~
+	amend = commit --amend
+	nevermind = !git reset --hard HEAD && git clean -d -f
+[credential]
+	helper = osxkeychain
+[core]
+	excludesfile = /Users/gerardmadorell/.gitignore_global
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true
+[push]
+	default = current
+[pager]
+	diff = diff-so-fancy | less --tabs=4 -RFX
+	show = diff-so-fancy | less --tabs=4 -RFX
+[diff]
+	compactionHeuristic = true
+

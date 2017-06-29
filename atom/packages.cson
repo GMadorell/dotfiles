@@ -8,11 +8,6 @@ packages: [
   "language-scala"
   "language-scala-plus"
   "linter"
-  "linter-flake8"
   "linter-ui-default"
-  "multi-cursor"
   "package-sync"
-  "project-manager"
-  "set-syntax"
-  "tasks"
 ]
