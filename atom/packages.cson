@@ -10,4 +10,5 @@ packages: [
   "linter"
   "linter-ui-default"
   "package-sync"
+  "project-manager"
 ]
