@@ -1,1 +1,1 @@
-EXCLUDES="jetbrains better-touch-tool"
+EXCLUDES="jetbrains better-touch-tool iterm2"
