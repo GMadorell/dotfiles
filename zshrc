@@ -1,7 +1,7 @@
 # Setup zsh with oh-my-zsh
 export ZSH=$HOME/.oh-my-zsh
 
-ZSH_THEME=avit_extra
+ZSH_THEME=ukelele
 
 plugins=(git gitfast git-extras colored-man colorize brew osx zsh-autosuggestions zsh-syntax-highlighting)
 
