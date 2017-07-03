@@ -4,7 +4,7 @@ Hello! Welcome to where I store my configuration files!
 
 ## How to import the files
 
-1. Clone the repo: `git clone https://github.com/thoughtbot/rcm.git ~/.dotfiles`
+1. Clone the repo: `git clone https://github.com/GMadorell/dotfiles ~/.dotfiles`
 2. Install [RCM](https://github.com/thoughtbot/rcm): `brew tap thoughtbot/formulae && brew install rcm`
 3. Check what symlinks are going to be created: `rcls`
 4. Create the symlinks: `rcup`
