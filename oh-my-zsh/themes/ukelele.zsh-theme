@@ -10,7 +10,7 @@ local _hist_no="%{$fg[grey]%}%h%{$reset_color%}"
 function _current_dir() {
   # http://stackoverflow.com/questions/30962925/collapse-directories-in-zsh-prompt
   local _collapsed_pwd=$(pwd | perl -pe "s|^$HOME|~|g; s|/([^/])[^/]*(?=/[^/]*/[^/]*/)|/\$1|g")
-  echo "%{$fg[magenta]%}$_collapsed_pwd%{$reset_color%}"
+  echo "%{$fg[yellow]%}$_collapsed_pwd%{$reset_color%}"
 }
 
 function _user_host() {

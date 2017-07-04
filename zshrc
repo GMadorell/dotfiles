@@ -1,3 +1,7 @@
+# Language flags (set to 1 if you want language specific things to be loaded)
+PHP_MODE=0
+PYTHON_MODE=0
+
 # Setup zsh with oh-my-zsh
 export ZSH=$HOME/.oh-my-zsh
 
@@ -12,29 +16,53 @@ export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
 
-# Language flags
-PHP_MODE=0
-PYTHON_MODE=0
-
-# User setup ---------------------------------
-
 if [[ -s $HOME/.secrets ]] ; then source $HOME/.secrets ; fi
 
-export DISABLE_AUTO_TITLE="true" # Don't let Oh-My-Zsh control title, control it yourself
-
 export EDITOR='vim'
+
 
 # Logging constants
 export LOG_ERROR="[Error]"
 export LOG_WARNING="[Warning]"
 export LOG_INFO="[Info]"
 
+
+# Shell configuration
+## Name console window / tab
+export DISABLE_AUTO_TITLE="true" # Don't let Oh-My-Zsh control title, control it yourself
+set_window_title_to_collapsed_pwd() {
+  local _collapsed_pwd=$(pwd | perl -pe "s|^$HOME|~|g; s|/([^/])[^/]*(?=/[^/]*/)|/\$1|g")
+  window_title="\e]0;${_collapsed_pwd}\a"
+  echo -ne "$window_title"
+}
+precmd_functions+=(set_window_title_to_collapsed_pwd)
+# add-zsh-hook precmd set_window_title_to_collapsed_pwd
+
+## Autocomplete setup
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*' group-name ''
+
+## Bindkeys - type 'bindkey' in terminal to check for shortcuts.
+bindkey ^A beginning-of-line  # Ctrl+A for moving to beggining
+bindkey ^S backward-word      # Ctrl+S for moving a word backward.
+bindkey ^D forward-word       # Ctrl+D for moving a word forward.
+bindkey ^F end-of-line        # Ctrl+F for moving till the end
+
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=240'
 
-# fasd is a command line productivity booster: z -> cd into a directory, "
-eval "$(fasd --init auto)"
+## fasd is a command line productivity booster:
+##   z -> cd into a directory `z projects`
+##   f -> find files
+##   a -> find anything
+##   d -> find directories
+fasd_cache="$HOME/.fasd-cache"
+if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
+  fasd --init auto >| "$fasd_cache"
+fi
+source "$fasd_cache"
+unset fasd_cache
 
-# hstr setup - improved history
+## hstr setup - improved history
 export HISTFILE=~/.zsh_history  # ensure history file visibility
 export HH_CONFIG=hicolor,keywords,rawhistory
 bindkey -s "\C-r" "\eqhh\n"     # bind hh to Ctrl-r (for Vi mode check doc)
@@ -83,56 +111,133 @@ if (($PHP_MODE)) ; then
   function fix_php_changed_files { gchanged_files | grep .php | xargs phpcbf --standard=PSR2 ; }
 fi
 
-# Autocomplete setup
-zstyle ':completion:*' verbose yes
-zstyle ':completion:*' group-name ''
 
-## Bindkeys - type 'bindkey' in terminal to check for shortcuts.
-bindkey ^A beginning-of-line
-bindkey ^S backward-word   # Ctrl+S for moving a word backward.
-bindkey ^D forward-word    # Ctrl+D for moving a word forward.
-bindkey ^F end-of-line
 
-# Random helper functions
-## Extract contents from compressed file in multiple formats
-function extract {
-    if [ -z "$1" ]; then
-        echo "Usage: extract <path/file_name>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|exe|tar.bz2|tar.gz|tar.xz|.jar>"
-    else
-        if [ -f "$1" ] ; then
-            NAME=${1%.*}
-            # mkdir $NAME && cd $NAME
-            case "$1" in
-                *.tar.bz2)   tar xvjf ./"$1"    ;;
-                *.tar.gz)    tar xvzf ./"$1"    ;;
-                *.tar.xz)    tar xvJf ./"$1"    ;;
-                *.lzma)      unlzma ./"$1"      ;;
-                *.bz2)       bunzip2 ./"$1"     ;;
-                *.rar)       unrar x -ad ./"$1" ;;
-                *.gz)        gunzip ./"$1"      ;;
-                *.tar)       tar xvf ./"$1"     ;;
-                *.tbz2)      tar xvjf ./"$1"    ;;
-                *.tgz)       tar xvzf ./"$1"    ;;
-                *.zip)       unzip ./"$1"       ;;
-                *.Z)         uncompress ./"$1"  ;;
-                *.7z)        7z x ./"$1"        ;;
-                *.xz)        unxz ./"$1"        ;;
-                *.exe)       cabextract ./"$1"  ;;
-                *.jar)       jar xf ./"$1"      ;;
-                *)           echo "extract: '$1' - unknown archive method" ;;
-            esac
-        else
-            echo "'$1' - file does not exist"
-        fi
-    fi
+# Service aliases
+: '
+Standard is:
+  - some letters to represent service -> $SERVICE (ej: my for mysql)
+  - $SERVICE+cli: open cli to access service (ej: mycli)
+  - $SERVICE+init: initialize service in the background
+  - $SERVICE+stop: stop the service
+  - $SERVICE+restart: stop and initialize the service
+  - $SERVICE+check: check if the service is running
+  - $SERVICE+cnf: open editor with the service configuration
+'
+## MySQL
+alias mycli="mycli"
+alias myinit="mysql.server start"
+alias myrestart="mysql.server restart"
+alias mycheck="mysql.server status"
+alias myversion="mysql --version"
+alias mycnf="$EDITOR /usr/local/etc/my.cnf"
+
+## PostgreSQL
+alias pgcli='pgcli'
+LOCAL_POSTGRES_DB_PATH="/usr/local/var/postgres"
+alias pginit="pg_ctl -D $LOCAL_POSTGRES_DB_PATH start"
+alias pgrestart="pg_ctl -D $LOCAL_POSTGRES_DB_PATH restart"
+
+## Zookeeper aliases
+ZOOKEEPER_URL="localhost:2181"
+alias zkcli="zkCli"
+### TODO zk_random_broker doesn't work with >1 brokers, need to split the string
+function zk_random_broker() { zk <<< "ls /brokers/ids" | tail -n 2 | head -n 1 | trim "[]" ; }
+
+## Kafka aliases
+function kafka_list_topics() { kafka-topics --zookeeper $ZOOKEEPER_URL --list ; }
+function kafka_delete_topic() {
+  if [ $# -eq 1 ]; then
+      kafka-topics --zookeeper $ZOOKEEPER_URL --delete --topic $1
+  else
+      echo "$LOG_ERROR Usage: kafka_delete_topic <TOPIC_NAME>"
+  fi
+}
+function kafka_describe_topic() {
+  if [ $# -eq 1 ]; then
+      kafka-topics --zookeeper $ZOOKEEPER_URL --describe --topic $1
+  else
+      echo "$LOG_ERROR Usage: kafka_describe_topic <TOPIC_NAME>"
+  fi
+}
+function kafka_create_topic() {
+  if [ $# -eq 1 ]; then
+      kafka-topics --zookeeper $ZOOKEEPER_URL --create --topic $1 --partitions 1 --replication-factor 1
+  else
+      echo "$LOG_ERROR Usage: kafka_create_topic <TOPIC_NAME>"
+  fi
 }
 
-## Fetch subtitles
+# RabbitMQ aliases
+function rabbitinit() { rabbitmq-server start -detached; }
+function rabbitstop() { rabbitmqctl stop; }
+function rabbitrestart() { rabbitstop && rabbitstart; }
+function rabbit_list_queues() { rabbitmqadmin list queues ; }
+function rabbitcheck() { rabbit_list_queues ; }
+
+# Redis aliases
+alias rediscli="rediscli"
+function redisinit() {
+  echo "Initializing redis as a daemon..."
+  redis-server --daemonize yes;
+}
+function redisstop() { redis-cli shutdown ; }
+function redischeck() { redis-cli ping ; }
+
+# Docker aliases
+alias docker_list_active_containers="docker container list"
+alias docker_list_stopped_containers="docker ps --filter \"status=exited\""
+alias docker_list_all_containers="docker ps -a"
+alias docker_list_images="docker image list"
+alias docker_start_container="docker container start"
+function docker_connect() {
+    container=$(docker ps | awk '{if (NR!=1) print $1 ": " $(NF)}' | percol --prompt='<green>Select the container:</green> %q')
+    container_id=$(echo $container | awk -F ': ' '{print $1}')
+    docker exec -i -t $container_id /bin/bash
+}
+
+
+
+
+# Helper functions and aliases
+
+function extract {
+  # Extract contents from compressed file in multiple formats
+  if [ -z "$1" ]; then
+    echo "Usage: extract <path/file_name>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|exe|tar.bz2|tar.gz|tar.xz|.jar>"
+  else
+    if [ -f "$1" ] ; then
+      NAME=${1%.*}
+      case "$1" in
+        *.tar.bz2)   tar xvjf ./"$1"    ;;
+        *.tar.gz)    tar xvzf ./"$1"    ;;
+        *.tar.xz)    tar xvJf ./"$1"    ;;
+        *.lzma)      unlzma ./"$1"      ;;
+        *.bz2)       bunzip2 ./"$1"     ;;
+        *.rar)       unrar x -ad ./"$1" ;;
+        *.gz)        gunzip ./"$1"      ;;
+        *.tar)       tar xvf ./"$1"     ;;
+        *.tbz2)      tar xvjf ./"$1"    ;;
+        *.tgz)       tar xvzf ./"$1"    ;;
+        *.zip)       unzip ./"$1"       ;;
+        *.Z)         uncompress ./"$1"  ;;
+        *.7z)        7z x ./"$1"        ;;
+        *.xz)        unxz ./"$1"        ;;
+        *.exe)       cabextract ./"$1"  ;;
+        *.jar)       jar xf ./"$1"      ;;
+        *)           echo "extract: '$1' - unknown archive method" ;;
+      esac
+    else
+        echo "'$1' - file does not exist"
+    fi
+  fi
+}
+
 function subtitles() {
   if [ -z "$1" ]; then
     echo "Usage: subtitles <file_path>"
   else
-    subliminal download -l en $1
+    subliminal download -l en -l es $1
   fi
 }
 
@@ -141,7 +246,7 @@ function subtitles_dir() {
     echo "Usage: subtitles_dir <dir_path>"
   else
     echo "Downloading subtitles in parallel..."
-    find "$1" -maxdepth 1 -type f | parallel subliminal download -l en {} \;
+    find "$1" -maxdepth 1 -type f | parallel subliminal download -l en -l es {} \;
   fi
 }
 
@@ -150,14 +255,6 @@ function fetch_gitignore() {
     curl -L -s https://www.gitignore.io/api/$@ | sed '/^# Created/ d' | sed '/./,$!d' | sed $'1s/^/\\\n/'
 }
 alias gi="fetch_gitignore"
-
-## Name console window / tab
-set_window_title_to_collapsed_pwd() {
-  local _collapsed_pwd=$(pwd | perl -pe "s|^$HOME|~|g; s|/([^/])[^/]*(?=/[^/]*/)|/\$1|g")
-  window_title="\e]0;${_collapsed_pwd}\a"
-  echo -ne "$window_title"
-}
-add-zsh-hook precmd set_window_title_to_collapsed_pwd
 
 ## Does an ls and greps it with the given argument
 function ls_grep() {
@@ -178,29 +275,6 @@ function is_running_on_mac() {
 
 function mkcdir() {
     mkdir -p "$1" && cd "$1"
-}
-
-function refactor_rename_files() {
-  if [ $# -eq 3 ]; then
-    local refactors=$(find "$1" -type f | grep "$2")
-    echo "Will refactor the following files:"
-    echo $refactors
-    read -k1 "reply?Are you sure?"
-    echo
-    if [[ "$reply" =~ ^[Yy]$ ]] then
-      echo "Doing the refactors"
-      find "$1" -type f \
-      | grep "$2" \
-      | sed -n "s/\(.*\)$2\(.*\)/mv \"\1$2\2\" \"\1$3\2\"/p" \
-      | sh
-    else
-      echo "$LOG_WARNING Answered no, so will not do any refactor"
-    fi
-  else
-    echo "$LOG_ERROR usage: refactor_rename_files ROOT_DIRECTORY ORIGINAL NEW_VALUE, ej: refactor_rename_files . bump_down_ product_rejected_"
-  fi
-
-
 }
 
 function find_by_name_globally() {
@@ -251,7 +325,6 @@ alias .6="cd ......."
 alias .7="cd ........"
 alias cdp="cd ~/projects/"
 
-
 alias cl="printf \"\033c\""
 
 alias h="history"
@@ -295,92 +368,9 @@ alias editzshrc="$EDITOR $HOME/.zshrc"
 function check_mail() { $EDITOR /var/mail/$USER }
 function clear_mail() { sudo rm /var/mail/$USER }
 
-
-# MySQL
-alias my="mycli"
-alias mysqlcli="mycli"
-alias mcli="mycli"
-alias msqlcli="mycli"
-
-alias myinit="mysql.server start"
-alias myrestart="mysql.server restart"
-alias mycheck="mysql.server status"
-alias myversion="mysql --version"
-alias mycnf="$EDITOR /usr/local/etc/my.cnf"
-
-# PostgreSQL
-alias postgresqlcli="pgcli"
-alias postgrescli="pgcli"
-alias postcli="pgcli"
-alias pcli="pgcli"
-alias pqcli="pgcli"
-alias pg="pgcli"
-alias psqlcli="pgcli"
-
-LOCAL_POSTGRES_DB_PATH="/usr/local/var/postgres"
-alias pginit="pg_ctl -D $LOCAL_POSTGRES_DB_PATH start"
-alias pgrestart="pg_ctl -D $LOCAL_POSTGRES_DB_PATH restart"
-
-# Zookeeper aliases
-ZOOKEEPER_URL="localhost:2181"
-alias zk="zkCli"
-### TODO zk_random_broker doesn't work with >1 brokers, need to split the string
-function zk_random_broker() { zk <<< "ls /brokers/ids" | tail -n 2 | head -n 1 | trim "[]" ; }
-
-# Kafka aliases
-function kafka_list_topics() { kafka-topics --zookeeper $ZOOKEEPER_URL --list ; }
-function kafka_delete_topic() {
-  if [ $# -eq 1 ]; then
-      kafka-topics --zookeeper $ZOOKEEPER_URL --delete --topic $1
-  else
-      echo "$LOG_ERROR kafka_delete_topic accepts a single parameter only (name of the topic)"
-  fi
-}
-function kafka_describe_topic() {
-  if [ $# -eq 1 ]; then
-      kafka-topics --zookeeper $ZOOKEEPER_URL --describe --topic $1
-  else
-      echo "$LOG_ERROR kafka_describe_topic accepts a single parameter only (name of the topic)"
-  fi
-}
-function kafka_create_topic() {
-  if [ $# -eq 1 ]; then
-      kafka-topics --zookeeper $ZOOKEEPER_URL --create --topic $1 --partitions 1 --replication-factor 1
-  else
-      echo "$LOG_ERROR kafka_create_topic accepts a single parameter only (name of the topic)"
-  fi
-}
-
-# RabbitMQ aliases
-function rabbitinit() { rabbitmq-server start -detached; }
-function rabbitstop() { rabbitmqctl stop; }
-function rabbitrestart() { rabbitstop && rabbitstart; }
-function rabbit_list_queues() { rabbitmqadmin list queues ; }
-function rabbitcheck() { rabbit_list_queues ; }
-
-# Redis aliases
-function redisinit() {
-  echo "Initializing redis as a daemon..."
-  redis-server --daemonize yes;
-}
-function redisstop() { redis-cli shutdown ; }
-function redischeck() { redis-cli ping ; }
-
 # HTTPie aliases
 alias get="http GET"
 alias post="http POST"
-
-# Docker aliases
-alias docker_list_active_containers="docker container list"
-alias docker_list_stopped_containers="docker ps --filter \"status=exited\""
-alias docker_list_all_containers="docker ps -a"
-alias docker_list_images="docker image list"
-alias docker_start_container="docker container start"
-function docker_connect() {
-    container=$(docker ps | awk '{if (NR!=1) print $1 ": " $(NF)}' | percol --prompt='<green>Select the container:</green> %q')
-    container_id=$(echo $container | awk -F ': ' '{print $1}')
-    docker exec -i -t $container_id /bin/bash
-}
 
 ## GIT ALIASES AND HELPER FUNCTIONS
 alias git="hub"
@@ -436,7 +426,7 @@ alias gbname=gcurrent_branch_name
 
 alias grm_deleted_files="git ls-files --deleted -z | xargs -0 git rm"  # Git rm files that have been deleted
 
-alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+alias gl="git log --graph --pretty=format:'%C(yellow)%h%Creset -%C(green)%d%Creset %s %C(magenta)(%cr) %C(cyan)<%an>%Creset' --abbrev-commit"
 
 alias gnuke_last_commit="git reset --hard HEAD~1"
 alias gnevermind="git nevermind"  # Remove all the changes you've made
@@ -529,9 +519,8 @@ alias gcmn=git_commit_no_verify_with_msg
 function git_changed_files() { git diff --name-only HEAD~1 ; }
 alias gchanged_files=git_changed_files
 
-function gmerge_upstream_master { git merge upstream/master }
-function gmerge_master { git merge master }
+function gmerge_upstream_master { git merge upstream/master ; }
+function gmerge_master { git merge master ; }
 alias gmum=gmerge_upstream_master
-function gabort_merge { git merge --abort }
-function gmerge_abort { git merge --abort }
-
+function gabort_merge { git merge --abort ; }
+function gmerge_abort { git merge --abort ; }
