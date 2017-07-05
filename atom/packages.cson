@@ -9,6 +9,8 @@ packages: [
   "language-scala-plus"
   "linter"
   "linter-ui-default"
+  "multi-cursor"
   "package-sync"
   "project-manager"
+  "ukelele-atom-syntax"
 ]
