@@ -1,5 +1,5 @@
 # Language flags (set to 1 if you want language specific things to be loaded)
-PHP_MODE=0
+PHP_MODE=1
 PYTHON_MODE=0
 
 # Setup zsh with oh-my-zsh
@@ -195,6 +195,8 @@ function docker_connect() {
     docker exec -i -t $container_id /bin/bash
 }
 
+# Apache
+function apacherestart() { sudo apachectl restart ; }
 
 
 
