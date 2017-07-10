@@ -15,6 +15,7 @@
 	helper = osxkeychain
 [core]
 	excludesfile = /Users/gerardmadorell/.gitignore_global
+	hooksPath = /Users/gerardmadorell/.git_hooks
 [filter "lfs"]
 	clean = git-lfs clean %f
 	smudge = git-lfs smudge %f
