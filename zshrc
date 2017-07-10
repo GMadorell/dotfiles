@@ -36,7 +36,6 @@ set_window_title_to_collapsed_pwd() {
   echo -ne "$window_title"
 }
 precmd_functions+=(set_window_title_to_collapsed_pwd)
-# add-zsh-hook precmd set_window_title_to_collapsed_pwd
 
 ## Autocomplete setup
 zstyle ':completion:*' verbose yes
@@ -371,6 +370,10 @@ function clear_mail() { sudo rm /var/mail/$USER }
 # HTTPie aliases
 alias get="http GET"
 alias post="http POST"
+
+# Execute last command as sudo
+alias please='sudo $(fc -ln -1)'
+alias pls=please
 
 ## GIT ALIASES AND HELPER FUNCTIONS
 alias git="hub"

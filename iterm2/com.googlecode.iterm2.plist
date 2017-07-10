@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>AllowClipboardAccess</key>
+	<true/>
 	<key>AppleAntiAliasingThreshold</key>
 	<integer>1</integer>
 	<key>AppleScrollAnimationEnabled</key>
@@ -245,6 +247,8 @@
 	<integer>8388864</integer>
 	<key>LoadPrefsFromCustomFolder</key>
 	<true/>
+	<key>Log Smart Selection Debug Info</key>
+	<integer>0</integer>
 	<key>NSNavLastRootDirectory</key>
 	<string>~/.dotfiles/iterm2</string>
 	<key>NSNavPanelExpandedSizeForOpenMode</key>
@@ -294,9 +298,9 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>1804 115 606 456 1280 -137 1920 1057 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>540 582 796 473 0 0 1920 1080 </string>
+	<string>-1106 253 918 512 -1280 165 1280 777 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>111 254 730 523 0 0 1280 777 </string>
+	<string>92 254 730 523 0 0 1280 777 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>226 97 730 523 0 0 1920 1057 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -327,13 +331,13 @@
 				<key>Alpha Component</key>
 				<real>1</real>
 				<key>Blue Component</key>
-				<real>0.42061090469360352</real>
+				<real>0.48055952787399292</real>
 				<key>Color Space</key>
 				<string>Calibrated</string>
 				<key>Green Component</key>
-				<real>0.35072052478790283</real>
+				<real>0.43100947141647339</real>
 				<key>Red Component</key>
-				<real>0.26531112194061279</real>
+				<real>0.45686501264572144</real>
 			</dict>
 			<key>Ansi 1 Color</key>
 			<dict>
@@ -366,13 +370,13 @@
 				<key>Alpha Component</key>
 				<real>1</real>
 				<key>Blue Component</key>
-				<real>0.52701163291931152</real>
+				<real>0.33148568868637085</real>
 				<key>Color Space</key>
 				<string>Calibrated</string>
 				<key>Green Component</key>
-				<real>0.90729165077209473</real>
+				<real>0.52871173620223999</real>
 				<key>Red Component</key>
-				<real>0.92154860496520996</real>
+				<real>0.99075615406036377</real>
 			</dict>
 			<key>Ansi 12 Color</key>
 			<dict>
@@ -440,13 +444,13 @@
 				<key>Alpha Component</key>
 				<real>1</real>
 				<key>Blue Component</key>
-				<real>0.58662396669387817</real>
+				<real>0.29832500219345093</real>
 				<key>Color Space</key>
 				<string>Calibrated</string>
 				<key>Green Component</key>
-				<real>0.85956883430480957</real>
+				<real>0.47379225492477417</real>
 				<key>Red Component</key>
-				<real>0.97285592555999756</real>
+				<real>0.88425737619400024</real>
 			</dict>
 			<key>Ansi 4 Color</key>
 			<dict>
@@ -501,13 +505,13 @@
 				<key>Alpha Component</key>
 				<real>1</real>
 				<key>Blue Component</key>
-				<real>0.52355140447616577</real>
+				<real>0.38885331153869629</real>
 				<key>Color Space</key>
 				<string>Calibrated</string>
 				<key>Green Component</key>
-				<real>0.44292542338371277</real>
+				<real>0.4260411262512207</real>
 				<key>Red Component</key>
-				<real>0.34552329778671265</real>
+				<real>0.29671391844749451</real>
 			</dict>
 			<key>Ansi 9 Color</key>
 			<dict>
@@ -1003,7 +1007,7 @@
 				<key>editor</key>
 				<string>com.sublimetext.3</string>
 				<key>text</key>
-				<string> open -b com.jetbrains.intellij.ce \1</string>
+				<string>/Users/gerardmadorell/bin/iterm_open_with \1 \5</string>
 			</dict>
 			<key>Send Code When Idle</key>
 			<false/>
@@ -1013,6 +1017,105 @@
 			<false/>
 			<key>Smart Cursor Color</key>
 			<false/>
+			<key>Smart Selection Rules</key>
+			<array>
+				<dict>
+					<key>notes</key>
+					<string>Word bounded by whitespace</string>
+					<key>precision</key>
+					<string>low</string>
+					<key>regex</key>
+					<string>\S+</string>
+				</dict>
+				<dict>
+					<key>notes</key>
+					<string>C++ namespace::identifier</string>
+					<key>precision</key>
+					<string>normal</string>
+					<key>regex</key>
+					<string>([a-zA-Z0-9_]+::)+[a-zA-Z0-9_]+</string>
+				</dict>
+				<dict>
+					<key>notes</key>
+					<string>Paths</string>
+					<key>precision</key>
+					<string>normal</string>
+					<key>regex</key>
+					<string>\~?/?([[:letter:][:number:]._-]+/+)+[[:letter:][:number:]._-]+/?</string>
+				</dict>
+				<dict>
+					<key>notes</key>
+					<string>Quoted string</string>
+					<key>precision</key>
+					<string>normal</string>
+					<key>regex</key>
+					<string>@?"(?:[^"\\]|\\.)*"</string>
+				</dict>
+				<dict>
+					<key>notes</key>
+					<string>Java/Python include paths</string>
+					<key>precision</key>
+					<string>normal</string>
+					<key>regex</key>
+					<string>([[:letter:][:number:]._]+\.)+[[:letter:][:number:]._]+</string>
+				</dict>
+				<dict>
+					<key>notes</key>
+					<string>mailto URL</string>
+					<key>precision</key>
+					<string>normal</string>
+					<key>regex</key>
+					<string>\bmailto:([a-z0-9A-Z_]+@)?([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\b</string>
+				</dict>
+				<dict>
+					<key>notes</key>
+					<string>Obj-C selector</string>
+					<key>precision</key>
+					<string>high</string>
+					<key>regex</key>
+					<string>@selector\([^)]+\)</string>
+				</dict>
+				<dict>
+					<key>notes</key>
+					<string>email address</string>
+					<key>precision</key>
+					<string>high</string>
+					<key>regex</key>
+					<string>\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}\b</string>
+				</dict>
+				<dict>
+					<key>notes</key>
+					<string>HTTP URL</string>
+					<key>precision</key>
+					<string>very_high</string>
+					<key>regex</key>
+					<string>https?://([a-z0-9A-Z]+(:[a-zA-Z0-9]+)?@)?[-a-z0-9A-Z\-]+(\.[-a-z0-9A-Z\-]+)*((:[0-9]+)?)(/[a-zA-Z0-9;:/\.\-_+%~?&amp;@=#\(\)]*)?</string>
+				</dict>
+				<dict>
+					<key>notes</key>
+					<string>SSH URL</string>
+					<key>precision</key>
+					<string>very_high</string>
+					<key>regex</key>
+					<string>\bssh:([a-z0-9A-Z_]+@)?([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\b</string>
+				</dict>
+				<dict>
+					<key>notes</key>
+					<string>Telnet URL</string>
+					<key>precision</key>
+					<string>very_high</string>
+					<key>regex</key>
+					<string>\btelnet:([a-z0-9A-Z_]+@)?([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\b</string>
+				</dict>
+				<dict>
+					<key>notes</key>
+					<string>Class Path Php</string>
+					<key>precision</key>
+					<string>normal</string>
+					<key>regex</key>
+					<string>.+\\[^\\]+</string>
+				</dict>
+			</array>
 			<key>Sync Title</key>
 			<false/>
 			<key>Tab Color</key>
@@ -1766,6 +1869,8 @@
 	</dict>
 	<key>PrefsCustomFolder</key>
 	<string>/Users/gerardmadorell/.dotfiles/iterm2</string>
+	<key>QuitWhenAllWindowsClosed</key>
+	<true/>
 	<key>SUAutomaticallyUpdate</key>
 	<true/>
 	<key>SUEnableAutomaticChecks</key>
@@ -1777,11 +1882,13 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2017-07-02T22:14:04Z</date>
+	<date>2017-07-07T16:02:35Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>Selection Respects Soft Boundaries</key>
 	<true/>
+	<key>SmartPlacement</key>
+	<false/>
 	<key>SplitPaneDimmingAmount</key>
 	<real>0.37780699118589745</real>
 	<key>TabStyle</key>

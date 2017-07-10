@@ -80,6 +80,9 @@
   # Delete line
   'cmd-y': 'editor:delete-line'
 
+  # Join lines
+  'cmd-shift-j': 'editor:join-lines'
+
 
 
 '.platform-darwin .tree-view':
