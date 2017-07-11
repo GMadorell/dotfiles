@@ -1,6 +1,8 @@
 "*":
   "atom-package-deps":
     ignored: []
+  "autocomplete-python":
+    useKite: false
   core:
     telemetryConsent: "limited"
     themes: [
@@ -22,3 +24,6 @@
     forceOverwrite: true
   welcome:
     showOnStartup: false
+".python.source":
+  editor:
+    scrollPastEnd: true

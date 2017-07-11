@@ -1,4 +1,5 @@
 packages: [
+  "autocomplete-python"
   "busy-signal"
   "dracula-syntax"
   "expand-region"

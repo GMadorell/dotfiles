@@ -17,19 +17,21 @@ args = sys.argv[1:]
 filename = args[0]
 pwd = args[1]
 
+PHPSTORM_EXTENSIONS = ["php", "feature"]
+INTELLIJ_IDEA_EXTENSIONS = ["scala", "java", "clj"]
+
 with open("/var/log/iterm_open_with.log", "w") as log_file:
     log_file.write("\n>>>> New execution\n")
     log_file.write("filename: {0}, pwd: {1}\n".format(filename, pwd))
 
     extension = filename.split(".")[-1]
 
-    if extension == "php":
+    if extension in PHPSTORM_EXTENSIONS:
         cmd = ["/usr/local/bin/pstorm", filename]
-    elif extension == "scala":
+    elif extension in INTELLIJ_IDEA_EXTENSIONS:
         cmd = ["/usr/local/bin/idea", filename]
     else:
         cmd = ["/usr/local/bin/atom", filename]
-
 
     p = Popen(cmd, shell=False, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
     output = p.stdout.read()
