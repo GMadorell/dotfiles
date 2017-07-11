@@ -8,6 +8,7 @@ packages: [
   "intentions"
   "language-scala"
   "language-scala-plus"
+  "last-cursor-position"
   "linter"
   "linter-ui-default"
   "multi-cursor"

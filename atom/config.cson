@@ -4,6 +4,9 @@
   "autocomplete-python":
     useKite: false
   core:
+    packagesWithKeymapsDisabled: [
+      "last-cursor-position"
+    ]
     telemetryConsent: "limited"
     themes: [
       "one-dark-ui"

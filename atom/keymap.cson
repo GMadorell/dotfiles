@@ -86,6 +86,10 @@
   # Join lines
   'cmd-shift-j': 'editor:join-lines'
 
+  # Jump back and forth to previous/next cursor position
+  'cmd-alt-left': 'last-cursor-position:previous'
+  'cmd-alt-right': 'last-cursor-position:next'
+
 
 
 '.platform-darwin .tree-view':
