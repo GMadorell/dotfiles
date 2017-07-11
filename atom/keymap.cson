@@ -26,6 +26,9 @@
   # Open project manager list projects
   'cmd-shift-p': 'project-manager:list-projects'
 
+  # Open a file
+  'cmd-alt-shift-o': 'application:open'
+
 
 
 '.platform-darwin atom-workspace atom-text-editor:not([mini])':
