@@ -6,6 +6,9 @@
   core:
     packagesWithKeymapsDisabled: [
       "last-cursor-position"
+      "expand-region"
+      "multi-cursor"
+      "project-manager"
     ]
     telemetryConsent: "limited"
     themes: [
