@@ -1,4 +1,5 @@
 packages: [
+  "autocomplete-emojis"
   "autocomplete-python"
   "busy-signal"
   "dracula-syntax"
@@ -13,6 +14,8 @@ packages: [
   "linter-ui-default"
   "multi-cursor"
   "package-sync"
+  "pigments"
   "project-manager"
+  "seti-ui"
   "ukelele-atom-syntax"
 ]

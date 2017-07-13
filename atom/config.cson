@@ -1,6 +1,8 @@
 "*":
   "atom-package-deps":
     ignored: []
+  "autocomplete-emojis":
+    enableMarkdownEmojis: false
   "autocomplete-python":
     useKite: false
   core:
@@ -12,7 +14,7 @@
     ]
     telemetryConsent: "limited"
     themes: [
-      "one-dark-ui"
+      "seti-ui"
       "dracula-syntax"
     ]
   editor:

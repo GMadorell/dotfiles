@@ -377,6 +377,11 @@ alias post="http POST"
 alias please='sudo $(fc -ln -1)'
 alias pls=please
 
+# Command line arithmetic (ej:  `calculate 10 * 10`)
+function calculate () { bc -l <<< "$@" ; }
+alias calc=calculate
+alias math=calculate
+
 ## GIT ALIASES AND HELPER FUNCTIONS
 alias git="hub"
 alias gp="git push"

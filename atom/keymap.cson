@@ -90,6 +90,11 @@
   'cmd-alt-left': 'last-cursor-position:previous'
   'cmd-alt-right': 'last-cursor-position:next'
 
+  # Split window panes
+  'cmd-shift-s right': 'pane:split-right'
+  'cmd-shift-s down': 'pane:split-down'
+  'cmd-shift-s left': 'pane:split-left'
+  'cmd-shift-s up': 'pane:split-up'
 
 
 '.platform-darwin .tree-view':
