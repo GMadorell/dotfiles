@@ -1,4 +1,11 @@
 "*":
+  "atom-beautify":
+    bash:
+      disabled: true
+    general:
+      _analyticsUserId: "5424fb2f-a6a7-4d81-aff7-4221e3ccafd9"
+    js:
+      end_with_newline: true
   "atom-package-deps":
     ignored: []
   "autocomplete-emojis":
@@ -11,6 +18,7 @@
       "expand-region"
       "multi-cursor"
       "project-manager"
+      "atom-beautify"
     ]
     telemetryConsent: "limited"
     themes: [
@@ -30,6 +38,7 @@
   "package-sync":
     createOnChange: true
     forceOverwrite: true
+  random: {}
   welcome:
     showOnStartup: false
 ".python.source":

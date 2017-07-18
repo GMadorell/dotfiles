@@ -96,6 +96,9 @@
   'cmd-shift-s left': 'pane:split-left'
   'cmd-shift-s up': 'pane:split-up'
 
+  # Generate random uuid
+  'cmd-shift-alt-g': 'random:guid'
+
 
 '.platform-darwin .tree-view':
   # Move (rename) selected file in tree view

@@ -278,6 +278,10 @@ function mkcdir() {
     mkdir -p "$1" && cd "$1"
 }
 
+function uuidcp() { uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]'  | pbcopy && pbpaste && echo ; }
+
+
+# Find files related
 function find_by_name_globally() {
   if [ $# -eq 1 ]; then
     sudo find / -iname "$1"
@@ -287,7 +291,12 @@ function find_by_name_globally() {
 }
 alias find_global="find_by_name_globally"
 
-function uuidcp() { uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]'  | pbcopy && pbpaste && echo ; }
+function fuzzyfind() { fzf --height 40% ; }
+alias fzfind=fuzzyfind
+function fuzzyopen() { $EDITOR $(fuzzyfind) ; }
+alias fzopen=fuzzyopen
+alias fzo=fuzzyopen
+
 
 # Hardware related
 ## Battery status
