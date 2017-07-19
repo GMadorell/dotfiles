@@ -19,6 +19,7 @@
       "multi-cursor"
       "project-manager"
       "atom-beautify"
+      "highlight-selected"
     ]
     telemetryConsent: "limited"
     themes: [

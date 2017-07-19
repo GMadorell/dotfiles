@@ -5,6 +5,7 @@ packages: [
   "busy-signal"
   "dracula-syntax"
   "expand-region"
+  "highlight-selected"
   "hyperclick"
   "hyperlink-hyperclick"
   "intentions"
