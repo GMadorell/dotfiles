@@ -16,10 +16,10 @@
     packagesWithKeymapsDisabled: [
       "last-cursor-position"
       "expand-region"
-      "multi-cursor"
       "project-manager"
       "atom-beautify"
       "highlight-selected"
+      "multi-cursor"
     ]
     telemetryConsent: "limited"
     themes: [

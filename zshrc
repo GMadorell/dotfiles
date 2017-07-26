@@ -41,11 +41,13 @@ precmd_functions+=(set_window_title_to_collapsed_pwd)
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' group-name ''
 
-## Bindkeys - type 'bindkey' in terminal to check for shortcuts.
-bindkey ^A beginning-of-line  # Ctrl+A for moving to beggining
-bindkey ^S backward-word      # Ctrl+S for moving a word backward.
-bindkey ^D forward-word       # Ctrl+D for moving a word forward.
-bindkey ^F end-of-line        # Ctrl+F for moving till the end
+## Keybindings- Bindkeys - type 'bindkey' in terminal to check for shortcuts
+bindkey ^A beginning-of-line         # Ctrl+A for moving to beggining
+bindkey ^S backward-word             # Ctrl+S for moving a word backward
+bindkey ^D forward-word              # Ctrl+D for moving a word forward
+bindkey ^F end-of-line               # Ctrl+F for moving till the end
+bindkey ^W backward-delete-word      # Ctrl+W to delete a word backward
+bindkey ^E kill-word                 # Ctrl+E to delete a word forward
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=240'
 
@@ -293,6 +295,10 @@ alias find_global="find_by_name_globally"
 
 function fuzzyfind() { fzf --height 40% ; }
 alias fzfind=fuzzyfind
+alias fuzzysearch=fuzzyfind
+alias fzsearch=fuzzysearch
+alias fzs=fuzzysearch
+alias fs=fuzzysearch
 function fuzzyopen() { $EDITOR $(fuzzyfind) ; }
 alias fzopen=fuzzyopen
 alias fzo=fuzzyopen
