@@ -404,6 +404,7 @@ alias math=calculate
 alias git="hub"
 alias gp="git push"
 alias gpf="git push --force"
+alias gpfn="git push --force --no-verify"
 alias gpumaster="git push upstream HEAD:master"  # Pushes current branch to upstream master
 alias gpoh="git push origin HEAD"  # Push current branch to a branch with same name on the remote (useful after creating new branch)
 alias gp_same_name="gpoh"
