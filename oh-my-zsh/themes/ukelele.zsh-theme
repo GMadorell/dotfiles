@@ -2,7 +2,7 @@
 
 PROMPT='
 $(_user_host)$(_current_dir) $(git_prompt_info)
-%{$fg[$CARETCOLOR]%}▶%{$resetcolor%} '
+%{$fg[$CARETCOLOR]%}▸%{$resetcolor%} '
 
 local _return_status="%{$fg[red]%}%(?..⍉)%{$reset_color%}"
 local _hist_no="%{$fg[grey]%}%h%{$reset_color%}"

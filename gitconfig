@@ -27,3 +27,5 @@
 [diff]
 	compactionHeuristic = true
 
+[init]
+	templatedir = ~/.git_hooks
