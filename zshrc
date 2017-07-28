@@ -393,7 +393,10 @@ alias please='sudo $(fc -ln -1)'
 alias pls=please
 
 # Command line arithmetic (ej:  `calculate 10 * 10`)
-function calculate () { bc -l <<< "$@" ; }
+function calculate () {
+  comma_less_args=$(echo "$@" | sed "s/,//g")
+  bc -l <<< "scale=3; $comma_less_args"
+}
 alias calc=calculate
 alias math=calculate
 
