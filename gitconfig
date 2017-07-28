@@ -28,4 +28,4 @@
 	compactionHeuristic = true
 
 [init]
-	templatedir = ~/.git_hooks
+	templatedir = ~/.git-templates

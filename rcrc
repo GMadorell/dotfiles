@@ -1,1 +1,2 @@
 EXCLUDES="jetbrains better-touch-tool iterm2 README.md"
+UNDOTTED="bin"

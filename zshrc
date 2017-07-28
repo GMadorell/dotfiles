@@ -177,7 +177,7 @@ function rabbit_list_queues() { rabbitmqadmin list queues ; }
 function rabbitcheck() { rabbit_list_queues ; }
 
 # Redis aliases
-alias rediscli="rediscli"
+alias rediscli="redis-cli"
 function redisinit() {
   echo "Initializing redis as a daemon..."
   redis-server --daemonize yes;
