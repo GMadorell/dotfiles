@@ -34,8 +34,7 @@
   "exception-reporting":
     userId: "99013d38-c828-0207-0013-3ab9d183e871"
   "expand-region": {}
-  "linter-ui-default":
-    panelHeight: 69
+  "linter-ui-default": {}
   "package-sync":
     createOnChange: true
     forceOverwrite: true

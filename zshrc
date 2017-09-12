@@ -41,7 +41,7 @@ precmd_functions+=(set_window_title_to_collapsed_pwd)
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' group-name ''
 
-## Keybindings- Bindkeys - type 'bindkey' in terminal to check for shortcuts
+## Keybindings- Bindkeys - type 'bindkey' in terminal to check for keyboard shortcuts
 bindkey ^A beginning-of-line         # Ctrl+A for moving to beggining
 bindkey ^S backward-word             # Ctrl+S for moving a word backward
 bindkey ^D forward-word              # Ctrl+D for moving a word forward
@@ -138,6 +138,15 @@ alias pgcli='pgcli'
 LOCAL_POSTGRES_DB_PATH="/usr/local/var/postgres"
 alias pginit="pg_ctl -D $LOCAL_POSTGRES_DB_PATH start"
 alias pgrestart="pg_ctl -D $LOCAL_POSTGRES_DB_PATH restart"
+
+## InfluxDB
+alias influxdbcli="influx"
+function influxdbinit() { nohup influxd > /dev/null 2>&1 & ; }
+function influxdbstop() { pkill influxd ; }
+function influxdbrestart() {
+  influxdbstop
+  influxdbinit
+}
 
 ## Zookeeper aliases
 ZOOKEEPER_URL="localhost:2181"
@@ -318,6 +327,7 @@ alias cbpaste=paste
 alias lg="ls_grep"
 alias lsg="ls_grep"
 alias lsh="ls -human"
+alias lst="exa -l -h -a -a --time-style long-iso"  # This should be the default to list files, abstracting away the used tool
 
 alias clean="clear"
 
@@ -462,6 +472,7 @@ alias gnevermind="git nevermind"  # Remove all the changes you've made
 
 alias gstash="git stash"
 function gstash_list() { git stash list ; }
+function gstash_clear() { git stash clear ; }
 function gstashs() {
   if [ $# -eq 1 ]; then
     git stash save "$1"

@@ -1,0 +1,26 @@
+#!/usr/bin/python
+"""
+trim "[string you want to strip]" "[string used as strip]"
+    - trims the string passed as first argument with all characters of
+      the second string
+trim "[string used as strip]"
+    - trims stdin with all individual characters in argument
+
+ej: trim "[trim_me_pls]" "[]"  ->  "trim_me_pls"
+"""
+import sys
+
+args = sys.argv[1:]
+if len(args) == 2:
+    string_to_strip = args[0]
+    trim = args[1]
+    print(string_to_strip.strip(trim))
+elif len(args) == 1:
+    trim = args[0]
+    for line in sys.stdin.readlines():
+        if line[-1] == "\n":
+            print(line[:-1].strip(trim) + "\n")
+        else:
+            print(line.strip(trim))
+else:
+    print(__doc__)

@@ -8,11 +8,9 @@ PREVIOUS_HEAD_REF="$1"
 NEW_HEAD_REF="$2"
 CHECKOUT_WAS_A_BRANCH_FLAG="$3"
 
-echo $GIT_DIR
-
 function act_on_stash_found() {
   echo ""
-  echo -e "\033[0;31m[WARNING] Stash found saved from the branch you're checking into, maybe you already did some work here? \033[0m"
+  echo -e "\033[0;31m[WARNING] Stash found saved from the branch you're checking into, did you already do some work? \033[0m"
   echo ""
   echo "Let me do a 'git stash list' for you..."
   echo $(git stash list)
@@ -20,7 +18,7 @@ function act_on_stash_found() {
 
 if [[ "$CHECKOUT_WAS_A_BRANCH_FLAG" == "1" ]]; then
   # If we have a detached HEAD reference, exit the hook (this happens when rebasing, for example)
-  branch_name="$(git symbolic-ref HEAD 2>/dev/null)" || exit 0
-
+  raw_branch_name="$(git symbolic-ref HEAD 2>/dev/null)" || exit 0
+  branch_name="$(echo $raw_branch_name | trim 'refs/heads/')"
   git stash list | cut -d ":" -f 2 | grep -qi $branch_name && act_on_stash_found
 fi
