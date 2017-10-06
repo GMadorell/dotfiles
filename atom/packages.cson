@@ -5,6 +5,7 @@ packages: [
   "busy-signal"
   "dracula-syntax"
   "expand-region"
+  "git-plus"
   "highlight-selected"
   "hyperclick"
   "hyperlink-hyperclick"

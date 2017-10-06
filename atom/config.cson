@@ -20,6 +20,8 @@
       "atom-beautify"
       "highlight-selected"
       "multi-cursor"
+      "git-plus"
+      "github"
     ]
     telemetryConsent: "limited"
     themes: [
@@ -28,13 +30,14 @@
     ]
   editor:
     fontFamily: "inconsolata-g"
-    fontSize: 20
+    fontSize: 23
     invisibles: {}
     showInvisibles: true
   "exception-reporting":
     userId: "99013d38-c828-0207-0013-3ab9d183e871"
   "expand-region": {}
-  "linter-ui-default": {}
+  "linter-ui-default":
+    panelHeight: 69
   "package-sync":
     createOnChange: true
     forceOverwrite: true

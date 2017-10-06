@@ -4,6 +4,9 @@
   # Goto Splitter Splitter (move between tabs backwards)
   'alt-shift-tab': 'window:focus-previous-pane'
 
+  # Disable default 'Save as...'
+  'cmd-shift-s': 'unset!'
+
 
 
 '.platform-darwin atom-workspace':
@@ -114,3 +117,6 @@
 
   # Copy full path of selected file
   'cmd-shift-c': 'tree-view:copy-full-path'
+
+'.platform-darwin':
+  'cmd-k': 'git-plus:add-all-and-commit'

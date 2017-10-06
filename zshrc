@@ -124,6 +124,7 @@ Standard is:
   - $SERVICE+restart: stop and initialize the service
   - $SERVICE+check: check if the service is running
   - $SERVICE+cnf: open editor with the service configuration
+  - $SERVICE+port: show which open port the service has
 '
 ## MySQL
 alias mycli="mycli"
@@ -193,6 +194,7 @@ function redisinit() {
 }
 function redisstop() { redis-cli shutdown ; }
 function redischeck() { redis-cli ping ; }
+function redisport() { ports | sed -n -e '1p;/redis/p' ; }
 
 # Docker aliases
 alias docker_list_active_containers="docker container list"
@@ -209,7 +211,11 @@ function docker_connect() {
 # Apache
 function apacherestart() { sudo apachectl restart ; }
 
-
+# Grafana
+function grafanainit() { brew services start grafana ; }
+function grafanastop() { brew services stop grafana ; }
+function grafanarestart() { brew services restart grafana ; }
+function grafanaport() { ports | sed -n -e '1p;/grafana/p' ; }
 
 # Helper functions and aliases
 
@@ -303,6 +309,7 @@ function find_by_name_globally() {
 alias find_global="find_by_name_globally"
 
 function fuzzyfind() { fzf --height 40% ; }
+alias ff=fuzzyfind
 alias fzfind=fuzzyfind
 alias fuzzysearch=fuzzyfind
 alias fzsearch=fuzzysearch
@@ -328,6 +335,12 @@ alias lg="ls_grep"
 alias lsg="ls_grep"
 alias lsh="ls -human"
 alias lst="exa -l -h -a -a --time-style long-iso"  # This should be the default to list files, abstracting away the used tool
+alias lst_date_created="exa -l -h -t created --sort created -a -a --time-style long-iso"
+alias lst_date_modified="exa -l -h -t modified --sort modified -a -a --time-style long-iso"
+
+# Display current load status
+alias mntr="gtop"
+alias monitor="mntr"
 
 alias clean="clear"
 
@@ -385,7 +398,7 @@ alias cores="amount_of_cores"
 alias amount_cores="amount_of_cores"
 alias cores_amount="amount_of_cores"
 
-alias ports="lsof -i | grep LISTEN"
+alias ports="sudo lsof -PiTCP -sTCP:LISTEN"
 
 alias sourcezshrc="source $HOME/.zshrc"
 alias srczshrc=sourcezshrc
