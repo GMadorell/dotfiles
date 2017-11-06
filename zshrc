@@ -180,7 +180,7 @@ function kafka_create_topic() {
 }
 
 # RabbitMQ aliases
-function rabbitinit() { rabbitmq-server start -detached; }
+function rabbitinit() { rabbitmq-server run -detached; }
 function rabbitstop() { rabbitmqctl stop; }
 function rabbitrestart() { rabbitstop && rabbitstart; }
 function rabbit_list_queues() { rabbitmqadmin list queues ; }
@@ -188,11 +188,9 @@ function rabbitcheck() { rabbit_list_queues ; }
 
 # Redis aliases
 alias rediscli="redis-cli"
-function redisinit() {
-  echo "Initializing redis as a daemon..."
-  redis-server --daemonize yes;
-}
-function redisstop() { redis-cli shutdown ; }
+function redisinit() { brew services run redis ; }
+function redisstop() { brew services stop redis ; }
+function redisrestart() { brew services restart redis ; }
 function redischeck() { redis-cli ping ; }
 function redisport() { ports | sed -n -e '1p;/redis/p' ; }
 
@@ -212,12 +210,26 @@ function docker_connect() {
 function apacherestart() { sudo apachectl restart ; }
 
 # Grafana
-function grafanainit() { brew services start grafana ; }
+function grafanainit() { brew services run grafana ; }
 function grafanastop() { brew services stop grafana ; }
 function grafanarestart() { brew services restart grafana ; }
 function grafanaport() { ports | sed -n -e '1p;/grafana/p' ; }
 
 # Helper functions and aliases
+
+function is_connected_to_internet {
+  wget -q --tries=10 --timeout=20 --spider http://google.com
+  echo "$?"
+}
+
+function assert_internet_connectivity {
+  if [[ $(is_connected_to_internet) -eq 0 ]]; then
+      # We're online
+  else
+      echo "Internet seems to be down, aborting..."
+      kill -INT $$
+  fi
+}
 
 function extract {
   # Extract contents from compressed file in multiple formats
@@ -252,6 +264,7 @@ function extract {
 }
 
 function subtitles() {
+  assert_internet_connectivity
   if [ -z "$1" ]; then
     echo "Usage: subtitles <file_path>"
   else
@@ -260,6 +273,7 @@ function subtitles() {
 }
 
 function subtitles_dir() {
+  assert_internet_connectivity
   if [ -z "$1" ]; then
     echo "Usage: subtitles_dir <dir_path>"
   else
@@ -298,7 +312,8 @@ function mkcdir() {
 function uuidcp() { uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]'  | pbcopy && pbpaste && echo ; }
 
 
-# Find files related
+# Find / Search files or file contents related
+
 function find_by_name_globally() {
   if [ $# -eq 1 ]; then
     sudo find / -iname "$1"
@@ -309,6 +324,7 @@ function find_by_name_globally() {
 alias find_global="find_by_name_globally"
 
 function fuzzyfind() { fzf --height 40% ; }
+alias filefind=fuzzyfind
 alias ff=fuzzyfind
 alias fzfind=fuzzyfind
 alias fuzzysearch=fuzzyfind
@@ -319,6 +335,8 @@ function fuzzyopen() { $EDITOR $(fuzzyfind) ; }
 alias fzopen=fuzzyopen
 alias fzo=fuzzyopen
 
+function search_in_files { rg $1 ; }
+alias sif=search_in_files
 
 # Hardware related
 ## Battery status
@@ -363,6 +381,7 @@ alias .5="cd ......"
 alias .6="cd ......."
 alias .7="cd ........"
 alias cdp="cd ~/projects/"
+alias cddownloads="cd ~/downloads/"
 
 alias cl="printf \"\033c\""
 
@@ -414,6 +433,7 @@ alias post="http POST"
 # Execute last command as sudo
 alias please='sudo $(fc -ln -1)'
 alias pls=please
+alias suda=please
 
 # Command line arithmetic (ej:  `calculate 10 * 10`)
 function calculate () {

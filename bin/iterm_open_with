@@ -19,6 +19,7 @@ pwd = args[1]
 
 PHPSTORM_EXTENSIONS = ["php", "feature"]
 INTELLIJ_IDEA_EXTENSIONS = ["scala", "java", "clj"]
+VIDEO_EXTENSIONS = ["mkv", "mp4"]
 
 with open("/var/log/iterm_open_with.log", "w") as log_file:
     log_file.write("\n>>>> New execution\n")
@@ -30,6 +31,8 @@ with open("/var/log/iterm_open_with.log", "w") as log_file:
         cmd = ["/usr/local/bin/pstorm", filename]
     elif extension in INTELLIJ_IDEA_EXTENSIONS:
         cmd = ["/usr/local/bin/idea", filename]
+    elif extension in VIDEO_EXTENSIONS:
+        cmd = ["/usr/local/bin/vlc", filename]
     else:
         cmd = ["/usr/local/bin/atom", filename]
 
