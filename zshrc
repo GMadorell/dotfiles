@@ -288,15 +288,6 @@ function fetch_gitignore() {
 }
 alias gi="fetch_gitignore"
 
-## Does an ls and greps it with the given argument
-function ls_grep() {
-    if [ $# -eq 1 ]; then
-        ls -lah | grep --ignore-case $1
-    else
-        echo "$LOG_ERROR ls_grep accepts a single parameter only (what to grep the ls result for)"
-    fi
-}
-
 function is_running_on_mac() {
   if [[ `uname` == "Darwin" ]]; then
     return true
@@ -349,12 +340,20 @@ alias paste="pbpaste"
 alias cbcopy=copy
 alias cbpaste=paste
 
+function ls_grep() {
+    if [ $# -eq 1 ]; then
+        lst | grep --ignore-case $1
+    else
+        echo "$LOG_ERROR ls_grep accepts a single parameter only (what to grep the ls result for)"
+    fi
+}
 alias lg="ls_grep"
 alias lsg="ls_grep"
-alias lsh="ls -human"
 alias lst="exa -l -h -a -a --time-style long-iso"  # This should be the default to list files, abstracting away the used tool
 alias lst_date_created="exa -l -h -t created --sort created -a -a --time-style long-iso"
+alias lst_created="lst_date_created"
 alias lst_date_modified="exa -l -h -t modified --sort modified -a -a --time-style long-iso"
+alias lst_modified="lst_date_modified"
 
 # Display current load status
 alias mntr="gtop"

@@ -6,6 +6,9 @@
       _analyticsUserId: "5424fb2f-a6a7-4d81-aff7-4221e3ccafd9"
     js:
       end_with_newline: true
+    markdown:
+      disabled: true
+      yaml: false
   "atom-package-deps":
     ignored: []
   "autocomplete-emojis":
