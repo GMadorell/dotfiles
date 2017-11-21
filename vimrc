@@ -10,6 +10,7 @@ Plugin 'VundleVim/Vundle.vim' " Let Vundle manage itself, required
 
 Plugin 'derekwyatt/vim-scala'
 Plugin 'dracula/vim'
+Plugin 'GEverding/vim-hocon'
 
 
 " All of your Plugins must be added before the following line

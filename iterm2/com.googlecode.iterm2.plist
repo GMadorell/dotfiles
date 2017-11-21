@@ -243,6 +243,8 @@
 	<integer>63247</integer>
 	<key>HotkeyCode</key>
 	<integer>111</integer>
+	<key>HotkeyMigratedFromSingleToMulti</key>
+	<true/>
 	<key>HotkeyModifiers</key>
 	<integer>8388864</integer>
 	<key>LoadPrefsFromCustomFolder</key>
@@ -250,7 +252,7 @@
 	<key>Log Smart Selection Debug Info</key>
 	<integer>0</integer>
 	<key>NSNavLastRootDirectory</key>
-	<string>~/.dotfiles/iterm2</string>
+	<string>~/Documents</string>
 	<key>NSNavPanelExpandedSizeForOpenMode</key>
 	<string>{712, 459}</string>
 	<key>NSNavPanelExpandedSizeForSaveMode</key>
@@ -270,7 +272,7 @@
 	gAKACoAN0xAJChEVGVdOUy5rZXlzoxITFIADgASABaMWFxiABoAHgAiACVpJZGVudGlm
 	aWVyVVdpZHRoVkhpZGRlblEwI0BowAAAAAAACNIhIiMkWiRjbGFzc25hbWVYJGNsYXNz
 	ZXNcTlNEaWN0aW9uYXJ5oiMlWE5TT2JqZWN00xAJCicrGaMSExSAA4AEgAWjLC0YgAuA
-	DIAIgAlRMSNAdCAAAAAAANIhIjM0Xk5TTXV0YWJsZUFycmF5ozM1JVdOU0FycmF5XxAP
+	DIAIgAlRMSNAdKAAAAAAANIhIjM0Xk5TTXV0YWJsZUFycmF5ozM1JVdOU0FycmF5XxAP
 	TlNLZXllZEFyY2hpdmVy0Tg5VUFycmF5gAEACAARABoAIwAtADIANwBGAEwAUQBcAGMA
 	ZgBoAGoAbABzAHsAfwCBAIMAhQCJAIsAjQCPAJEAnACiAKkAqwC0ALUAugDFAM4A2wDe
 	AOcA7gDyAPQA9gD4APwA/gEAAQIBBAEGAQ8BFAEjAScBLwFBAUQBSgAAAAAAAAIBAAAA
@@ -298,11 +300,11 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>1804 115 606 456 1280 -137 1920 1057 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>-1106 253 918 512 -1280 165 1280 777 </string>
+	<string>-1160 430 918 381 -1280 165 1280 777 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>92 254 730 523 0 0 1280 777 </string>
+	<string>358 -796 1280 772 358 -800 1280 777 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>226 97 730 523 0 0 1920 1057 </string>
+	<string>226 101 730 523 0 0 1920 1080 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
 	<string>268 84 730 523 0 0 1920 1057 </string>
 	<key>NSWindow Frame iTerm Window 3</key>
@@ -1882,7 +1884,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2017-07-07T16:02:35Z</date>
+	<date>2017-10-29T22:10:16Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>Selection Respects Soft Boundaries</key>
@@ -1902,7 +1904,7 @@
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.0.15</string>
+	<string>3.1.0</string>
 	<key>kCPKSelectionViewPreferredModeKey</key>
 	<integer>1</integer>
 	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>

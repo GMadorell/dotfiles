@@ -1,5 +1,5 @@
 # Language flags (set to 1 if you want language specific things to be loaded)
-PHP_MODE=1
+PHP_MODE=0
 PYTHON_MODE=0
 
 # Setup zsh with oh-my-zsh
@@ -201,9 +201,9 @@ alias docker_list_all_containers="docker ps -a"
 alias docker_list_images="docker image list"
 alias docker_start_container="docker container start"
 function docker_connect() {
-    container=$(docker ps | awk '{if (NR!=1) print $1 ": " $(NF)}' | percol --prompt='<green>Select the container:</green> %q')
-    container_id=$(echo $container | awk -F ': ' '{print $1}')
-    docker exec -i -t $container_id /bin/bash
+  container=$(docker ps | awk '{if (NR!=1) print $1 ": " $(NF)}' | percol --prompt='<green>Select the container:</green> %q')
+  container_id=$(echo $container | awk -F ': ' '{print $1}')
+  docker exec -i -t $container_id /bin/bash
 }
 
 # Apache
@@ -214,6 +214,19 @@ function grafanainit() { brew services run grafana ; }
 function grafanastop() { brew services stop grafana ; }
 function grafanarestart() { brew services restart grafana ; }
 function grafanaport() { ports | sed -n -e '1p;/grafana/p' ; }
+
+# Elasticsearch
+function esinit() { brew services run elasticsearch ; }
+function esstop() { brew services stop elasticsearch ; }
+function esrestart() { brew services restart elasticsearch ; }
+function esport() {
+  es_status=$(get http://localhost:9200/_cluster/health | jq -r '{message: .status} | "\(.message)"')
+  if [[ "$es_status" == "green" ]]; then
+    echo "9200"
+  else
+    echo "$LOG_ERROR elastic search seems to not be running on port 9200"
+  fi
+}
 
 # Helper functions and aliases
 
@@ -304,7 +317,6 @@ function uuidcp() { uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]'  | pbcopy 
 
 
 # Find / Search files or file contents related
-
 function find_by_name_globally() {
   if [ $# -eq 1 ]; then
     sudo find / -iname "$1"
@@ -322,12 +334,22 @@ alias fuzzysearch=fuzzyfind
 alias fzsearch=fuzzysearch
 alias fzs=fuzzysearch
 alias fs=fuzzysearch
-function fuzzyopen() { $EDITOR $(fuzzyfind) ; }
+function fuzzyopen() {
+  local find_result=$(fuzzyfind)
+  if [[ ! -z "$find_result" ]]; then
+    $EDITOR $find_result
+    echo "File opened: $find_result"
+  fi
+}
 alias fzopen=fuzzyopen
 alias fzo=fuzzyopen
 
-function search_in_files { rg $1 ; }
+function search_in_files() { rg $1 ; }
 alias sif=search_in_files
+alias search_in_content=search_in_files
+alias search_content=search_in_files
+alias searchcontent=search_in_files
+alias sic=search_in_files
 
 # Hardware related
 ## Battery status
@@ -340,6 +362,14 @@ alias paste="pbpaste"
 alias cbcopy=copy
 alias cbpaste=paste
 
+alias lst="exa -l -h -a -a --time-style long-iso"  # This should be the default to list files, abstracting away the used tool
+alias lst_date_created="exa -l -h -t created --sort created -a -a --time-style long-iso"
+alias lst_created="lst_date_created"
+alias lstcreated="lst_data_created"
+alias lstc="lst_date_created"
+alias lst_date_modified="exa -l -h -t modified --sort modified -a -a --time-style long-iso"
+alias lst_modified="lst_date_modified"
+alias lstmodified="lst_date_modified"
 function ls_grep() {
     if [ $# -eq 1 ]; then
         lst | grep --ignore-case $1
@@ -349,11 +379,7 @@ function ls_grep() {
 }
 alias lg="ls_grep"
 alias lsg="ls_grep"
-alias lst="exa -l -h -a -a --time-style long-iso"  # This should be the default to list files, abstracting away the used tool
-alias lst_date_created="exa -l -h -t created --sort created -a -a --time-style long-iso"
-alias lst_created="lst_date_created"
-alias lst_date_modified="exa -l -h -t modified --sort modified -a -a --time-style long-iso"
-alias lst_modified="lst_date_modified"
+
 
 # Display current load status
 alias mntr="gtop"
