@@ -216,15 +216,16 @@ function grafanarestart() { brew services restart grafana ; }
 function grafanaport() { ports | sed -n -e '1p;/grafana/p' ; }
 
 # Elasticsearch
-function esinit() { brew services run elasticsearch ; }
-function esstop() { brew services stop elasticsearch ; }
-function esrestart() { brew services restart elasticsearch ; }
+elasticsearch_version="elasticsearch@5.6"
+function esinit() { brew services run $elasticsearch_version ; }
+function esstop() { brew services stop $elasticsearch_version ; }
+function esrestart() { brew services restart $elasticsearch_version ; }
 function esport() {
   es_status=$(get http://localhost:9200/_cluster/health | jq -r '{message: .status} | "\(.message)"')
   if [[ "$es_status" == "green" ]]; then
     echo "9200"
   else
-    echo "$LOG_ERROR elastic search seems to not be running on port 9200"
+    echo "$LOG_ERROR elastic search seems to not be running on port 9200 (or it might be just starting, try again?)"
   fi
 }
 
