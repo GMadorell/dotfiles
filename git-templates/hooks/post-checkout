@@ -19,6 +19,6 @@ function act_on_stash_found() {
 if [[ "$CHECKOUT_WAS_A_BRANCH_FLAG" == "1" ]]; then
   # If we have a detached HEAD reference, exit the hook (this happens when rebasing, for example)
   raw_branch_name="$(git symbolic-ref HEAD 2>/dev/null)" || exit 0
-  branch_name="$(echo $raw_branch_name | trim 'refs/heads/')"
+  branch_name="$(echo $raw_branch_name | trim_phrase 'refs/heads/')"
   git stash list | cut -d ":" -f 2 | grep -qi $branch_name && act_on_stash_found
 fi

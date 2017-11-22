@@ -1,0 +1,33 @@
+#!/usr/bin/python
+"""
+trim_phrase "[string you want to strip]" "phrase that will be stripped"
+    - trims the string passed as first argument using the given phrase
+trim_phrase "phrase that will be stripped"
+    - trims stdin using the given phrase
+
+ej: trim_phrase "test this is a test test" "test"  ->  " this is a test "
+"""
+import sys
+
+
+def strip_phrase(string, phrase):
+    if string.endswith(phrase):
+        string = string[:len(string)-len(phrase)]
+    if string.startswith(phrase):
+        string = string[len(phrase):]
+    return string
+
+args = sys.argv[1:]
+if len(args) == 2:
+    string_to_strip = args[0]
+    trim = args[1]
+    print(strip_phrase(string_to_strip, trim))
+elif len(args) == 1:
+    trim = args[0]
+    for line in sys.stdin.readlines():
+        if line[-1] == "\n":
+            print(strip_phrase(line[:-1], trim) + "\n")
+        else:
+            print(strip_phrase(line, trim))
+else:
+    print(__doc__)
