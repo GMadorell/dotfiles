@@ -128,26 +128,24 @@ Standard is:
 '
 ## MySQL
 alias mycli="mycli"
-alias myinit="mysql.server start"
-alias myrestart="mysql.server restart"
+alias myinit="brew services run mysql"
+alias mystop="brew services stop mysql"
+alias myrestart="brew services restart mysql"
 alias mycheck="mysql.server status"
 alias myversion="mysql --version"
 alias mycnf="$EDITOR /usr/local/etc/my.cnf"
 
 ## PostgreSQL
 alias pgcli='pgcli'
-LOCAL_POSTGRES_DB_PATH="/usr/local/var/postgres"
-alias pginit="pg_ctl -D $LOCAL_POSTGRES_DB_PATH start"
-alias pgrestart="pg_ctl -D $LOCAL_POSTGRES_DB_PATH restart"
+alias pginit="brew services run postgresql"
+alias pgstop="brew services stop postgresql"
+alias pgrestart="brew services restart postgresql"
 
 ## InfluxDB
 alias influxdbcli="influx"
-function influxdbinit() { nohup influxd > /dev/null 2>&1 & ; }
-function influxdbstop() { pkill influxd ; }
-function influxdbrestart() {
-  influxdbstop
-  influxdbinit
-}
+function influxdbinit() { brew services run influxdb ; }
+function influxdbstop() { brew services stop influxdb ; }
+function influxdbrestart() { brew services restart influxdb ; }
 
 ## Zookeeper aliases
 ZOOKEEPER_URL="localhost:2181"
