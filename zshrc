@@ -226,6 +226,16 @@ function esport() {
     echo "$LOG_ERROR elastic search seems to not be running on port 9200 (or it might be just starting, try again?)"
   fi
 }
+function escheck() {
+  es_status=$(get http://localhost:9200/_cluster/health | jq -r '{message: .status} | "\(.message)"')
+  if [[ "$es_status" == "green" ]]; then
+    echo "Status: OK"
+  else
+    echo "$LOG_ERROR elastic search seems to not be running on port 9200 (or it might be just starting, try again?)"
+  fi
+}
+function escnf() { $EDITOR /usr/local/etc/elasticsearch/elasticsearch.yml ; }
+function esplugin() { /usr/local/opt/elasticsearch@5.6/libexec/bin/elasticsearch-plugin $@ ; }
 
 # Helper functions and aliases
 
