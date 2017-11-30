@@ -146,6 +146,12 @@ alias influxdbcli="influx"
 function influxdbinit() { brew services run influxdb ; }
 function influxdbstop() { brew services stop influxdb ; }
 function influxdbrestart() { brew services restart influxdb ; }
+# --- replicate influxdb aliases as influx
+alias influxcli="influxdbcli"
+function influxinit() { influxdbinit ; }
+function influxstop() { influxdbstop ; }
+function influxrestart() { influxdbrestart ; }
+
 
 ## Zookeeper aliases
 ZOOKEEPER_URL="localhost:2181"
@@ -459,6 +465,10 @@ alias editzshrc="$EDITOR $HOME/.zshrc"
 
 function check_mail() { $EDITOR /var/mail/$USER }
 function clear_mail() { sudo rm /var/mail/$USER }
+
+# Vim aliases
+alias vim_install_plugins="vim +PluginInstall +qall"
+alias vim_plugin_update=vim_install_plugins
 
 # HTTPie aliases
 alias get="http GET"

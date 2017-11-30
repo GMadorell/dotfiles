@@ -11,6 +11,7 @@ Plugin 'VundleVim/Vundle.vim' " Let Vundle manage itself, required
 Plugin 'derekwyatt/vim-scala'
 Plugin 'dracula/vim'
 Plugin 'GEverding/vim-hocon'
+Plugin 'terryma/vim-expand-region'
 
 
 " All of your Plugins must be added before the following line
