@@ -1,6 +1,6 @@
 # Language flags (set to 1 if you want language specific things to be loaded)
 PHP_MODE=0
-PYTHON_MODE=0
+PYTHON_MODE=1
 
 # Setup zsh with oh-my-zsh
 export ZSH=$HOME/.oh-my-zsh
@@ -72,22 +72,19 @@ bindkey -s "\C-r" "\eqhh\n"     # bind hh to Ctrl-r (for Vi mode check doc)
 if (($PYTHON_MODE)) ; then
   echo "$LOG_INFO Python mode enabled - setting up python related utilities…"
 
-  ## Virtualenvwrapper
-  mkdir -p $HOME/.envs
-  export WORKON_HOME=$HOME/envs
-  if [[ -s /usr/local/bin/virtualenvwrapper_lazy.sh ]] ; then
-    echo "$LOG_INFO Setting up virtualenvwrapper…"
-    source /usr/local/bin/virtualenvwrapper_lazy.sh ;
-  else
-    echo "$LOG_WARNING Virtualenvwrapper is not setup correctly"
-  fi
-
   ## Python specific aliases
   function nose_parallel() {
     # Nose is a testing framework for python
     twice_amount_of_cores="$(($(amount_of_cores) * 2))"
     nosetests --processes=${twice_amount_of_cores} --process-timeout=45
   }
+
+  function venvcreate() { conda create --name $1 python=3 ; }
+  function venvlist() { conda env list ; }
+  function venvactivate() { source activate $1 ; }
+  function venvdeactivate() { source deactivate $1 ; }
+  function venvinstall() { conda install $@ ; }
+  function venvshowinstalledpackages { conda list ; }
 fi
 
 # PHP setup
