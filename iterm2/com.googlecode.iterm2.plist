@@ -10,6 +10,8 @@
 	<integer>0</integer>
 	<key>AppleSmoothFixedFontsSizeThreshold</key>
 	<integer>1</integer>
+	<key>AppleWindowTabbingMode</key>
+	<string>manual</string>
 	<key>Custom Color Presets</key>
 	<dict>
 		<key>Dracula</key>
@@ -302,9 +304,9 @@
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>-1160 430 918 381 -1280 165 1280 777 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>358 -796 1280 772 358 -800 1280 777 </string>
+	<string>0 4 1920 1053 0 0 1920 1057 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>226 101 730 523 0 0 1920 1080 </string>
+	<string>104 129 1072 525 0 0 1280 777 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
 	<string>268 84 730 523 0 0 1920 1057 </string>
 	<key>NSWindow Frame iTerm Window 3</key>
@@ -1884,7 +1886,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2017-10-29T22:10:16Z</date>
+	<date>2017-12-12T15:30:19Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>Selection Respects Soft Boundaries</key>
@@ -1904,7 +1906,7 @@
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.1.0</string>
+	<string>3.1.5</string>
 	<key>kCPKSelectionViewPreferredModeKey</key>
 	<integer>1</integer>
 	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>

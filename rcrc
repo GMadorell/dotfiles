@@ -1,2 +1,2 @@
-EXCLUDES="jetbrains better-touch-tool iterm2 README.md"
+EXCLUDES="jetbrains better-touch-tool iterm2 README.md vimium"
 UNDOTTED="bin"

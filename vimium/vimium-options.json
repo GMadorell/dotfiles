@@ -1,0 +1,158 @@
+{
+  "settingsVersion": "1.62.4",
+  "exclusionRules": [
+    {
+      "pattern": "http*://mail.google.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "http://hackertyper.net/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "*ipynb*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "http://jspspemu.com/#http://iso.jspspemu.com/PuzzleBobble.iso",
+      "passKeys": ""
+    },
+    {
+      "pattern": "http://localhost:8888/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "http://127.0.0.1:8888/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "http://www.openvim.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "http://vim-adventures.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "http://screeps.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "http://www.int33h.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "http://coolwanglu.github.io/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://www.docker.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https://www.evernote.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://rogueskib.github.io/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://playcanv.as/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://www.tutorialspoint.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://hackertyper.net/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://fediafedia.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://fediafedia.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://www.komoroske.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://www.komoroske.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://www.komoroske.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://implicit.harvard.edu/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://implicit.harvard.edu/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://www.scalakata.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://www.scalakata.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://kibana.letgo.aws:5601/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://kibana.letgo.aws:5601/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://inbox.google.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://inbox.google.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://docs.google.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://docs.google.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://trello.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://trello.com/*",
+      "passKeys": ""
+    }
+  ],
+  "filterLinkHints": false,
+  "waitForEnterForFilteredHints": true,
+  "hideHud": false,
+  "keyMappings": "# Insert your preferred key mappings here.\nunmap x",
+  "linkHintCharacters": "sadfjklewcmpgh",
+  "linkHintNumbers": "0123456789",
+  "newTabUrl": "about:newtab",
+  "nextPatterns": "next,more,newer,>,›,→,»,≫,>>",
+  "previousPatterns": "prev,previous,back,older,<,‹,←,«,≪,<<",
+  "regexFindMode": false,
+  "ignoreKeyboardLayout": false,
+  "scrollStepSize": 60,
+  "smoothScroll": true,
+  "grabBackFocus": false,
+  "searchEngines": "w: https://www.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia\n\n# More examples.\n#\n# (Vimium supports search completion Wikipedia, as\n# above, and for these.)\n#\n# g: https://www.google.com/search?q=%s Google\n# l: https://www.google.com/search?q=%s&btnI I'm feeling lucky...\n# y: https://www.youtube.com/results?search_query=%s Youtube\n# gm: https://www.google.com/maps?q=%s Google maps\n# b: https://www.bing.com/search?q=%s Bing\n# d: https://duckduckgo.com/?q=%s DuckDuckGo\n# az: https://www.amazon.com/s/?field-keywords=%s Amazon\n# qw: https://www.qwant.com/?q=%s Qwant",
+  "searchUrl": "https://www.google.com/search?q=",
+  "userDefinedLinkHintCss": "div > .vimiumHintMarker {\n/* linkhint boxes */\nbackground: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFF785),\n  color-stop(100%,#FFC542));\nborder: 1px solid #E3BE23;\n}\n\ndiv > .vimiumHintMarker span {\n/* linkhint text */\ncolor: black;\nfont-weight: bold;\nfont-size: 12px;\n}\n\ndiv > .vimiumHintMarker > .matchingCharacter {\n}"
+}

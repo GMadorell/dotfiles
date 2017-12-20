@@ -85,6 +85,7 @@ if (($PYTHON_MODE)) ; then
   function venvdeactivate() { source deactivate $1 ; }
   function venvinstall() { conda install $@ ; }
   function venvshowinstalledpackages { conda list ; }
+  function venvremove() { conda remove --name $1 --all ; }
 fi
 
 # PHP setup
@@ -462,6 +463,9 @@ alias editzshrc="$EDITOR $HOME/.zshrc"
 
 function check_mail() { $EDITOR /var/mail/$USER }
 function clear_mail() { sudo rm /var/mail/$USER }
+
+function weather() { curl wttr.in/$1 ; }
+function weatherbcn() { weather barcelona ; }
 
 # Vim aliases
 alias vim_install_plugins="vim +PluginInstall +qall"
