@@ -68,6 +68,9 @@ export HISTFILE=~/.zsh_history  # ensure history file visibility
 export HH_CONFIG=hicolor,keywords,rawhistory
 bindkey -s "\C-r" "\eqhh\n"     # bind hh to Ctrl-r (for Vi mode check doc)
 
+# Direnv - environment variables switcher (similar to virtualenv)
+eval "$(direnv hook zsh)"
+
 # Python setup
 if (($PYTHON_MODE)) ; then
   echo "$LOG_INFO Python mode enabled - setting up python related utilities…"
@@ -483,10 +486,17 @@ alias suda=please
 # Command line arithmetic (ej:  `calculate 10 * 10`)
 function calculate () {
   comma_less_args=$(echo "$@" | sed "s/,//g")
-  bc -l <<< "scale=3; $comma_less_args"
+  answer=$(bc -l <<< "scale=3; $comma_less_args")
+  echo $answer
 }
 alias calc=calculate
 alias math=calculate
+
+function remove_decimals () { echo ${1%.*} ; }
+
+# Unit conversion
+function timestamp_to_date () { date -r $1 ; }
+function timestamp_in_millis_to_date () { timestamp_to_date $(remove_decimals $(calculate "$1 / 1000")); }
 
 ## GIT ALIASES AND HELPER FUNCTIONS
 alias git="hub"
