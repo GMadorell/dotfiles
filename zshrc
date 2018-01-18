@@ -498,6 +498,8 @@ function remove_decimals () { echo ${1%.*} ; }
 function timestamp_to_date () { date -u -r $1 ; }
 function timestamp_in_millis_to_date () { timestamp_to_date $(remove_decimals $(calculate "$1 / 1000")); }
 
+function clock_utc () { while :; do printf '%s\r' "$(date -u)"; sleep 1 ; done ; }
+
 ## GIT ALIASES AND HELPER FUNCTIONS
 alias git="hub"
 alias gp="git push"
