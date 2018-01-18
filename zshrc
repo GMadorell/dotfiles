@@ -495,7 +495,7 @@ alias math=calculate
 function remove_decimals () { echo ${1%.*} ; }
 
 # Unit conversion
-function timestamp_to_date () { date -r $1 ; }
+function timestamp_to_date () { date -u -r $1 ; }
 function timestamp_in_millis_to_date () { timestamp_to_date $(remove_decimals $(calculate "$1 / 1000")); }
 
 ## GIT ALIASES AND HELPER FUNCTIONS
