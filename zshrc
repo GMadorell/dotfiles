@@ -21,6 +21,11 @@ if [[ -s $HOME/.secrets ]] ; then source $HOME/.secrets ; fi
 export EDITOR='vim'
 
 
+# Brew constants
+export HOMEBREW_AUTO_UPDATE_SECS=14400
+
+
+
 # Logging constants
 export LOG_ERROR="[Error]"
 export LOG_WARNING="[Warning]"
@@ -36,6 +41,10 @@ set_window_title_to_collapsed_pwd() {
   echo -ne "$window_title"
 }
 precmd_functions+=(set_window_title_to_collapsed_pwd)
+
+## Add function to evaluate bash's PROMPT_COMMAND variable
+prmptcmd() { eval "$PROMPT_COMMAND" }
+precmd_functions+=(prmptcmd)
 
 ## Autocomplete setup
 zstyle ':completion:*' verbose yes
@@ -81,6 +90,8 @@ if (($PYTHON_MODE)) ; then
     twice_amount_of_cores="$(($(amount_of_cores) * 2))"
     nosetests --processes=${twice_amount_of_cores} --process-timeout=45
   }
+  
+  source `which conda_auto_env.sh`
 
   function venvcreate() { conda create --name $1 python=3 ; }
   function venvlist() { conda env list ; }
@@ -396,6 +407,9 @@ function ls_grep() {
 alias lg="ls_grep"
 alias lsg="ls_grep"
 
+# File browser
+alias dir="ranger"
+
 
 # Display current load status
 alias mntr="gtop"
@@ -423,6 +437,7 @@ alias .6="cd ......."
 alias .7="cd ........"
 alias cdp="cd ~/projects/"
 alias cddownloads="cd ~/downloads/"
+alias cdh="cd $HOME"
 
 alias cl="printf \"\033c\""
 
@@ -485,19 +500,21 @@ alias suda=please
 
 # Command line arithmetic (ej:  `calculate 10 * 10`)
 function calculate () {
-  comma_less_args=$(echo "$@" | sed "s/,//g")
-  answer=$(bc -l <<< "scale=3; $comma_less_args")
+  cleaned_args=$(echo "$@" | sed "s/,//g")
+  answer=$(bc -l <<< "scale=3; $cleaned_args")
   echo $answer
 }
 alias calc=calculate
 alias math=calculate
+alias m=calculate
 
 function remove_decimals () { echo ${1%.*} ; }
 
-# Unit conversion
+# Time and date
+function timestamp () { date +%s ; }
+function timestamp_milliseconds() { calculate "$(timestamp) * 1000" ; }
 function timestamp_to_date () { date -u -r $1 ; }
 function timestamp_in_millis_to_date () { timestamp_to_date $(remove_decimals $(calculate "$1 / 1000")); }
-
 function clock_utc () { while :; do printf '%s\r' "$(date -u)"; sleep 1 ; done ; }
 
 ## GIT ALIASES AND HELPER FUNCTIONS
@@ -654,3 +671,7 @@ function gmerge_master { git merge master ; }
 alias gmum=gmerge_upstream_master
 function gabort_merge { git merge --abort ; }
 function gmerge_abort { git merge --abort ; }
+
+# Unset some aliases that are included by default in zsh
+unalias grv
+
