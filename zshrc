@@ -1,5 +1,5 @@
 # Language flags (set to 1 if you want language specific things to be loaded)
-PHP_MODE=0
+PHP_MODE=1
 PYTHON_MODE=1
 
 # Setup zsh with oh-my-zsh
@@ -9,7 +9,8 @@ ZSH_THEME=ukelele
 
 plugins=(git gitfast git-extras colored-man colorize brew osx zsh-autosuggestions zsh-syntax-highlighting)
 
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/bin:$PATH"
+export PATH="/usr/bin:/usr/local/sbin:/usr/local/bin:bin:/usr/sbin:/sbin:$HOME/bin:$PATH"
+export PATH="$(brew --prefix php\@7.0)/bin:$PATH"
 export PATH="$HOME/anaconda/bin:$PATH"
 export PATH="$HOME/miniconda3/bin:$PATH"
 export MANPATH="/usr/local/man:$MANPATH"
@@ -107,14 +108,6 @@ if (($PHP_MODE)) ; then
   DEFAULT_PHP_VERSION="7"
   echo "$LOG_INFO PHP mode enabled - setting up PHP related utilities…"
 
-  ## Php-version setup
-  if [[ -s $(brew --prefix php-version)/php-version.sh ]] ; then
-    echo "$LOG_INFO Using default php-version: $DEFAULT_PHP_VERSION"
-    source $(brew --prefix php-version)/php-version.sh && php-version $DEFAULT_PHP_VERSION
-  else
-    echo "$LOG_WARNING php-version is not setup correctly"
-  fi
-
   ## Php specific aliases
   function php_find_ini() { php --ini ; }
   function phpunit { bin/phpunit ; }
@@ -196,9 +189,9 @@ function kafka_create_topic() {
 }
 
 # RabbitMQ aliases
-function rabbitinit() { rabbitmq-server run -detached; }
-function rabbitstop() { rabbitmqctl stop; }
-function rabbitrestart() { rabbitstop && rabbitstart; }
+function rabbitinit() { brew services run rabbitmq ; }
+function rabbitstop() { brew services stop rabbitmq ; }
+function rabbitrestart() { brew services restart rabbitmq ; }
 function rabbit_list_queues() { rabbitmqadmin list queues ; }
 function rabbitcheck() { rabbit_list_queues ; }
 
@@ -352,15 +345,35 @@ function find_by_name_globally() {
   fi
 }
 alias find_global="find_by_name_globally"
+alias search_global="find_by_name_globally"
 
-function fuzzyfind() { fzf --height 40% ; }
-alias filefind=fuzzyfind
-alias ff=fuzzyfind
-alias fzfind=fuzzyfind
-alias fuzzysearch=fuzzyfind
+
+function searchfaq() { 
+  FAQ=$(cat <<-END
+SEARCH HELP
+=================================
+- fs (filesearch): search for a file with given substring in current directory tree
+    ej: fs email
+- fzs (fuzzysearch): search for a file with given string structure in current directory tree
+    ej: fzs
+- fzo (fuzzyopen): search and open a file, fuzzily
+    ej: fzo
+- sic (search_in_content): search inside file contents
+    ej: sic email 
+- search_global: search files globally by name
+    ej: search_global my.cnf
+END
+  )
+  echo "$FAQ"
+}
+
+function filesearch() { find . | grep $1 ; }
+alias fs=filesearch
+
+function fuzzysearch() { fzf --height 40% ; }
 alias fzsearch=fuzzysearch
 alias fzs=fuzzysearch
-alias fs=fuzzysearch
+
 function fuzzyopen() {
   local find_result=$(fuzzyfind)
   if [[ ! -z "$find_result" ]]; then
@@ -371,12 +384,10 @@ function fuzzyopen() {
 alias fzopen=fuzzyopen
 alias fzo=fuzzyopen
 
-function search_in_files() { rg $1 ; }
-alias sif=search_in_files
-alias search_in_content=search_in_files
-alias search_content=search_in_files
-alias searchcontent=search_in_files
-alias sic=search_in_files
+function search_in_content() { rg $1 ; }
+alias search_content=search_in_content
+alias searchcontent=search_in_content
+alias sic=search_in_content
 
 # Hardware related
 ## Battery status
