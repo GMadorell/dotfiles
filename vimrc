@@ -21,3 +21,8 @@ filetype plugin indent on
 
 syntax on
 color dracula
+
+
+" Commands
+"" Json Formatting
+com! FormatJSON %!python -m json.tool

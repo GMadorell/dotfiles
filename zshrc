@@ -7,7 +7,7 @@ export ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME=ukelele
 
-plugins=(git gitfast git-extras colored-man colorize brew osx zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git gitfast git-extras colored-man colorize brew osx zsh-autosuggestions zsh-syntax-highlighting ssh-agent)
 
 export PATH="/usr/bin:/usr/local/sbin:/usr/local/bin:bin:/usr/sbin:/sbin:$HOME/bin:$PATH"
 export PATH="$(brew --prefix php\@7.0)/bin:$PATH"
@@ -117,6 +117,9 @@ if (($PHP_MODE)) ; then
   function fix_php_changed_files { gchanged_files | grep .php | xargs phpcbf --standard=PSR2 ; }
 fi
 
+# Scala setup
+function kill_sbt() { ps aux | grep java | grep bin/sbt-launch.jar | awk '{print $2}' | xargs kill -9 ; }
+
 
 
 # Service aliases
@@ -133,9 +136,9 @@ Standard is:
 '
 ## MySQL
 alias mycli="mycli"
-alias myinit="brew services run mysql"
-alias mystop="brew services stop mysql"
-alias myrestart="brew services restart mysql"
+alias myinit="brew services run mysql@5.7"
+alias mystop="brew services stop mysql@5.7"
+alias myrestart="brew services restart mysql@5.7"
 alias mycheck="mysql.server status"
 alias myversion="mysql --version"
 alias mycnf="$EDITOR /usr/local/etc/my.cnf"
@@ -262,6 +265,11 @@ function assert_internet_connectivity {
       echo "Internet seems to be down, aborting..."
       kill -INT $$
   fi
+}
+
+function restart_networking {
+  sudo ifconfig en0 down
+  sudo ifconfig en0 up
 }
 
 function extract {
@@ -681,8 +689,3 @@ function gmerge_upstream_master { git merge upstream/master ; }
 function gmerge_master { git merge master ; }
 alias gmum=gmerge_upstream_master
 function gabort_merge { git merge --abort ; }
-function gmerge_abort { git merge --abort ; }
-
-# Unset some aliases that are included by default in zsh
-unalias grv
-
