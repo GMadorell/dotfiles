@@ -11,11 +11,14 @@ Hello! Welcome to where I store my configuration files!
 
 Some configuration files need extra work though!
 
+### Brew
+Execute `brew bundle install Brewfile`, or `brew bundle dump` for exporting.
+
 ### Jetbrains IDEs (IntelliJ, PyCharm, PhpStorm, Datagrip, etc)
 Import the jars inside the ide `file -> import settings`
 
 ### Better touch tool
-Import inside the program
+Import inside the program (click on manage presets for exporting / importing).
 
 ### Iterm2
 Thanks to: http://stratus3d.com/blog/2015/02/28/sync-iterm2-profile-with-dotfiles-repository/
