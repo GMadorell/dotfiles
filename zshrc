@@ -9,13 +9,15 @@ ZSH_THEME=ukelele
 
 plugins=(git gitfast git-extras colored-man colorize brew osx zsh-autosuggestions zsh-syntax-highlighting ssh-agent)
 
-export PATH="/usr/bin:/usr/local/sbin:/usr/local/bin:bin:/usr/sbin:/sbin:$HOME/bin:$PATH"
+export PATH="/usr/local/sbin:/usr/local/bin:bin:/usr/sbin:/sbin:$HOME/bin:/usr/bin:$PATH"
 export PATH="$(brew --prefix php\@7.0)/bin:$PATH"
 export PATH="$HOME/anaconda/bin:$PATH"
 export PATH="$HOME/miniconda3/bin:$PATH"
 export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 if [[ -s $HOME/.secrets ]] ; then source $HOME/.secrets ; fi
 
@@ -23,7 +25,7 @@ export EDITOR='vim'
 
 
 # Brew constants
-export HOMEBREW_AUTO_UPDATE_SECS=14400
+export HOMEBREW_AUTO_UPDATE_SECS=25200
 
 
 
@@ -92,8 +94,6 @@ if (($PYTHON_MODE)) ; then
     nosetests --processes=${twice_amount_of_cores} --process-timeout=45
   }
   
-  source `which conda_auto_env.sh`
-
   function venvcreate() { conda create --name $1 python=3 ; }
   function venvlist() { conda env list ; }
   function venvactivate() { source activate $1 ; }
@@ -216,6 +216,11 @@ function docker_connect() {
   container=$(docker ps | awk '{if (NR!=1) print $1 ": " $(NF)}' | percol --prompt='<green>Select the container:</green> %q')
   container_id=$(echo $container | awk -F ': ' '{print $1}')
   docker exec -i -t $container_id /bin/bash
+}
+
+function dps() {
+  docker ps -a --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}" \
+     | awk 'NR == 1; NR > 1 { print $0 | "sort" }';
 }
 
 # Apache
@@ -425,6 +430,7 @@ function ls_grep() {
 }
 alias lg="ls_grep"
 alias lsg="ls_grep"
+alias lsh="ls -human"
 
 # File browser
 alias dir="ranger"
@@ -569,6 +575,9 @@ alias gfetch="git fetch"
 alias gfa="git fetch --all"
 alias gfu="git fetch upstream"
 alias gfupstream="git fetch upstream"
+
+alias gfom="git fetch origin && git merge origin/master"
+alias gfor="git fetch origin && git rebase origin/master"
 
 alias gpl="git pull"
 alias gplr="git pull --rebase"

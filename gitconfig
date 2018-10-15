@@ -14,7 +14,7 @@
 [credential]
 	helper = osxkeychain
 [core]
-	excludesfile = /Users/gerardmadorell/.gitignore_global
+	excludesfile = /Users/gerard.madorell/.gitignore_global
 [filter "lfs"]
 	clean = git-lfs clean %f
 	smudge = git-lfs smudge %f
@@ -27,6 +27,4 @@
 	branch = false
 [diff]
 	compactionHeuristic = true
-
-[init]
-	templatedir = ~/.git-templates
+	noprefix = false
