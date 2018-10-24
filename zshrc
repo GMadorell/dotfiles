@@ -659,13 +659,9 @@ function git_branch_rename_local() {
 }
 alias gbrename=git_branch_rename_local
 alias grename_branch=git_branch_rename_local
-function gbset_remote_to() {
-  # $1 expected to be of the form remote/branch
-  if [ $# -eq 1 ]; then
-      git branch "$gcurrent_branch_name" --set-upstream-to $1
-  else
-      echo "$LOG_ERROR gbset_remote_to accepts a single parameter only (the remote)"
-  fi
+function gbset_upstream_to_same_branch_in_origin() {
+  current_branch_name=$(gcurrent_branch_name)
+  git branch --set-upstream-to=origin/$current_branch_name $current_branch_name
 }
 
 alias gc="git commit"
