@@ -566,7 +566,7 @@ alias gck_unstaged="git checkout -- ."
 alias gckunstaged="git checkout -- ."
 function gckl() {
   percol_branch_selection=$(git branch -a | percol --prompt='<green>Select branch to checkout:</green> %q')
-  branch=$(echo $percol_branch_selection | trim " *" | sed 's/^remotes\/.*\///')
+  branch=$(echo $percol_branch_selection | sed 's/^[ |\*]*//' | sed 's/^remotes\/.*\///')
   git checkout $branch
 }
 
