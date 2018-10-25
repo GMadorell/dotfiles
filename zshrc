@@ -464,6 +464,25 @@ alias cdp="cd ~/projects/"
 alias cddownloads="cd ~/downloads/"
 alias cdh="cd $HOME"
 
+# Regex functions
+function regex_escape() {
+  python -c "import re; print(re.escape('$1'))"
+}
+
+# String manipulation
+function ltrim() {
+  if [ $# -eq 1 ]; then
+    escaped_input=$(regex_escape $1)
+    while read line; do
+      echo $line | sed "s/^$escaped_input*//"
+    done
+  elif [ $# -eq 2 ]; then
+    echo "$1" | ltrim "$2"
+  else
+    echo "$LOG_ERROR ltrim needs either two args (first one string to trim, second one char to trim) or a single arg (will trim the string consumed from stdin with given char)"
+  fi
+}
+
 alias cl="printf \"\033c\""
 
 alias h="history"
@@ -564,9 +583,9 @@ alias gckmine="git checkout --ours" # Checkout the file I already had (compared 
 alias gdiscard_unstaged="git checkout -- ."
 alias gck_unstaged="git checkout -- ."
 alias gckunstaged="git checkout -- ."
-function gckl() {
+function function gckl() {
   percol_branch_selection=$(git branch -a | percol --prompt='<green>Select branch to checkout:</green> %q')
-  branch=$(echo $percol_branch_selection | sed 's/^[ |\*]*//' | sed 's/^remotes\/.*\///')
+  branch=$(echo $percol_branch_selection | ltrim "*" | ltrim " " | sed 's/^remotes\/.*\///')
   git checkout $branch
 }
 
