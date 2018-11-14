@@ -53,6 +53,19 @@ precmd_functions+=(prmptcmd)
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' group-name ''
 
+### Hotfix for slow paste of huge texts - see https://github.com/zsh-users/zsh-autosuggestions/issues/238#issuecomment-389324292
+pasteinit() {
+  OLD_SELF_INSERT=${${(s.:.)widgets[self-insert]}[2,3]}
+  zle -N self-insert url-quote-magic # I wonder if you'd need `.url-quote-magic`?
+}
+
+pastefinish() {
+  zle -N self-insert $OLD_SELF_INSERT
+}
+zstyle :bracketed-paste-magic paste-init pasteinit
+zstyle :bracketed-paste-magic paste-finish pastefinish
+### /Hotfix
+
 ## Keybindings- Bindkeys - type 'bindkey' in terminal to check for keyboard shortcuts
 bindkey ^A beginning-of-line         # Ctrl+A for moving to beggining
 bindkey ^S backward-word             # Ctrl+S for moving a word backward
