@@ -1,0 +1,45 @@
+#!/usr/bin/python
+import sys
+
+args = sys.argv[1:]
+
+
+def format_case_class(raw_text):
+    output = ""
+    identation_level = 0
+    for character in raw_text:
+        if character == "(":
+            output += "("
+            identation_level += 1
+            output = output + "\n" + (" " * identation_level)
+        elif character == ")":
+            identation_level -= 1
+            output = output + "\n" + (" " * identation_level)
+            output += ")"
+        elif character == ",":
+            output += ","
+            output = output + "\n" + (" " * identation_level)
+        else:
+            output += character
+    return output
+
+
+if len(args) == 1:
+    scalatest_output = args[0]
+    splited = scalatest_output.split("did not equal") 
+    import difflib
+    
+    expected = splited[0].rstrip()
+    actual = splited[1].lstrip()
+    
+    expected_formatted = format_case_class(expected)
+    actual_formatted = format_case_class(actual)
+
+    expected_split = expected_formatted.splitlines(1)
+    actual_split = actual_formatted.splitlines(1)
+
+    diff=difflib.ndiff(expected_split, actual_split)
+
+    print(''.join(diff))
+else:
+    print("WTF")
