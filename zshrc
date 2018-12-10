@@ -450,7 +450,7 @@ alias dir="ranger"
 
 
 # Display current load status
-alias mntr="gtop"
+alias mntr="glances"
 alias monitor="mntr"
 
 alias clean="clear"
