@@ -28,3 +28,5 @@
 [diff]
 	compactionHeuristic = true
 	noprefix = false
+[rerere]
+	enabled = true

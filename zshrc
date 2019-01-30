@@ -1,6 +1,6 @@
 # Language flags (set to 1 if you want language specific things to be loaded)
-PHP_MODE=1
-PYTHON_MODE=1
+PHP_MODE=0
+PYTHON_MODE=0
 
 # Setup zsh with oh-my-zsh
 export ZSH=$HOME/.oh-my-zsh
@@ -10,7 +10,6 @@ ZSH_THEME=ukelele
 plugins=(git gitfast git-extras colored-man colorize brew osx zsh-autosuggestions zsh-syntax-highlighting ssh-agent)
 
 export PATH="/usr/local/sbin:/usr/local/bin:bin:/usr/sbin:/sbin:$HOME/bin:/usr/bin:$PATH"
-export PATH="$(brew --prefix php\@7.0)/bin:$PATH"
 export PATH="$HOME/anaconda/bin:$PATH"
 export PATH="$HOME/miniconda3/bin:$PATH"
 export MANPATH="/usr/local/man:$MANPATH"
@@ -95,6 +94,9 @@ bindkey -s "\C-r" "\eqhh\n"     # bind hh to Ctrl-r (for Vi mode check doc)
 
 # Direnv - environment variables switcher (similar to virtualenv)
 eval "$(direnv hook zsh)"
+
+# Fix command line mistakes (write fuck after failing something)
+eval $(thefuck --alias)
 
 # Python setup
 if (($PYTHON_MODE)) ; then
@@ -359,7 +361,8 @@ function mkcdir() {
     mkdir -p "$1" && cd "$1"
 }
 
-function uuidcp() { uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]'  | pbcopy && pbpaste && echo ; }
+function randomuuid() {	echo $(uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]') ; }
+function uuidcp() { randomuuid | tr -d '\n' | pbcopy && pbpaste && echo ; }
 
 
 # Find / Search files or file contents related
@@ -589,6 +592,7 @@ alias gpnohooks="git push --no-verify"
 alias gpn="git push --no-verify"
 
 alias gck="git checkout"
+alias gckm="git checkout master"
 alias gckb="git checkout -b"
 alias gckt="git checkout --theirs"
 alias gcko="git checkout --ours"
