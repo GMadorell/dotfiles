@@ -366,57 +366,60 @@ function uuidcp() { randomuuid | tr -d '\n' | pbcopy && pbpaste && echo ; }
 
 
 # Find / Search files or file contents related
-function find_by_name_globally() {
-  if [ $# -eq 1 ]; then
-    sudo find / -iname "$1"
-  else
-      echo "$LOG_ERROR find_by_name_globally accepts a single parameter only (what to find for)"
-  fi
-}
-alias find_global="find_by_name_globally"
-alias search_global="find_by_name_globally"
-
-
 function searchfaq() { 
   FAQ=$(cat <<-END
 SEARCH HELP
 =================================
 - fs (filesearch): search for a file with given substring in current directory tree
-    ej: fs email
-- fzs (fuzzysearch): search for a file with given string structure in current directory tree
-    ej: fzs
-- fzo (fuzzyopen): search and open a file, fuzzily
-    ej: fzo
-- sic (search_in_content): search inside file contents
-    ej: sic email 
-- search_global: search files globally by name
-    ej: search_global my.cnf
+    ej: fs
+    ej: fs email 
+- fso (file search and open): search and open a file
+    ej: fso
+    ej: fso email
+- fsc (file search inside contents): search inside file contents for a given string
+    ej: fsc email
+- fsg (file search globally by name)
+    ej: fsg my.cnf
+
+- fd: use it to find files (output as a list)
 END
   )
   echo "$FAQ"
 }
 
-function filesearch() { find . | grep $1 ; }
+export FZF_DEFAULT_COMMAND='fd --type f'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+function filesearch() { 
+  if [ $# -eq 1 ]; then
+    fzf --height 40% -q $1
+  else
+    fzf --height 40% 
+  fi
+}
 alias fs=filesearch
 
-function fuzzysearch() { fzf --height 40% ; }
-alias fzsearch=fuzzysearch
-alias fzs=fuzzysearch
-
-function fuzzyopen() {
-  local find_result=$(fuzzyfind)
+function search_and_open() {
+  local find_result=$(fs)
   if [[ ! -z "$find_result" ]]; then
     $EDITOR $find_result
     echo "File opened: $find_result"
   fi
 }
-alias fzopen=fuzzyopen
-alias fzo=fuzzyopen
+alias fso=search_and_open
 
 function search_in_content() { rg $1 ; }
-alias search_content=search_in_content
-alias searchcontent=search_in_content
-alias sic=search_in_content
+alias fsc=search_in_content
+
+function find_by_name_globally() {
+  if [ $# -eq 1 ]; then
+    fd -HI "$1" / | fzf
+  else
+      echo "$LOG_ERROR find_by_name_globally accepts a single parameter only (what to find for)"
+  fi
+}
+alias fsg="find_by_name_globally"
+
 
 # Hardware related
 ## Battery status

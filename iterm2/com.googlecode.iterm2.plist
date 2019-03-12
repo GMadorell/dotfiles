@@ -509,9 +509,9 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>269 126 606 469 0 0 2560 1440 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>739 986 770 429 0 0 2560 1418 </string>
+	<string>231 1436 918 514 -240 900 1920 1080 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 7 1920 886 0 0 1440 900 </string>
+	<string>0 725 1279 715 0 0 2560 1440 </string>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -1140,7 +1140,7 @@
 				<key>editor</key>
 				<string>com.sublimetext.3</string>
 				<key>text</key>
-				<string>/Users/gerardmadorell/bin/iterm_open_with \1 \5</string>
+				<string>/Users/gerard.madorell/bin/iterm_open_with \1 \5</string>
 			</dict>
 			<key>Send Code When Idle</key>
 			<false/>
@@ -1940,6 +1940,8 @@
 			<string>/Users/gerardmadorell</string>
 		</dict>
 	</array>
+	<key>NoSyncHaveRequestedFullDiskAccess</key>
+	<true/>
 	<key>NoSyncHaveUsedCopyMode</key>
 	<true/>
 	<key>NoSyncHaveWarnedAboutPasteConfirmationChange</key>
@@ -2002,7 +2004,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2018-11-17T03:53:39Z</date>
+	<date>2019-01-31T13:45:53Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>Selection Respects Soft Boundaries</key>
@@ -2028,7 +2030,7 @@
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.2.5</string>
+	<string>3.2.7</string>
 	<key>kCPKSelectionViewPreferredModeKey</key>
 	<integer>1</integer>
 	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>
