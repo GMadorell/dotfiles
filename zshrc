@@ -7,16 +7,16 @@ export ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME=ukelele
 
-plugins=(git gitfast git-extras colored-man colorize brew osx zsh-autosuggestions zsh-syntax-highlighting ssh-agent)
+plugins=(zsh-autosuggestions ssh-agent zsh-syntax-highlighting)
 
-export PATH="/usr/local/sbin:/usr/local/bin:bin:/usr/sbin:/sbin:$HOME/bin:/usr/bin:$PATH"
+export GOPATH="$HOME/golang_workspace"
+export PATH="/usr/local/sbin:/usr/local/bin:bin:/usr/sbin:/sbin:$HOME/bin:/usr/bin:$GOPATH/bin:$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/anaconda/bin:$PATH"
 export PATH="$HOME/miniconda3/bin:$PATH"
+export DOTFILES_PATH="$HOME/.dotfiles"
 export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
-source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 if [[ -s $HOME/.secrets ]] ; then source $HOME/.secrets ; fi
 
@@ -25,6 +25,9 @@ export EDITOR='vim'
 
 # Brew constants
 export HOMEBREW_AUTO_UPDATE_SECS=25200
+export HOMEBREW_NO_ANALYTICS=true
+export HOMEBREW_INSTALL_BADGE="(ʘ‿ʘ)"
+export HOMEBREW_BUNDLE_FILE_PATH=${DOTFILES_PATH}/Brewfile
 
 
 
@@ -343,6 +346,10 @@ function subtitles_dir() {
   fi
 }
 
+function benchmark_shell() {
+  for i in $(seq 1 10); do /usr/bin/time $SHELL -i -c exit; done
+}
+
 ## Get .gitignore info easily - ej: gi python,java,linux,osx
 function fetch_gitignore() {
     curl -L -s https://www.gitignore.io/api/$@ | sed '/^# Created/ d' | sed '/./,$!d' | sed $'1s/^/\\\n/'
@@ -363,7 +370,6 @@ function mkcdir() {
 
 function randomuuid() {	echo $(uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]') ; }
 function uuidcp() { randomuuid | tr -d '\n' | pbcopy && pbpaste && echo ; }
-
 
 # Find / Search files or file contents related
 function searchfaq() { 
@@ -453,6 +459,10 @@ alias lsh="ls -human"
 
 # File browser
 alias dir="ranger"
+
+
+# Visual Studio Code Editor Related
+alias vscode="code"
 
 
 # Display current load status
@@ -604,7 +614,7 @@ alias gdiscard_unstaged="git checkout -- ."
 alias gck_unstaged="git checkout -- ."
 alias gckunstaged="git checkout -- ."
 function function gckl() {
-  percol_branch_selection=$(git branch -a | percol --prompt='<green>Select branch to checkout:</green> %q')
+  percol_branch_selection=$(git branch --sort=-committerdate -a | percol --prompt='<green>Select branch to checkout:</green> %q')
   branch=$(echo $percol_branch_selection | ltrim "*" | ltrim " " | sed 's/^remotes\/.*\///')
   git checkout $branch
 }
