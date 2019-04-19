@@ -748,3 +748,30 @@ function gmerge_upstream_master { git merge upstream/master ; }
 function gmerge_master { git merge master ; }
 alias gmum=gmerge_upstream_master
 function gabort_merge { git merge --abort ; }
+
+function git_integrate() {
+  local starting_branch=$(gbname)
+  local oldest_commit=$(gl | percol --prompt="select OLDEST commit to pick for cherry-pick" | trim "*" | trim " " | cut -d " " -f1)
+  local most_recent_commit=$(gl | percol --prompt="select MOST RECENT commit to pick for cherry-picking (first one was $oldest_commit)" | trim "*" | trim " " | cut -d " " -f1)
+  vared -p 'Input branch name for the new branch to be created: ' -c branch_name
+
+  echo ">>>>>> Checking out master and getting it updated..."
+  git checkout master
+  git pull
+  echo ">>>>>> Done!"
+
+  echo " "
+
+  echo ">>>>>> Checking out a new branch called '$branch_name', cherry-picking and pushing it..."
+  git checkout -b $branch_name
+  git cherry-pick $oldest_commit^..$most_recent_commit
+  git push
+  echo ">>>>>> Done!"
+
+  echo " "
+
+  echo ">>>>>> Going back to the original branch, which was '$starting_branch'"
+  git checkout $starting_branch
+
+  echo ">>>>>> We're finished, thanks for doing a small pull request!"
+}
