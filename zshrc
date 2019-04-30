@@ -581,6 +581,12 @@ alias calc=calculate
 alias math=calculate
 alias m=calculate
 
+function convert_units() {
+  local help="Eg: convert_units 3600 seconds hours"
+  units "$1 $2" $3    
+}
+alias unit_conversion=convert_units
+
 function remove_decimals () { echo ${1%.*} ; }
 
 # Time and date
@@ -645,8 +651,11 @@ alias gprune="grp"
 alias grinfo="git remote | xargs git remote show"
 alias grshow_all="grinfo"
 alias grmmerged="git branch --merged master | grep -v 'master$' | xargs git branch -d"  # Remove local branches that have already been merged into master
-alias gprune_and_remove_merged="gprune && grmmerged"
-alias gmaintenance="gprune && grmmerged"
+function gmaintenance() {
+  gprune --dry-run | grep "\[would prune\]" | ltrim " " | ltrim "* [would prune] origin/" | git_branch_exists_filter | xargs git branch -D
+  gprune
+  grmmerged
+}
 
 function gcurrent_branch_name() { git rev-parse --abbrev-ref HEAD ; }
 alias git_branch_name=gcurrent_branch_name
@@ -661,6 +670,7 @@ alias gnevermind="git nevermind"  # Remove all the changes you've made
 
 alias gstash="git stash"
 function gstash_list() { git stash list ; }
+alias gsl=gstash_list
 function gstash_clear() { git stash clear ; }
 function gstashs() {
   if [ $# -eq 1 ]; then
@@ -712,6 +722,20 @@ function gbset_upstream_to_same_branch_in_origin() {
   current_branch_name=$(gcurrent_branch_name)
   git branch --set-upstream-to=origin/$current_branch_name $current_branch_name
 }
+function git_branch_exists_filter() {
+  # Function meant to be used as unix pipes filter (reading from stdin)
+  # input = branch names
+  # output = same branch name if exists, nothing (no output) if it does not
+  while IFS= read -r line; do
+    local trimmed=$(echo $line | tr -d '\n')
+    git rev-parse --verify $trimmed &> /dev/null
+    if [[ $? == 0 ]]; then
+      echo "$trimmed"
+    fi
+  done
+}
+
+
 
 alias gc="git commit"
 alias gca="gc --amend"
@@ -764,7 +788,7 @@ function git_integrate() {
 
   echo ">>>>>> Checking out a new branch called '$branch_name', cherry-picking and pushing it..."
   git checkout -b $branch_name
-  git cherry-pick $oldest_commit^..$most_recent_commit
+  git cherry-pick "$oldest_commit^..$most_recent_commit"
   git push
   echo ">>>>>> Done!"
 
@@ -775,3 +799,4 @@ function git_integrate() {
 
   echo ">>>>>> We're finished, thanks for doing a small pull request!"
 }
+alias gintegrate=git_integrate
