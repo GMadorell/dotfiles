@@ -619,8 +619,13 @@ alias gckmine="git checkout --ours" # Checkout the file I already had (compared 
 alias gdiscard_unstaged="git checkout -- ."
 alias gck_unstaged="git checkout -- ."
 alias gckunstaged="git checkout -- ."
-function function gckl() {
+function function gckl_all() {
   percol_branch_selection=$(git branch --sort=-committerdate -a | percol --prompt='<green>Select branch to checkout:</green> %q')
+  branch=$(echo $percol_branch_selection | ltrim "*" | ltrim " " | sed 's/^remotes\/.*\///')
+  git checkout $branch
+}
+function gckl() {
+  percol_branch_selection=$(git branch --sort=-committerdate | percol --prompt='<green>Select branch to checkout:</green> %q')
   branch=$(echo $percol_branch_selection | ltrim "*" | ltrim " " | sed 's/^remotes\/.*\///')
   git checkout $branch
 }
