@@ -11,6 +11,7 @@ Expected call is something like:
 import sys
 import subprocess
 from subprocess import Popen, PIPE, STDOUT
+import datetime
 
 args = sys.argv[1:]
 
@@ -21,11 +22,13 @@ PHPSTORM_EXTENSIONS = ["php", "feature"]
 INTELLIJ_IDEA_EXTENSIONS = ["scala", "java", "clj"]
 VIDEO_EXTENSIONS = ["mkv", "mp4", "avi"]
 
-with open("/var/log/iterm_open_with.log", "w") as log_file:
-    log_file.write("\n>>>> New execution\n")
+with open("/var/log/iterm_open_with.log", "a+") as log_file:
+    log_file.write("\n>>>> New execution - {0}\n".format(datetime.datetime.now()))
     log_file.write("filename: {0}, pwd: {1}\n".format(filename, pwd))
 
     extension = filename.split(".")[-1]
+
+    log_file.write("extension detected: {0}\n".format(extension))
 
     if extension in PHPSTORM_EXTENSIONS:
         cmd = ["/usr/local/bin/pstorm", filename]
@@ -34,8 +37,9 @@ with open("/var/log/iterm_open_with.log", "w") as log_file:
     elif extension in VIDEO_EXTENSIONS:
         cmd = ["/usr/local/bin/vlc", filename]
     else:
-        cmd = ["/usr/local/bin/atom", filename]
+        cmd = ["/usr/local/bin/code", filename]
 
+    log_file.write("executing cmd: {0}".format(cmd))
     p = Popen(cmd, shell=False, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
     output = p.stdout.read()
     log_file.write(str(output))

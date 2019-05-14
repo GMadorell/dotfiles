@@ -1,6 +1,6 @@
 # Language flags (set to 1 if you want language specific things to be loaded)
 PHP_MODE=0
-PYTHON_MODE=0
+PYTHON_MODE=1
 
 # Setup zsh with oh-my-zsh
 export ZSH=$HOME/.oh-my-zsh
@@ -119,6 +119,9 @@ if (($PYTHON_MODE)) ; then
   function venvinstall() { conda install $@ ; }
   function venvshowinstalledpackages { conda list ; }
   function venvremove() { conda remove --name $1 --all ; }
+
+  # Python setup
+  source `which conda_autoenv.sh`
 fi
 
 # PHP setup
@@ -456,6 +459,10 @@ function ls_grep() {
 alias lg="ls_grep"
 alias lsg="ls_grep"
 alias lsh="ls -human"
+function lscd() {
+  local chosen_directory=$(ls | percol --prompt='<green>Select directory to cd into:</green> %q') 
+  cd "$chosen_directory"
+}
 
 # File browser
 alias dir="ranger"
@@ -503,7 +510,7 @@ function ltrim() {
   if [ $# -eq 1 ]; then
     escaped_input=$(regex_escape $1)
     while read line; do
-      echo $line | sed "s/^$escaped_input*//"
+      echo $line | sed "s~^$escaped_input*~~"
     done
   elif [ $# -eq 2 ]; then
     echo "$1" | ltrim "$2"
