@@ -9,6 +9,7 @@ ZSH_THEME=ukelele
 
 plugins=(zsh-autosuggestions ssh-agent zsh-syntax-highlighting)
 
+# Path manipulation
 export GOPATH="$HOME/golang_workspace"
 export PATH="/usr/local/sbin:/usr/local/bin:bin:/usr/sbin:/sbin:$HOME/bin:/usr/bin:$GOPATH/bin:$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/anaconda/bin:$PATH"
@@ -19,6 +20,14 @@ export MANPATH="/usr/local/man:$MANPATH"
 source $ZSH/oh-my-zsh.sh
 
 if [[ -s $HOME/.secrets ]] ; then source $HOME/.secrets ; fi
+
+#OktaAWSCLI
+if [[ -f "$HOME/.okta/bash_functions" ]]; then
+    . "$HOME/.okta/bash_functions"
+fi
+if [[ -d "$HOME/.okta/bin" && ":$PATH:" != *":$HOME/.okta/bin:"* ]]; then
+    PATH="$HOME/.okta/bin:$PATH"
+fi
 
 export EDITOR='vim'
 
