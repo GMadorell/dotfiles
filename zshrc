@@ -1,6 +1,6 @@
 # Language flags (set to 1 if you want language specific things to be loaded)
 PHP_MODE=0
-PYTHON_MODE=1
+PYTHON_MODE=0
 
 # Setup zsh with oh-my-zsh
 export ZSH=$HOME/.oh-my-zsh
@@ -20,14 +20,6 @@ export MANPATH="/usr/local/man:$MANPATH"
 source $ZSH/oh-my-zsh.sh
 
 if [[ -s $HOME/.secrets ]] ; then source $HOME/.secrets ; fi
-
-#OktaAWSCLI
-if [[ -f "$HOME/.okta/bash_functions" ]]; then
-    . "$HOME/.okta/bash_functions"
-fi
-if [[ -d "$HOME/.okta/bin" && ":$PATH:" != *":$HOME/.okta/bin:"* ]]; then
-    PATH="$HOME/.okta/bin:$PATH"
-fi
 
 export EDITOR='vim'
 
@@ -439,6 +431,11 @@ function find_by_name_globally() {
 alias fsg="find_by_name_globally"
 
 
+# JSON related
+alias compress_json="jq -c"
+alias json_compress=compress_json
+
+
 # Hardware related
 ## Battery status
 function mouse_battery_percentage() {
@@ -650,6 +647,7 @@ alias gs="git status"
 alias gsa="git status -uall"
 
 alias gpr="git pull-request"
+alias gprl="git pr list -f '%i - %t%n%U%n%l%nBy: %au @ %H%n%n'"
 
 alias gf="git fetch"
 alias gfetch="git fetch"
