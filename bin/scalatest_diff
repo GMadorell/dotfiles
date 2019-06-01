@@ -21,7 +21,7 @@ if len(args) == 1:
     expected_split = expected_formatted.splitlines(1)
     actual_split = actual_formatted.splitlines(1)
 
-    diff=difflib.ndiff(expected_split, actual_split)
+    diff=difflib.unified_diff(expected_split, actual_split)
 
     print(''.join(diff))
 else:
