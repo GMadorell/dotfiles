@@ -103,7 +103,7 @@ eval "$(direnv hook zsh)"
 eval $(thefuck --alias)
 
 # Python setup
-if (($PYTHON_MODE)) ; then
+function setup_python() {
   echo "$LOG_INFO Python mode enabled - setting up python related utilities…"
 
   ## Python specific aliases
@@ -123,10 +123,14 @@ if (($PYTHON_MODE)) ; then
 
   # Python setup
   source `which conda_autoenv.sh`
+}
+
+if (($PYTHON_MODE)) ; then
+  setup_python
 fi
 
 # PHP setup
-if (($PHP_MODE)) ; then
+function setup_php() {
   DEFAULT_PHP_VERSION="7"
   echo "$LOG_INFO PHP mode enabled - setting up PHP related utilities…"
 
@@ -137,6 +141,11 @@ if (($PHP_MODE)) ; then
   function phpunitfilter { phpunit_filter ; }
   function behat { bin/behat ; }
   function fix_php_changed_files { gchanged_files | grep .php | xargs phpcbf --standard=PSR2 ; }
+
+}
+
+if (($PHP_MODE)) ; then
+  setup_php
 fi
 
 # Scala setup
