@@ -124,6 +124,8 @@ function setup_python() {
   # Python setup
   source `which conda_autoenv.sh`
 }
+alias toggle_python="setup_python"
+alias enable_python="setup_python"
 
 if (($PYTHON_MODE)) ; then
   setup_python
@@ -486,6 +488,7 @@ alias dir="ranger"
 # Visual Studio Code Editor Related
 alias vscode="code"
 
+alias notify="osascript -e 'display notification \"Done\" with title \"Terminal command completed\" sound name \"Glass\"'"
 
 # Display current load status
 alias mntr="glances"
