@@ -126,6 +126,7 @@ function setup_python() {
 }
 alias toggle_python="setup_python"
 alias enable_python="setup_python"
+alias activate_python="setup_python"
 
 if (($PYTHON_MODE)) ; then
   setup_python
