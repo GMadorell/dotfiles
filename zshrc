@@ -621,6 +621,9 @@ function timestamp_milliseconds() { calculate "$(timestamp) * 1000" ; }
 function timestamp_to_date () { date -u -r $1 ; }
 function timestamp_in_millis_to_date () { timestamp_to_date $(remove_decimals $(calculate "$1 / 1000")); }
 function clock_utc () { while :; do printf '%s\r' "$(date -u)"; sleep 1 ; done ; }
+function date_utc () { date -u +%Y-%m-%dT%H:%M:%S ; }
+function date_utc_external () { date -u -r $(get http://api.timezonedb.com/v2.1/get-time-zone\?key\=$TIMEZONEDB_API_TOKEN\&format\=json\&by\=zone\&zone\=Africa/Ouagadougou -b | jq -r ".timestamp") +%Y-%m-%dT%H:%M:%S ; }
+function utc_difference () { datediff $(date_utc) $(date_utc_external) ; }
 
 ## GIT ALIASES AND HELPER FUNCTIONS
 alias git="hub"
@@ -796,6 +799,11 @@ function git_commit_no_verify_with_msg() {
 }
 alias gcnm=git_commit_no_verify_with_msg
 alias gcmn=git_commit_no_verify_with_msg
+function git_empty_commit() {
+  git commit --allow-empty -m "This is an empty commit"
+}
+alias git_commit_empty=git_empty_commit
+alias gempty=git_empty_commit
 
 function git_changed_files() { git diff --name-only HEAD~1 ; }
 alias gchanged_files=git_changed_files
