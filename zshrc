@@ -366,6 +366,10 @@ function benchmark_shell() {
   for i in $(seq 1 10); do /usr/bin/time $SHELL -i -c exit; done
 }
 
+function echo_return_code() {
+  echo $?
+}
+
 ## Get .gitignore info easily - ej: gi python,java,linux,osx
 function fetch_gitignore() {
     curl -L -s https://www.gitignore.io/api/$@ | sed '/^# Created/ d' | sed '/./,$!d' | sed $'1s/^/\\\n/'
@@ -804,6 +808,12 @@ function git_empty_commit() {
 }
 alias git_commit_empty=git_empty_commit
 alias gempty=git_empty_commit
+function gcbname() {
+  # Applies a commit with the same name as the current branch name transformed to sentence case
+  local branch_name=$(gbname)  
+  local commit_message=$(case_converter -f snake -t sentence $branch_name) 
+  gcm "$commit_message"
+}
 
 function git_changed_files() { git diff --name-only HEAD~1 ; }
 alias gchanged_files=git_changed_files
@@ -813,7 +823,7 @@ function gmerge_master { git merge master ; }
 alias gmum=gmerge_upstream_master
 function gabort_merge { git merge --abort ; }
 
-function git_integrate() {
+function git_integrate_multiple() {
   local starting_branch=$(gbname)
   local oldest_commit=$(gl | percol --prompt="select OLDEST commit to pick for cherry-pick" | trim "*" | trim " " | cut -d " " -f1)
   local most_recent_commit=$(gl | percol --prompt="select MOST RECENT commit to pick for cherry-picking (first one was $oldest_commit)" | trim "*" | trim " " | cut -d " " -f1)
@@ -839,4 +849,34 @@ function git_integrate() {
 
   echo ">>>>>> We're finished, thanks for doing a small pull request!"
 }
-alias gintegrate=git_integrate
+alias gintegrate_multiple=git_integrate_multiple
+
+function git_integrate_single() {
+  local starting_branch=$(gbname)
+  local commit_hash=$(gl | percol --prompt="select SINGLE commit to pick for cherry-pick" | trim "*" | trim " " | cut -d " " -f1)
+
+  echo "Picked out commit with hash $commit_hash"
+  echo "Commit message: $(git log --format=%B -n 1 $commit_hash)"
+  vared -p 'Input branch name for the new branch to be created: ' -c branch_name
+
+  echo ">>>>>> Checking out master and getting it updated..."
+  git checkout master
+  git pull
+  echo ">>>>>> Done!"
+
+  echo " "
+
+  echo ">>>>>> Checking out a new branch called '$branch_name', cherry-picking and pushing it..."
+  git checkout -b $branch_name
+  git cherry-pick "$commit_hash"
+  git push
+  echo ">>>>>> Done!"
+
+  echo " "
+
+  echo ">>>>>> Going back to the original branch, which was '$starting_branch'"
+  git checkout $starting_branch
+
+  echo ">>>>>> We're finished, thanks for doing a small pull request!"
+}
+alias gintegrate_single=git_integrate_single
