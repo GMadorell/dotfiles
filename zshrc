@@ -96,6 +96,10 @@ export HISTFILE=~/.zsh_history  # ensure history file visibility
 export HH_CONFIG=hicolor,keywords,rawhistory
 bindkey -s "\C-r" "\eqhh\n"     # bind hh to Ctrl-r (for Vi mode check doc)
 
+## Broot setup - improved tree command
+source "$HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br"
+alias tree=br
+
 # Direnv - environment variables switcher (similar to virtualenv)
 eval "$(direnv hook zsh)"
 
@@ -251,6 +255,8 @@ function docker_connect() {
   container_id=$(echo $container | awk -F ': ' '{print $1}')
   docker exec -i -t $container_id /bin/bash
 }
+alias docker_stop_all="docker stop $(docker ps -a -q)"
+alias dockerstopall=docker_stop_all
 
 function dps() {
   docker ps -a --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}" \
@@ -311,6 +317,8 @@ function restart_networking {
   sudo ifconfig en0 up
 }
 
+
+# Functions to deal with documents
 function extract {
   # Extract contents from compressed file in multiple formats
   if [ -z "$1" ]; then
@@ -341,6 +349,40 @@ function extract {
         echo "'$1' - file does not exist"
     fi
   fi
+}
+
+function encrypt_pdf {
+  if [ -z "$1" ]; then
+    echo "Usage: encrypt_pdf <path/file_name>"
+  else
+    if [ -f "$1" ] ; then
+      qpdf --encrypt $DOCUMENTATION_PW $DOCUMENTATION_PW 128 --use-aes=y -- $1 tmp.pdf
+      rm $1
+      mv tmp.pdf $1
+    else
+      echo "'$1' - file does not exist"
+    fi
+  fi
+}
+
+function convert_image_to_pdf {
+  if [ -z "$1" ]; then
+    echo "Usage: convert_image_to_pdf <path/file_name>"
+  else
+    if [ -f "$1" ] ; then
+      local filename=$(echo $1 | sed "s/\(.*\)\..*/\1/")
+      sips -s format pdf $1 --out $filename.pdf
+    else
+      echo "'$1' - file does not exist"
+    fi
+  fi
+}
+
+function encrypt_image_as_pdf {
+  local pdfname="$(echo $1 | sed "s/\(.*\)\..*/\1/").pdf"
+  convert_image_to_pdf $1
+  encrypt_pdf $pdfname
+  rm $1
 }
 
 function subtitles() {
@@ -880,3 +922,4 @@ function git_integrate_single() {
   echo ">>>>>> We're finished, thanks for doing a small pull request!"
 }
 alias gintegrate_single=git_integrate_single
+
