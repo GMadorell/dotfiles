@@ -263,6 +263,10 @@ function dps() {
      | awk 'NR == 1; NR > 1 { print $0 | "sort" }';
 }
 
+# Docker-Compose aliases
+alias docker-compose-restart="docker-compose rm -s -f && docker-compose up -d"
+alias docker_compose_restart=docker-compose-restart
+
 # Apache
 function apacherestart() { sudo apachectl restart ; }
 
@@ -318,7 +322,7 @@ function restart_networking {
 }
 
 
-# Functions to deal with documents
+# Functions to deal with documents/files (files management, working with files)
 function extract {
   # Extract contents from compressed file in multiple formats
   if [ -z "$1" ]; then
@@ -383,6 +387,19 @@ function encrypt_image_as_pdf {
   convert_image_to_pdf $1
   encrypt_pdf $pdfname
   rm $1
+}
+
+function encrypt_zip {
+  if [ -z "$1" ]; then
+    echo "Usage: encrypt_zip <path/file_name>"
+  else
+    if [ -f "$1" ] ; then
+      zip -P $DOCUMENTATION_PW "$1.zip" $1
+      rm $1
+    else
+      echo "'$1' - file does not exist"
+    fi
+  fi
 }
 
 function subtitles() {
