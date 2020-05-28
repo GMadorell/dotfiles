@@ -4,3 +4,5 @@ export PATH="$PATH:$HOME/.python_dev_links"
 export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
 
+
+source /Users/gerard.madorell/Library/Preferences/org.dystroy.broot/launcher/bash/br

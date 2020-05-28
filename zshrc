@@ -727,6 +727,7 @@ alias gsa="git status -uall"
 
 alias gpr="git pull-request"
 alias gprl="git pr list -f '%i - %t%n%U%n%l%nBy: %au @ %H%n%n'"
+alias gpropen="hub pr show"
 
 alias gf="git fetch"
 alias gfetch="git fetch"
@@ -940,3 +941,5 @@ function git_integrate_single() {
 }
 alias gintegrate_single=git_integrate_single
 
+
+source /Users/gerard.madorell/Library/Preferences/org.dystroy.broot/launcher/bash/br
