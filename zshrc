@@ -455,10 +455,10 @@ function searchfaq() {
   FAQ=$(cat <<-END
 SEARCH HELP
 =================================
-- fs (filesearch): search for a file with given substring in current directory tree
+- fs (filesearch): search for a file with given substring by name, in current directory tree
     ej: fs
     ej: fs email 
-- fso (file search and open): search and open a file
+- fso (file search and open): search and open a file by name
     ej: fso
     ej: fso email
 - fsc (file search inside contents): search inside file contents for a given string
