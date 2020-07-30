@@ -407,7 +407,7 @@ function subtitles() {
   if [ -z "$1" ]; then
     echo "Usage: subtitles <file_path>"
   else
-    subliminal download -l en -l es $1
+    subliminal --opensubtitles $OPENSUBTITLES_USER $OPENSUBTITLES_PW download -l es -l en $1
   fi
 }
 
@@ -417,7 +417,7 @@ function subtitles_dir() {
     echo "Usage: subtitles_dir <dir_path>"
   else
     echo "Downloading subtitles in parallel..."
-    find "$1" -maxdepth 1 -type f | parallel subliminal download -l en -l es {} \;
+    find "$1" -maxdepth 1 -type f | subliminal --opensubtitles $OPENSUBTITLES_USER $OPENSUBTITLES_PW download -l es -l en {} \;
   fi
 }
 
@@ -728,6 +728,8 @@ alias gsa="git status -uall"
 alias gpr="git pull-request"
 alias gprl="git pr list -f '%i - %t%n%U%n%l%nBy: %au @ %H%n%n'"
 alias gpropen="hub pr show"
+alias gbrowse="gpropen"
+alias gprbrowse="gpropen"
 
 alias gf="git fetch"
 alias gfetch="git fetch"
