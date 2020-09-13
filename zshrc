@@ -6,8 +6,9 @@ PYTHON_MODE=0
 export ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME=ukelele
+ZSH_DISABLE_COMPFIX=true
 
-plugins=(zsh-autosuggestions ssh-agent zsh-syntax-highlighting)
+plugins=(zsh-autosuggestions zsh-syntax-highlighting)
 
 # Path manipulation
 export GOPATH="$HOME/golang_workspace"
@@ -97,7 +98,7 @@ export HH_CONFIG=hicolor,keywords,rawhistory
 bindkey -s "\C-r" "\eqhh\n"     # bind hh to Ctrl-r (for Vi mode check doc)
 
 ## Broot setup - improved tree command
-source "$HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br"
+source "$HOME/.config/broot/launcher/bash/br"
 alias tree=br
 
 # Direnv - environment variables switcher (similar to virtualenv)
@@ -109,27 +110,15 @@ eval $(thefuck --alias)
 # Python setup
 function setup_python() {
   echo "$LOG_INFO Python mode enabled - setting up python related utilities…"
-
-  ## Python specific aliases
-  function nose_parallel() {
-    # Nose is a testing framework for python
-    twice_amount_of_cores="$(($(amount_of_cores) * 2))"
-    nosetests --processes=${twice_amount_of_cores} --process-timeout=45
-  }
-  
-  function venvcreate() { conda create --name $1 python=3 ; }
-  function venvlist() { conda env list ; }
-  function venvactivate() { source activate $1 ; }
-  function venvdeactivate() { source deactivate $1 ; }
-  function venvinstall() { conda install $@ ; }
-  function venvshowinstalledpackages { conda list ; }
-  function venvremove() { conda remove --name $1 --all ; }
-
-  # Python setup
-  source `which conda_autoenv.sh`
+  # Pyenv setup
+  if command -v pyenv 1>/dev/null 2>&1; then
+    eval "$(pyenv init -)"
+  fi
 }
+  
 alias toggle_python="setup_python"
 alias enable_python="setup_python"
+alias python_enable=enable_python
 alias activate_python="setup_python"
 
 if (($PYTHON_MODE)) ; then
@@ -472,9 +461,6 @@ END
   echo "$FAQ"
 }
 
-export FZF_DEFAULT_COMMAND='fd --type f'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-
 function filesearch() { 
   if [ $# -eq 1 ]; then
     fzf --height 40% -q $1
@@ -548,11 +534,38 @@ function lscd() {
 # File browser
 alias dir="ranger"
 
+# Timer and Alarms
+function notify() {
+    if [ $# -eq 2 ]; then
+	osascript -e "display notification \"$2\" with title \"$1\" sound name \"Glass\""
+    else
+        echo "$LOG_ERROR notify requires two parameters (notification body and title)"
+    fi
+}
+
+function timer() {
+    if [ $# -eq 1 ]; then
+	local start=$(date +%s)
+	local goal=$(m "$start+60*$1")
+	echo "Setting up a timer for $1 minutes"
+        echo "Start at: $(gdate -d@$start +%H:%M:%S)" 
+	echo "Run until $(gdate -d@$goal +%H:%M:%S)"
+	while [ $goal -ge $(date +%s) ];
+	do;
+	  local secondsLeft=$(m "$goal-$(date +%s)")
+	  echo -en "\r\033[KTimer Left: $(gdate -d@$secondsLeft -u +%H:%M:%S)"
+	  sleep 1;
+        done;
+	notify "Timer is done" "Timer is done"
+	for i in {1..3}; do afplay /System/Library/Sounds/Glass.aiff; done
+        say "Timer is done"
+    else
+	echo "$LOG_ERROR timer requires one parameter (amount of minutes)"
+    fi
+}
 
 # Visual Studio Code Editor Related
 alias vscode="code"
-
-alias notify="osascript -e 'display notification \"Done\" with title \"Terminal command completed\" sound name \"Glass\"'"
 
 # Display current load status
 alias mntr="glances"
@@ -942,6 +955,3 @@ function git_integrate_single() {
   echo ">>>>>> We're finished, thanks for doing a small pull request!"
 }
 alias gintegrate_single=git_integrate_single
-
-
-source /Users/gerard.madorell/Library/Preferences/org.dystroy.broot/launcher/bash/br

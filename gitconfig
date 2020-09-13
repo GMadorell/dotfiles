@@ -14,7 +14,7 @@
 [credential]
 	helper = osxkeychain
 [core]
-	excludesfile = /Users/gerard.madorell/.gitignore_global
+	excludesfile = /Users/gerard/.gitignore_global
 [filter "lfs"]
 	clean = git-lfs clean %f
 	smudge = git-lfs smudge %f
