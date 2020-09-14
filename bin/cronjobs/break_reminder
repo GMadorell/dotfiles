@@ -8,10 +8,9 @@ goal=$(echo "$last_awake + $MINUTES_AFTER_WHICH_TO_REMIND * 60" | bc)
 
 if [ $now -ge $goal ]; then
   echo "Break time!"
-  minutes_without_break=$(echo "($now - $last_awake) / 60" | bc)
-  osascript -e "display notification \"$minutes_without_break min without a break!\nLast break @ $(gdate -d @$last_awake +%H:%M) - Now: $(gdate -d @$now +%H:%M)\" with title \"Break time!\" sound name \"Glass\""
-  sleep 0.6;
-  afplay /System/Library/Sounds/Glass.aiff;
+  seconds_without_break=$(echo "($now - $last_awake)" | bc)
+  osascript -e "display notification \"$(gdate -ud @$seconds_without_break +%H:%M) session duration.\nSession: $(gdate -d @$last_awake +%H:%M)-$(gdate -d @$now +%H:%M).\" with title \"Break time!\" sound name \"Glass\""
+  sleep 0.8;
   say "Break time"
 else
   echo "NOT break time"
