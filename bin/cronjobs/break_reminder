@@ -1,0 +1,23 @@
+#!/bin/bash
+MINUTES_AFTER_WHICH_TO_REMIND=30
+echo "`date`: RUNNING: break reminder"
+
+now=$(gdate +%s)
+last_awake=$(log show --style syslog --predicate 'process == "loginwindow"' --last 1000m | grep "LUIAuthenticationServiceProvider deactivateWithContext:]_block_invoke" | tail -n 1 | cut -d' ' -f1,2 | xargs -I {} gdate +%s -d "{}")
+goal=$(echo "$last_awake + $MINUTES_AFTER_WHICH_TO_REMIND * 60" | bc)
+
+if [ $now -ge $goal ]; then
+  echo "Break time!"
+  minutes_without_break=$(echo "($now - $last_awake) / 60" | bc)
+  osascript -e "display notification \"$minutes_without_break min without a break!\nLast break @ $(gdate -d @$last_awake +%H:%M) - Now: $(gdate -d @$now +%H:%M)\" with title \"Break time!\" sound name \"Glass\""
+  sleep 0.6;
+  afplay /System/Library/Sounds/Glass.aiff;
+  say "Break time"
+else
+  echo "NOT break time"
+fi;
+
+echo "`date`: FINISHED: break reminder"
+
+
+
