@@ -13,7 +13,8 @@ if [ $now -ge $goal ]; then
   sleep 0.8;
   say "Break time"
 else
-  echo "NOT break time"
+  time_until_break=$(echo "$goal - $now" | bc)
+  echo "NOT break time. Next break at: $(gdate -d @$goal +%H:%M), in $(gdate -ud @$time_until_break +%H:%M)."
 fi;
 
 echo "`date`: FINISHED: break reminder"
