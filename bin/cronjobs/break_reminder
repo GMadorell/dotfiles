@@ -3,13 +3,21 @@ MINUTES_AFTER_WHICH_TO_REMIND=30
 echo "`date`: RUNNING: break reminder"
 
 now=$(gdate +%s)
-last_awake=$(log show --style syslog --predicate 'process == "loginwindow"' --last 1000m | grep "LUIAuthenticationServiceProvider deactivateWithContext:]_block_invoke" | tail -n 1 | cut -d' ' -f1,2 | xargs -I {} gdate +%s -d "{}")
-goal=$(echo "$last_awake + $MINUTES_AFTER_WHICH_TO_REMIND * 60" | bc)
+last_login=$(log show --style syslog --predicate 'process == "loginwindow"' --last 1000m | grep "SecKeychainLogin returned success" | tail -n 1 | cut -d' ' -f1,2 | xargs -I {} gdate +%s -d "{}")
+last_sleep=$(log show --style syslog --predicate 'process == "loginwindow"' --last 1000m | grep "LUIAuthenticationServiceProvider deactivateWithContext:]_block_invoke" | tail -n 1 | cut -d' ' -f1,2 | xargs -I {} gdate +%s -d "{}")
+goal=$(echo "$last_sleep + $MINUTES_AFTER_WHICH_TO_REMIND * 60" | bc)
 
-if [ $now -ge $goal ]; then
+echo "Last login at $last_login"
+echo "Last sleep at $last_sleep"
+
+if [ $last_sleep -gt $last_login ]; then
+  echo "Skipping further processing because last sleep happened after last login"
+elif [ $now -ge $goal ]; then
   echo "Break time!"
-  seconds_without_break=$(echo "($now - $last_awake)" | bc)
-  osascript -e "display notification \"$(gdate -ud @$seconds_without_break +%H:%M) session duration.\nSession: $(gdate -d @$last_awake +%H:%M)-$(gdate -d @$now +%H:%M).\" with title \"Break time!\" sound name \"Glass\""
+  seconds_without_break=$(echo "($now - $last_login)" | bc)
+  display_message=$(echo "$(gdate -ud @$seconds_without_break +%H:%M) session duration.\nSession: $(gdate -d @$last_login +%H:%M)-$(gdate -d @$now +%H:%M)").
+  echo $display_message
+  osascript -e "display notification \"$display_message\" with title \"Break time!\" sound name \"Glass\""
   sleep 0.8;
   say "Break time"
 else

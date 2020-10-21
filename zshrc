@@ -310,6 +310,8 @@ function restart_networking {
   sudo ifconfig en0 up
 }
 
+alias pingg="ping www.google.com"
+
 
 # Functions to deal with documents/files (files management, working with files)
 function extract {
@@ -593,6 +595,7 @@ alias .6="cd ......."
 alias .7="cd ........"
 alias cdp="cd ~/projects/"
 alias cddownloads="cd ~/downloads/"
+alias cdd="cddownloads"
 alias cdh="cd $HOME"
 
 # Regex functions
@@ -696,6 +699,7 @@ function timestamp () { date +%s ; }
 function timestamp_milliseconds() { calculate "$(timestamp) * 1000" ; }
 function timestamp_to_date () { date -u -r $1 ; }
 function timestamp_in_millis_to_date () { timestamp_to_date $(remove_decimals $(calculate "$1 / 1000")); }
+function clock() { while :; do printf '%s\r' "$(date)"; sleep 1 ; done ; }
 function clock_utc () { while :; do printf '%s\r' "$(date -u)"; sleep 1 ; done ; }
 function date_utc () { date -u +%Y-%m-%dT%H:%M:%S ; }
 function date_utc_external () { date -u -r $(get http://api.timezonedb.com/v2.1/get-time-zone\?key\=$TIMEZONEDB_API_TOKEN\&format\=json\&by\=zone\&zone\=Africa/Ouagadougou -b | jq -r ".timestamp") +%Y-%m-%dT%H:%M:%S ; }
