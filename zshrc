@@ -244,7 +244,9 @@ function docker_connect() {
   container_id=$(echo $container | awk -F ': ' '{print $1}')
   docker exec -i -t $container_id /bin/bash
 }
-alias docker_stop_all="docker stop $(docker ps -a -q)"
+function docker_stop_all() {
+  docker stop $(docker ps -a -q)
+}
 alias dockerstopall=docker_stop_all
 
 function dps() {
@@ -511,6 +513,7 @@ alias cbcopy=copy
 alias cbpaste=paste
 
 alias lst="exa -l -h -a -a --time-style long-iso"  # This should be the default to list files, abstracting away the used tool
+alias l=lst
 alias lst_date_created="exa -l -h -t created --sort created -a -a --time-style long-iso"
 alias lst_created="lst_date_created"
 alias lstcreated="lst_data_created"
