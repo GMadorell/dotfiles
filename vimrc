@@ -12,6 +12,7 @@ Plugin 'derekwyatt/vim-scala'
 Plugin 'dracula/vim'
 Plugin 'GEverding/vim-hocon'
 Plugin 'terryma/vim-expand-region'
+Plugin 'chaoren/vim-wordmotion'
 
 
 " All of your Plugins must be added before the following line

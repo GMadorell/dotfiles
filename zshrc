@@ -1,6 +1,7 @@
 # Language flags (set to 1 if you want language specific things to be loaded)
 PHP_MODE=0
 PYTHON_MODE=0
+RUBY_MODE=0
 
 # Setup zsh with oh-my-zsh
 export ZSH=$HOME/.oh-my-zsh
@@ -124,6 +125,22 @@ alias activate_python="setup_python"
 if (($PYTHON_MODE)) ; then
   setup_python
 fi
+
+# Ruby setup
+function setup_ruby() {
+  echo "$LOG_INFO Ruby mode enabled - setting up ruby related utilities…"
+  eval "$(rbenv init -)"
+}
+  
+alias toggle_ruby="setup_ruby"
+alias enable_ruby="setup_ruby"
+alias ruby_enable=enable_ruby
+alias activate_ruby="setup_ruby"
+
+if (($RUBY_MODE)) ; then
+  setup_ruby
+fi
+
 
 # PHP setup
 function setup_php() {
