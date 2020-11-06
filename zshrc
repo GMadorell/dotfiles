@@ -308,8 +308,7 @@ function escheck() {
 function escnf() { $EDITOR /usr/local/etc/elasticsearch/elasticsearch.yml ; }
 function esplugin() { /usr/local/opt/elasticsearch@5.6/libexec/bin/elasticsearch-plugin $@ ; }
 
-# Helper functions and aliases
-
+# Internet / Connectivity
 function is_connected_to_internet {
   wget -q --tries=10 --timeout=20 --spider http://google.com
   echo "$?"
@@ -332,7 +331,7 @@ function restart_networking {
 alias pingg="ping www.google.com"
 
 
-# Functions to deal with documents/files (files management, working with files)
+# Deal with documents/files (files management, working with files)
 function extract {
   # Extract contents from compressed file in multiple formats
   if [ -z "$1" ]; then
@@ -412,6 +411,7 @@ function encrypt_zip {
   fi
 }
 
+# Subtitles
 function subtitles() {
   assert_internet_connectivity
   if [ -z "$1" ]; then
@@ -459,6 +459,11 @@ function mkcdir() {
 
 function randomuuid() {	echo $(uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]') ; }
 function uuidcp() { randomuuid | tr -d '\n' | pbcopy && pbpaste && echo ; }
+
+function randomcowsay() {
+  cow=(`cowsay -l | tail -n +2 | tr  " "  "\n" | sort -R | head -n 1`)
+  cowsay -f $cow "$@"
+}
 
 # Find / Search files or file contents related
 function searchfaq() { 
@@ -593,8 +598,6 @@ alias vscode="code"
 alias mntr="glances"
 alias monitor="mntr"
 
-alias clean="clear"
-
 alias maven="mvn"
 
 # CD aliases
@@ -637,8 +640,11 @@ function ltrim() {
   fi
 }
 
+# Clean the screen (leave it empty with the prompt on top of it)
 alias cl="printf \"\033c\""
+alias clean="cl"
 
+# History (command history related)
 alias h="history"
 alias hist="history"
 function history_grep() {
@@ -659,6 +665,7 @@ function copy_file_to_clipboard() {
   fi
 }
 
+# Hardware CPU amount of cores related
 function amount_of_cores() {
   if is_running_on_mac; then
     cores=$(sysctl -n hw.ncpu)
@@ -673,13 +680,16 @@ alias cores_amount="amount_of_cores"
 
 alias ports="sudo lsof -PiTCP -sTCP:LISTEN"
 
+# ZSHRC manipulation
 alias sourcezshrc="source $HOME/.zshrc"
 alias srczshrc=sourcezshrc
 alias editzshrc="$EDITOR $HOME/.zshrc"
 
+# Mail
 function check_mail() { $EDITOR /var/mail/$USER }
 function clear_mail() { sudo rm /var/mail/$USER }
 
+# Weather
 function weather() { curl wttr.in/$1 ; }
 function weatherbcn() { weather barcelona ; }
 
@@ -979,3 +989,10 @@ function git_integrate_single() {
   echo ">>>>>> We're finished, thanks for doing a small pull request!"
 }
 alias gintegrate_single=git_integrate_single
+
+# Greeting Message
+function greeting() {
+  fortune | randomcowsay | lolcat -F 0.05
+}
+touch ~/.hushlogin # Disable the 'Last login: .....' message that appears as the first line on a new shell.
+greeting
