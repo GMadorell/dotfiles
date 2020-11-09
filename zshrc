@@ -534,15 +534,19 @@ alias paste="pbpaste"
 alias cbcopy=copy
 alias cbpaste=paste
 
-alias lst="exa -l -h -a -a --time-style long-iso"  # This should be the default to list files, abstracting away the used tool
+# lst is the default to list files, abstracting away the used tool
+# the --extended flag checks the extended extensions on files, useful to see if they are quarantined in MacOS, for example.
+alias lst="exa -l -h -a -a --time-style long-iso --extended" 
 alias l=lst
 alias lst_date_created="exa -l -h -t created --sort created -a -a --time-style long-iso"
 alias lst_created="lst_date_created"
 alias lstcreated="lst_data_created"
 alias lstc="lst_date_created"
+alias lc="lst_date_created"
 alias lst_date_modified="exa -l -h -t modified --sort modified -a -a --time-style long-iso"
 alias lst_modified="lst_date_modified"
 alias lstmodified="lst_date_modified"
+alias lm="lst_date_modified"
 function ls_grep() {
     if [ $# -eq 1 ]; then
         lst | grep --ignore-case $1
@@ -552,9 +556,8 @@ function ls_grep() {
 }
 alias lg="ls_grep"
 alias lsg="ls_grep"
-alias lsh="ls -human"
 function lscd() {
-  local chosen_directory=$(ls | percol --prompt='<green>Select directory to cd into:</green> %q') 
+  local chosen_directory=$(lst | percol --prompt='<green>Select directory to cd into:</green> %q') 
   cd "$chosen_directory"
 }
 
@@ -996,3 +999,7 @@ function greeting() {
 }
 touch ~/.hushlogin # Disable the 'Last login: .....' message that appears as the first line on a new shell.
 greeting
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/Users/gerard/.sdkman"
+[[ -s "/Users/gerard/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/gerard/.sdkman/bin/sdkman-init.sh"
