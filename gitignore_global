@@ -123,3 +123,6 @@ Temporary Items
 .bsp
 .metals
 .bloop
+
+# Direnv
+.envrc

@@ -270,6 +270,7 @@ function dps() {
   docker ps -a --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}" \
      | awk 'NR == 1; NR > 1 { print $0 | "sort" }';
 }
+alias dls="dps"
 
 # Docker-Compose aliases
 alias docker-compose-restart="docker-compose rm -s -f && docker-compose up -d"
@@ -754,6 +755,7 @@ alias gpn="git push --no-verify"
 
 alias gck="git checkout"
 alias gckm="git checkout master"
+alias gckd="git checkout develop"
 alias gckb="git checkout -b"
 alias gckt="git checkout --theirs"
 alias gcko="git checkout --ours"
@@ -784,11 +786,14 @@ alias gprbrowse="gpropen"
 alias gf="git fetch"
 alias gfetch="git fetch"
 alias gfa="git fetch --all"
+alias gfo="git fetch origin"
 alias gfu="git fetch upstream"
 alias gfupstream="git fetch upstream"
 
-alias gfom="git fetch origin && git merge origin/master"
-alias gfor="git fetch origin && git rebase origin/master"
+alias gfommerge="git fetch origin && git merge origin/master"
+alias gfomrebase="git fetch origin && git rebase origin/master"
+alias gfodmerge="git fetch origin && git merge origin/develop"
+alias gfodrebase="git fetch origin && git rebase origin/develop"
 
 alias gpl="git pull"
 alias gplr="git pull --rebase"
@@ -852,9 +857,12 @@ alias gdh8="git diff HEAD~8"
 alias gdh9="git diff HEAD~9"
 alias gdhs="git diff HEAD --stat"
 function gdmaster() { git diff remotes/origin/master..$(gcurrent_branch_name) }
+alias gdm=gdmaster
 alias gdmaster_name_status="gdmaster --name-status"
 function gdupstream_master { git diff upstream/master $(gcurrent_branch_name) }
 alias gdum=gdupstream_master
+function gddevelop() { git diff remotes/origin/develop..$(gcurrent_branch_name) }
+alias gdd=gddevelop
 
 alias gb="git branch"
 alias gbd="git branch -d"
