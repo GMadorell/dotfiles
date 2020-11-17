@@ -19,7 +19,7 @@ elif [ $now -ge $goal ]; then
   echo $display_message
   osascript -e "display notification \"$display_message\" with title \"Break time!\" sound name \"Glass\""
   sleep 0.8;
-  say "Break time"
+  say "[[volm 0.4]] Break time"
 else
   time_until_break=$(echo "$goal - $now" | bc)
   echo "NOT break time. Next break at: $(gdate -d @$goal +%H:%M), in $(gdate -ud @$time_until_break +%H:%M)."

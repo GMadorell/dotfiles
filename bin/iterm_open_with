@@ -5,8 +5,8 @@ Iterm is supposed to call this script when a click on a path of a file happens.
 This can be configured inside iterm in:
     Settings/Profiles/Advanced/Semantic History
 
-Expected call is something like:
-    /Users/YOUR:USER/bin/iterm_open_with \1 \5
+Expected call is like:
+    /Users/YOUR:USER/bin/iterm_open_with \1 \2 \3 \4 \5
 """
 import sys
 import subprocess
@@ -16,30 +16,38 @@ import datetime
 args = sys.argv[1:]
 
 filename = args[0]
-pwd = args[1]
+line_number = args[1]
+text_before_click = args[2]
+text_after_click = args[3]
+pwd = args[4]
 
 PHPSTORM_EXTENSIONS = ["php", "feature"]
 INTELLIJ_IDEA_EXTENSIONS = ["scala", "java", "clj"]
 VIDEO_EXTENSIONS = ["mkv", "mp4", "avi"]
 
 with open("/var/log/iterm_open_with.log", "a+") as log_file:
-    log_file.write("\n>>>> New execution - {0}\n".format(datetime.datetime.now()))
-    log_file.write("filename: {0}, pwd: {1}\n".format(filename, pwd))
+    log_file.write(
+        "\n>>>> New execution - {0}\n".format(datetime.datetime.now()))
+    log_file.write(
+        "filename: {0}, line_number: {1}, text_before_click: {2}, text_after_click: {3}, pwd: {4}\n".format(
+            filename, line_number, text_before_click, text_after_click, pwd)
+    )
 
     extension = filename.split(".")[-1]
 
-    log_file.write("extension detected: {0}\n".format(extension))
+    log_file.write("Extension detected: {0}\n".format(extension))
 
     if extension in PHPSTORM_EXTENSIONS:
         cmd = ["/usr/local/bin/pstorm", filename]
     elif extension in INTELLIJ_IDEA_EXTENSIONS:
-        cmd = ["/usr/local/bin/idea", filename]
+        cmd = ["/usr/local/bin/idea", "--line", line_number, filename]
     elif extension in VIDEO_EXTENSIONS:
         cmd = ["/usr/local/bin/vlc", filename]
     else:
         cmd = ["/usr/local/bin/code", filename]
 
-    log_file.write("executing cmd: {0}".format(cmd))
-    p = Popen(cmd, shell=False, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+    log_file.write("Executing cmd: {0}".format(cmd))
+    p = Popen(cmd, shell=False, stdin=PIPE, stdout=PIPE,
+              stderr=STDOUT, close_fds=True)
     output = p.stdout.read()
     log_file.write(str(output))
