@@ -163,6 +163,8 @@ fi
 
 # Scala setup
 function kill_sbt() { ps aux | grep java | grep bin/sbt-launch.jar | awk '{print $2}' | xargs kill -9 ; }
+alias fucksbt="kill_sbt"
+alias killsbt="kill_sbt"
 
 
 
@@ -742,8 +744,8 @@ function utc_difference () { datediff $(date_utc) $(date_utc_external) ; }
 ## GIT ALIASES AND HELPER FUNCTIONS
 alias git="hub"
 alias gp="git push"
-alias gpf="git push --force"
-alias gpfn="git push --force --no-verify"
+alias gpf="git push --force-with-lease"
+alias gpfn="git push --force-with-lease --no-verify"
 alias gpumaster="git push upstream HEAD:master"  # Pushes current branch to upstream master
 alias gpoh="git push origin HEAD"  # Push current branch to a branch with same name on the remote (useful after creating new branch)
 alias gp_same_name="gpoh"
@@ -821,7 +823,7 @@ alias grm_deleted_files="git ls-files --deleted -z | xargs -0 git rm"  # Git rm 
 
 alias gl="git log --graph --pretty=format:'%C(yellow)%h%Creset -%C(green)%d%Creset %s %C(magenta)(%cr) %C(cyan)<%an>%Creset' --abbrev-commit"
 
-alias gnuke_last_commit="git reset --hard HEAD~1"
+alias gnuke_last_commit="git reset --keep HEAD~1"
 alias gnevermind="git nevermind"  # Remove all the changes you've made
 
 alias gstash="git stash"
