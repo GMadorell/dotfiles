@@ -36,3 +36,5 @@
 [filesystem "Oracle Corporation|1.8.0_181|/dev/disk1s1"]
 	timestampResolution = 1001 milliseconds
 	minRacyThreshold = 0 nanoseconds
+[pull]
+	ff = only
