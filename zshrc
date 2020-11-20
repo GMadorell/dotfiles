@@ -414,6 +414,10 @@ function encrypt_zip {
   fi
 }
 
+function current_directory_size {
+  du -h $(pwd) | tail -n 1
+}
+
 # Subtitles
 function subtitles() {
   assert_internet_connectivity
