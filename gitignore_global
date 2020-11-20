@@ -123,6 +123,7 @@ Temporary Items
 .bsp
 .metals
 .bloop
+own-alias.sbt
 
 # Direnv
 .envrc
