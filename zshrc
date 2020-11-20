@@ -782,6 +782,7 @@ function gckl() {
 
 alias gs="git status"
 alias gsa="git status -uall"
+alias gas="gsa" # Typo
 
 alias gpr="git pull-request"
 alias gprl="git pr list -f '%i - %t%n%U%n%l%nBy: %au @ %H%n%n'"
