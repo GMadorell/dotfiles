@@ -11,13 +11,15 @@ ZSH_DISABLE_COMPFIX=true
 
 plugins=(zsh-autosuggestions zsh-syntax-highlighting)
 
-# Path manipulation
+# Path constants
 export GOPATH="$HOME/golang_workspace"
 export PATH="/usr/local/sbin:/usr/local/bin:bin:/usr/sbin:/sbin:$HOME/bin:/usr/bin:$GOPATH/bin:$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/anaconda/bin:$PATH"
 export PATH="$HOME/miniconda3/bin:$PATH"
 export DOTFILES_PATH="$HOME/.dotfiles"
 export MANPATH="/usr/local/man:$MANPATH"
+
+export PROJECTS_PATH="$HOME/projects"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -626,7 +628,7 @@ alias .4="cd ....."
 alias .5="cd ......"
 alias .6="cd ......."
 alias .7="cd ........"
-alias cdp="cd ~/projects/"
+alias cdp="cd $PROJECTS_PATH"
 alias cddownloads="cd ~/downloads/"
 alias cdd="cddownloads"
 alias cdh="cd $HOME"
@@ -716,15 +718,10 @@ alias please='sudo $(fc -ln -1)'
 alias pls=please
 alias suda=please
 
-# Command line arithmetic (ej:  `calculate 10 * 10`)
-function calculate () {
-  cleaned_args=$(echo "$@" | sed "s/,//g")
-  answer=$(bc -l <<< "scale=3; $cleaned_args")
-  echo $answer
-}
-alias calc=calculate
-alias math=calculate
-alias m=calculate
+# Command line arithmetic (ej:  `math 10 * 10`)
+alias math="amm $PROJECTS_PATH/cli_math/CLIMath.sc"
+alias calc=math
+alias m=math
 
 function convert_units() {
   local help="Eg: convert_units 3600 seconds hours"
