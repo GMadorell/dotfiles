@@ -11,7 +11,10 @@ last_login=$(echo "$last_login + 1" | bc) # Fix off by one error that happens ra
 echo "Last login at $last_login"
 echo "Last sleep at $last_sleep"
 
-if [ $last_sleep -gt $last_login ]; then
+sleep_vs_login_diff=$(echo $(($last_login-$last_sleep)) | sed 's/-//')
+echo "Sleep vs login difference: $sleep_vs_login_diff"
+
+if [[ $last_sleep -gt $last_login && $sleep_vs_login_diff -gt 5 ]]; then
   echo "Skipping further processing because last sleep happened after last login"
 elif [ $now -ge $goal ]; then
   echo "Break time!"
