@@ -13,14 +13,6 @@ import subprocess
 from subprocess import Popen, PIPE, STDOUT
 import datetime
 
-args = sys.argv[1:]
-
-filename = args[0]
-line_number = args[1]
-text_before_click = args[2]
-text_after_click = args[3]
-pwd = args[4]
-
 PHPSTORM_EXTENSIONS = ["php", "feature"]
 INTELLIJ_IDEA_EXTENSIONS = ["scala", "java", "clj"]
 VIDEO_EXTENSIONS = ["mkv", "mp4", "avi"]
@@ -28,8 +20,28 @@ VIDEO_EXTENSIONS = ["mkv", "mp4", "avi"]
 with open("/var/log/iterm_open_with.log", "a+") as log_file:
     log_file.write(
         "\n>>>> New execution - {0}\n".format(datetime.datetime.now()))
+
+    args = sys.argv[1:]
+
+    log_file.write("\nArgs - {0}\n".format(args))
+
+    if (len(args) == 5):
+        filename = args[0]
+        line_number = args[1]
+        text_before_click = args[2]
+        text_after_click = args[3]
+        pwd = args[4]
+    elif len(args) == 4:
+        filename = args[0]
+        line_number = None
+        text_before_click = args[1]
+        text_after_click = args[2]
+        pwd = args[3]
+    else:
+        log_file.write("ERROR - Cannot match arguments\n")
+
     log_file.write(
-        "filename: {0}, line_number: {1}, text_before_click: {2}, text_after_click: {3}, pwd: {4}\n".format(
+        "Extracted variables:\nfilename: {0}\nline_number: {1}\ntext_before_click: {2}\ntext_after_click: {3}\npwd: {4}\n".format(
             filename, line_number, text_before_click, text_after_click, pwd)
     )
 
@@ -40,7 +52,11 @@ with open("/var/log/iterm_open_with.log", "a+") as log_file:
     if extension in PHPSTORM_EXTENSIONS:
         cmd = ["/usr/local/bin/pstorm", filename]
     elif extension in INTELLIJ_IDEA_EXTENSIONS:
-        cmd = ["/usr/local/bin/idea", "--line", line_number, filename]
+        if line_number == None:
+            cmd = ["/usr/local/bin/idea", filename]
+        else:
+            cmd = ["/usr/local/bin/idea", "--line", line_number, filename]
+
     elif extension in VIDEO_EXTENSIONS:
         cmd = ["/usr/local/bin/vlc", filename]
     else:
