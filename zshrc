@@ -719,7 +719,7 @@ alias pls=please
 alias suda=please
 
 # Command line arithmetic (ej:  `math 10 * 10`)
-alias math="amm $PROJECTS_PATH/cli_math/CLIMath.sc"
+alias math="amm --silent $PROJECTS_PATH/cli_math/CLIMath.sc"
 alias calc=math
 alias m=math
 
