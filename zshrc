@@ -743,6 +743,13 @@ function date_utc () { date -u +%Y-%m-%dT%H:%M:%S ; }
 function date_utc_external () { date -u -r $(get http://api.timezonedb.com/v2.1/get-time-zone\?key\=$TIMEZONEDB_API_TOKEN\&format\=json\&by\=zone\&zone\=Africa/Ouagadougou -b | jq -r ".timestamp") +%Y-%m-%dT%H:%M:%S ; }
 function utc_difference () { datediff $(date_utc) $(date_utc_external) ; }
 
+# Kubernetes K8S related aliases and helper functions
+[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
+alias k="kubectl"
+function kcurrent() { echo "$(kcurrent_context) / $(kcurrent_namespace)"; }
+function kcurrent_context() { kubectl config current-context; }
+function kcurrent_namespace() { kubens --current; }
+
 ## GIT ALIASES AND HELPER FUNCTIONS
 alias git="hub"
 alias gp="git push"
