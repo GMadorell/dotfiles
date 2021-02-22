@@ -879,7 +879,7 @@ function gdupstream_master { git diff upstream/master $(gcurrent_branch_name) }
 alias gdum=gdupstream_master
 function gddevelop() { git diff remotes/origin/develop..$(gcurrent_branch_name) }
 alias gdd=gddevelop
-alias gtodo="git diff-index -U --cached -G TODO HEAD" # Find files that contain "TODO" in last index (remember to add the files!)
+alias gtodo="git diff-index --name-only -U --cached -G TODO HEAD" # Find files that contain "TODO" in last index (remember to add the files!)
 
 alias gb="git branch"
 alias gbd="git branch -d"
