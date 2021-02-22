@@ -275,6 +275,9 @@ function dps() {
      | awk 'NR == 1; NR > 1 { print $0 | "sort" }';
 }
 alias dls="dps"
+function dpsg() {
+  dps | grep $1
+}
 
 # Docker-Compose aliases
 alias docker-compose-restart="docker-compose rm -s -f && docker-compose up -d"
@@ -722,6 +725,7 @@ alias suda=please
 # Command line arithmetic (ej:  `math 10 * 10`)
 alias math="amm --silent $PROJECTS_PATH/cli_math/CLIMath.sc"
 alias calc=math
+alias calculate=math
 alias m=math
 
 function convert_units() {
@@ -875,6 +879,7 @@ function gdupstream_master { git diff upstream/master $(gcurrent_branch_name) }
 alias gdum=gdupstream_master
 function gddevelop() { git diff remotes/origin/develop..$(gcurrent_branch_name) }
 alias gdd=gddevelop
+alias gtodo="git diff-index -U --cached -G TODO HEAD" # Find files that contain "TODO" in last index (remember to add the files!)
 
 alias gb="git branch"
 alias gbd="git branch -d"

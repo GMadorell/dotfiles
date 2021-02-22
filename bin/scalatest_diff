@@ -9,7 +9,12 @@ args = sys.argv[1:]
 
 if len(args) == 1:
     scalatest_output = args[0]
-    splited = scalatest_output.split("did not equal") 
+    if "did not equal" in scalatest_output:
+        splited = scalatest_output.split("did not equal")
+    elif "was not equal to" in scalatest_output:
+        splited = scalatest_output.split("was not equal to")
+    else:
+        splited = None
     import difflib
     
     expected = splited[0].rstrip()
