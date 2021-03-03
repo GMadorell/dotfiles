@@ -1,2 +1,2 @@
-EXCLUDES="jetbrains better-touch-tool iterm2 README.md vimium"
+EXCLUDES="jetbrains better-touch-tool iterm2 README.md vimium Brewfile rcrc"
 UNDOTTED="bin"
