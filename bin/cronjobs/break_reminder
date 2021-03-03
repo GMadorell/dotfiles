@@ -3,11 +3,15 @@ MINUTES_AFTER_WHICH_TO_REMIND=30
 echo "`date`: RUNNING: break reminder"
 
 now=$(gdate +%s)
-last_login=$(log show --style syslog --predicate 'process == "loginwindow"' --last 1000m | grep "SecKeychainLogin returned success" | tail -n 1 | cut -d' ' -f1,2 | xargs -I {} gdate +%s -d "{}")
+last_keychain_login=$(log show --style syslog --predicate 'process == "loginwindow"' --last 1000m | grep "SecKeychainLogin returned success" | tail -n 1 | cut -d' ' -f1,2 | xargs -I {} gdate +%s -d "{}")
+last_biometric_login=$(log show --style syslog --predicate 'process == "loginwindow"' --last 60m | grep "sessionUnlocked : 1" | tail -n 1 | cut -d' ' -f1,2 | xargs -I {} gdate +%s -d "{}")
+last_login=$(( last_keychain_login > last_biometric_login ? last_keychain_login : last_biometric_login ))
 last_sleep=$(log show --style syslog --predicate 'process == "loginwindow"' --last 1000m | grep "LUIAuthenticationServiceProvider deactivateWithContext:]_block_invoke" | tail -n 1 | cut -d' ' -f1,2 | xargs -I {} gdate +%s -d "{}")
 goal=$(echo "$last_sleep + $MINUTES_AFTER_WHICH_TO_REMIND * 60" | bc)
 
 last_login=$(echo "$last_login + 1" | bc) # Fix off by one error that happens rarely.
+echo "Last keychain login at $last_keychain_login"
+echo "Last biometric login at $last_biometric_login"
 echo "Last login at $last_login"
 echo "Last sleep at $last_sleep"
 
