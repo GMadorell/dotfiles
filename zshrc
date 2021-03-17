@@ -755,7 +755,6 @@ function kcurrent_context() { kubectl config current-context; }
 function kcurrent_namespace() { kubens --current; }
 
 ## GIT ALIASES AND HELPER FUNCTIONS
-alias git="hub"
 alias gp="git push"
 alias gpf="git push --force-with-lease"
 alias gpfn="git push --force-with-lease --no-verify"
@@ -795,7 +794,7 @@ alias gas="gsa" # Typo
 
 alias gpr="git pull-request"
 alias gprl="git pr list -f '%i - %t%n%U%n%l%nBy: %au @ %H%n%n'"
-alias gpropen="hub pr show"
+alias gpropen="gh pr view --web"
 alias gbrowse="gpropen"
 alias gprbrowse="gpropen"
 
