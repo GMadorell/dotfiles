@@ -821,11 +821,11 @@ alias grp="git remote prune origin"  # Remove branches locally that have already
 alias gprune="grp"
 alias grinfo="git remote | xargs git remote show"
 alias grshow_all="grinfo"
-alias grmmerged="git branch --merged master | grep -v 'master$' | xargs git branch -d"  # Remove local branches that have already been merged into master
+alias grmmergedmaster="git branch --merged master | grep -v 'master$' | xargs git branch -d"  # Remove local branches that have already been merged into master
 function gmaintenance() {
   gprune --dry-run | grep "\[would prune\]" | ltrim " " | ltrim "* [would prune] origin/" | git_branch_exists_filter | xargs git branch -D
   gprune
-  grmmerged
+  # grmmergedmaster # Seems to not be needed?
 }
 
 function gcurrent_branch_name() { git rev-parse --abbrev-ref HEAD ; }
@@ -1016,6 +1016,12 @@ function git_integrate_single() {
   echo ">>>>>> We're finished, thanks for doing a small pull request!"
 }
 alias gintegrate_single=git_integrate_single
+
+# Git machete aliases
+alias gms="git machete status"
+alias gmu="git machete update"
+alias gmt="git machete traverse --fetch"
+alias gmtall="git machete traverse --fetch --whole"
 
 # Greeting Message
 function greeting() {
