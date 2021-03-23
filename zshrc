@@ -817,6 +817,8 @@ alias ga="git add"
 alias gaa="ga ."  # Git add all
 alias ga.="ga ."
 
+alias grc="git rebase --continue"
+
 alias grp="git remote prune origin"  # Remove branches locally that have already been deleted in the remote
 alias gprune="grp"
 alias grinfo="git remote | xargs git remote show"
@@ -1019,8 +1021,10 @@ alias gintegrate_single=git_integrate_single
 
 # Git machete aliases
 alias gms="git machete status"
-alias gmu="git machete update"
 alias gmt="git machete traverse --fetch"
+alias gmadd="git machete add"
+alias gmadvance="git machete advance"
+alias gmu="git machete update"
 alias gmtall="git machete traverse --fetch --whole"
 
 # Greeting Message
