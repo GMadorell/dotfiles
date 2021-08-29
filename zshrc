@@ -795,8 +795,9 @@ alias gas="gsa" # Typo
 alias gpr="git pull-request"
 alias gprl="git pr list -f '%i - %t%n%U%n%l%nBy: %au @ %H%n%n'"
 alias gpropen="gh pr view --web"
-alias gbrowse="gpropen"
+alias gbrowsepr="gpropen"
 alias gprbrowse="gpropen"
+alias grepoview="gh repo view -w"
 
 alias gf="git fetch"
 alias gfetch="git fetch"
