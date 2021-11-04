@@ -168,6 +168,8 @@ function kill_sbt() { ps aux | grep java | grep bin/sbt-launch.jar | awk '{print
 alias fucksbt="kill_sbt"
 alias killsbt="kill_sbt"
 
+# C# setup
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 
 # Service aliases
@@ -834,6 +836,9 @@ function gmaintenance() {
 function gcurrent_branch_name() { git rev-parse --abbrev-ref HEAD ; }
 alias git_branch_name=gcurrent_branch_name
 alias gbname=gcurrent_branch_name
+
+alias grh="git reset --hard"
+function grh_same_branch_origin() { git reset --hard "origin/$(gcurrent_branch_name)" ; }
 
 alias grm_deleted_files="git ls-files --deleted -z | xargs -0 git rm"  # Git rm files that have been deleted
 

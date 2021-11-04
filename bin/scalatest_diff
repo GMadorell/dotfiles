@@ -13,6 +13,8 @@ if len(args) == 1:
         splited = scalatest_output.split("did not equal")
     elif "was not equal to" in scalatest_output:
         splited = scalatest_output.split("was not equal to")
+    elif "did not contain the same elements as" in scalatest_output:
+        splited = scalatest_output.split("did not contain the same elements as")
     else:
         splited = None
     import difflib

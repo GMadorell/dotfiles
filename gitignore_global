@@ -131,3 +131,6 @@ own-alias.sbt
 
 # VSCode
 .vscode
+
+# Temporal notes
+tmp_note*
