@@ -492,6 +492,8 @@ SEARCH HELP
     ej: fso email
 - fsc (file search inside contents): search inside file contents for a given string
     ej: fsc email
+- fsc2 (file search inside contents 2 files): search for files which contain both inputs
+    ej: fsc2 email repository
 - fsg (file search globally by name)
     ej: fsg my.cnf
 
@@ -521,6 +523,9 @@ alias fso=search_and_open
 
 function search_in_content() { rg $1 ; }
 alias fsc=search_in_content
+
+function search_in_content_two_independent_words() { rg $1 -l -0 | xargs -0 rg $2 -l ; }
+alias fsc2=search_in_content_two_independent_words
 
 function find_by_name_globally() {
   if [ $# -eq 1 ]; then
