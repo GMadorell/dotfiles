@@ -421,6 +421,16 @@ function encrypt_zip {
   fi
 }
 
+function optimize_clipboard_image () {
+  rm /tmp/test.png
+  pngpaste /tmp/test.png
+  pngquant 128 --skip-if-larger --strip --ext=.png --force /tmp/test.png
+  zopflipng -y /tmp/test.png /tmp/test.png
+  osascript -e "set the clipboard to (read (POSIX file \"$(perl -e "print glob('/tmp/test.png')")\") as {«class PNGf»})"
+  echo "Image is optimized :)"
+}
+
+
 function current_directory_size {
   du -h $(pwd) | tail -n 1
 }
@@ -963,6 +973,7 @@ function gcbname() {
   local commit_message=$(case_converter -f snake -t sentence $branch_name) 
   gcm "$commit_message"
 }
+alias gcwip="gcm \"WIP\""
 
 function git_changed_files() { git diff --name-only HEAD~1 ; }
 alias gchanged_files=git_changed_files
