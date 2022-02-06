@@ -21,6 +21,7 @@ export MANPATH="/usr/local/man:$MANPATH"
 
 export PROJECTS_PATH="$HOME/projects"
 
+eval "$(/opt/homebrew/bin/brew shellenv)"
 source $ZSH/oh-my-zsh.sh
 
 if [[ -s $HOME/.secrets ]] ; then source $HOME/.secrets ; fi
