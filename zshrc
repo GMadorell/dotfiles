@@ -172,6 +172,9 @@ alias killsbt="kill_sbt"
 # C# setup
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
+# PGP/GPG setup
+export GPG_TTY=$(tty)
+
 
 # Service aliases
 : '
@@ -318,6 +321,9 @@ function escheck() {
 }
 function escnf() { $EDITOR /usr/local/etc/elasticsearch/elasticsearch.yml ; }
 function esplugin() { /usr/local/opt/elasticsearch@5.6/libexec/bin/elasticsearch-plugin $@ ; }
+
+# AWS
+export AWS_PROFILE=saml
 
 # Internet / Connectivity
 function is_connected_to_internet {

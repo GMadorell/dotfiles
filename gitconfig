@@ -1,6 +1,7 @@
 [user]
 	name = GMadorell
 	email = gmadorell@gmail.com
+	signingKey = 9F60F45397854874
 [alias]
 	branches = branch -a
 	tags = tag
@@ -31,11 +32,9 @@
 	noprefix = false
 [rerere]
 	enabled = true
-[filesystem "N/A|13.0.2|/dev/disk1s1"]
-	timestampResolution = 8000 nanoseconds
-	minRacyThreshold = 0 nanoseconds
-[filesystem "Oracle Corporation|1.8.0_181|/dev/disk1s1"]
-	timestampResolution = 1001 milliseconds
-	minRacyThreshold = 0 nanoseconds
 [pull]
 	ff = only
+[commit]
+	gpgsign = true
+[gpg]
+	program = /opt/homebrew/bin/gpg
