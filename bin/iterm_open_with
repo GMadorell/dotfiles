@@ -50,12 +50,12 @@ with open("/var/log/iterm_open_with.log", "a+") as log_file:
     log_file.write("Extension detected: {0}\n".format(extension))
 
     if extension in PHPSTORM_EXTENSIONS:
-        cmd = ["/usr/local/bin/jetbrains/idea", filename]
+        cmd = ["/usr/local/bin/idea", filename]
     elif extension in INTELLIJ_IDEA_EXTENSIONS:
         if line_number == None:
-            cmd = ["/usr/local/bin/jetbrains/idea", filename]
+            cmd = ["/usr/local/bin/idea", filename]
         else:
-            cmd = ["/usr/local/bin/jetbrains/idea", "--line", line_number, filename]
+            cmd = ["/usr/local/bin/idea", "--line", line_number, filename]
 
     elif extension in VIDEO_EXTENSIONS:
         cmd = ["/usr/local/bin/vlc", filename]

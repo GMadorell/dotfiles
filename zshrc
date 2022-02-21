@@ -1,6 +1,6 @@
 # Language flags (set to 1 if you want language specific things to be loaded)
 PHP_MODE=0
-PYTHON_MODE=0
+PYTHON_MODE=1
 RUBY_MODE=0
 
 # Setup zsh with oh-my-zsh
@@ -771,12 +771,21 @@ function date_utc () { date -u +%Y-%m-%dT%H:%M:%S ; }
 function date_utc_external () { date -u -r $(get http://api.timezonedb.com/v2.1/get-time-zone\?key\=$TIMEZONEDB_API_TOKEN\&format\=json\&by\=zone\&zone\=Africa/Ouagadougou -b | jq -r ".timestamp") +%Y-%m-%dT%H:%M:%S ; }
 function utc_difference () { datediff $(date_utc) $(date_utc_external) ; }
 
-# Kubernetes K8S related aliases and helper functions
+# kubernetes k8s related aliases and helper functions
 [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
 alias k="kubectl"
+alias kgp="kubectl get pods"
+alias kgsec="kubectl get secret"
+
 function kcurrent() { echo "$(kcurrent_context) / $(kcurrent_namespace)"; }
 function kcurrent_context() { kubectl config current-context; }
 function kcurrent_namespace() { kubens --current; }
+function kchangecontext() { kubectx ; }
+function kctx () { kubectx ; }
+function kcontext () { kubectx ; }
+function kchangenamespace() { kubens ; }
+function knamespace() { kubens ; }
+function kns() { kubens ; }
 
 ## GIT ALIASES AND HELPER FUNCTIONS
 alias gp="git push"
@@ -911,6 +920,8 @@ alias gdd=gddevelop
 alias gtodo="git diff-index --name-only -U --cached -G TODO HEAD" # Find files that contain "TODO" in last index (remember to add the files!)
 
 alias gb="git branch"
+alias gba="git branch -a"
+alias gbr="git branch -r"
 alias gbd="git branch -d"
 alias gbD="git branch -D --"
 alias gbd_remote="git push origin --no-verify --delete"

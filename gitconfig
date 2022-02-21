@@ -2,6 +2,8 @@
 	name = GMadorell
 	email = gmadorell@gmail.com
 	signingKey = 9F60F45397854874
+[includeIf "gitdir:~/projects/coralogix/"] 
+        path = ~/projects/coralogix/.gitconfig
 [alias]
 	branches = branch -a
 	tags = tag

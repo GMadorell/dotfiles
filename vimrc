@@ -23,6 +23,7 @@ filetype plugin indent on
 syntax on
 color dracula
 
+:set number "Line numbers
 
 " Commands
 "" Json Formatting
