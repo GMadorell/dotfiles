@@ -432,7 +432,7 @@ function optimize_clipboard_image () {
   rm /tmp/test.png
   pngpaste /tmp/test.png
   pngquant 128 --skip-if-larger --strip --ext=.png --force /tmp/test.png
-  zopflipng -y /tmp/test.png /tmp/test.png
+  # zopflipng -y /tmp/test.png /tmp/test.png
   osascript -e "set the clipboard to (read (POSIX file \"$(perl -e "print glob('/tmp/test.png')")\") as {«class PNGf»})"
   echo "Image is optimized :)"
 }
@@ -799,6 +799,7 @@ alias gpskiphooks="git push --no-verify"
 alias gp_no_hooks="git push --no-verify"
 alias gpnohooks="git push --no-verify"
 alias gpn="git push --no-verify"
+alias gpt="git push --tags"
 
 alias gck="git checkout"
 alias gckm="git checkout master"
@@ -825,12 +826,13 @@ alias gs="git status"
 alias gsa="git status -uall"
 alias gas="gsa" # Typo
 
-alias gpr="git pull-request"
+alias gpr="gh pr create"
 alias gprl="git pr list -f '%i - %t%n%U%n%l%nBy: %au @ %H%n%n'"
 alias gpropen="gh pr view --web"
 alias gbrowsepr="gpropen"
 alias gprbrowse="gpropen"
-alias grepoview="gh repo view -w"
+alias grepo="gh repo view -w"
+alias grepoview="grepo"
 
 alias gf="git fetch"
 alias gfetch="git fetch"
@@ -1066,6 +1068,7 @@ alias gmadd="git machete add"
 alias gmadvance="git machete advance"
 alias gmu="git machete update"
 alias gmtall="git machete traverse --fetch --whole"
+alias gmedit="git machete edit"
 
 # Greeting Message
 function greeting() {
