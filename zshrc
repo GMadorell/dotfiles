@@ -862,9 +862,16 @@ alias grshow_all="grinfo"
 function gmaintenance() {
   # Switch to a head branch
   git remote show origin | grep "HEAD branch" | cut -d ":" -f 2 | xargs git checkout
+  gpl
   git remote prune origin
-  # Remove "gone" branches
-  git branch -vv | grep ': gone]'|  grep -v "\*" | awk '{ print $1; }' | xargs -r git branch -D
+  # Store gone branches
+  git branch -vv | grep ': gone]'|  grep -v "\*" | awk '{ print $1; }' > /tmp/gmaintenance.txt 
+  
+  # Give some room to edit branches
+  vim /tmp/gmaintenance.txt
+
+  # Delete them
+  xargs git branch -D </tmp/gmaintenance.txt
 }
 
 function gcurrent_branch_name() { git rev-parse --abbrev-ref HEAD ; }
