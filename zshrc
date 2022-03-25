@@ -859,11 +859,12 @@ alias grp="git remote prune origin"  # Remove branches locally that have already
 alias gprune="grp"
 alias grinfo="git remote | xargs git remote show"
 alias grshow_all="grinfo"
-alias grmmergedmaster="git branch --merged master | grep -v 'master$' | xargs git branch -d"  # Remove local branches that have already been merged into master
 function gmaintenance() {
-  gprune --dry-run | grep "\[would prune\]" | ltrim " " | ltrim "* [would prune] origin/" | git_branch_exists_filter | xargs git branch -D
-  gprune
-  # grmmergedmaster # Seems to not be needed?
+  # Switch to a head branch
+  git remote show origin | grep "HEAD branch" | cut -d ":" -f 2 | xargs git checkout
+  git remote prune origin
+  # Remove "gone" branches
+  git branch -vv | grep ': gone]'|  grep -v "\*" | awk '{ print $1; }' | xargs -r git branch -D
 }
 
 function gcurrent_branch_name() { git rev-parse --abbrev-ref HEAD ; }
