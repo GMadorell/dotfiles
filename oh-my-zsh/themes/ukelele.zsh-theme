@@ -1,7 +1,7 @@
 # Ukelele ZSH Theme
 
 PROMPT='
-$(_user_host)$(_current_dir) $(git_prompt_info) $(_ruby_version)
+$(_user_host)$(_current_dir) $(git_prompt_info)$(_git_wip_info) $(_ruby_version)
 %{$fg[$CARETCOLOR]%}▸%{$resetcolor%} '
 
 local _return_status="%{$fg[red]%}%(?..⍉)%{$reset_color%}"
@@ -27,6 +27,15 @@ function _user_host() {
 function _vi_status() {
   if {echo $fpath | grep -q "plugins/vi-mode"}; then
     echo "$(vi_mode_prompt_info)"
+  fi
+}
+
+function _git_wip_info() {
+  if {git status &>/dev/null}; then
+    last_commit=$(git show -s --format=%s)
+    if [[ $last_commit == *"WIP"* ]]; then
+      echo "  \U1F6A7 $fg[yellow]WIP$reset_color \U1F6A7"
+    fi
   fi
 }
 
