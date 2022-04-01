@@ -31,7 +31,8 @@ function _vi_status() {
 }
 
 function _git_wip_info() {
-  if {git status &>/dev/null}; then
+  # If it's a git repo AND git repo has at least 1 commit (is nonempty). We do this by checking output of git log command.
+  if git log -n 1 --pretty=format:"1" &>/dev/null; then
     last_commit=$(git show -s --format=%s)
     if [[ $last_commit == *"WIP"* ]]; then
       echo "  \U1F6A7 $fg[yellow]WIP$reset_color \U1F6A7"
