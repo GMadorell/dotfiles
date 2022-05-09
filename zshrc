@@ -431,7 +431,7 @@ function encrypt_zip {
 function optimize_clipboard_image () {
   rm /tmp/test.png
   pngpaste /tmp/test.png
-  pngquant 128 --skip-if-larger --strip --ext=.png --force /tmp/test.png
+  pngquant 64 --skip-if-larger --strip --ext=.png --force /tmp/test.png
   # zopflipng -y /tmp/test.png /tmp/test.png
   osascript -e "set the clipboard to (read (POSIX file \"$(perl -e "print glob('/tmp/test.png')")\") as {«class PNGf»})"
   echo "Image is optimized :)"
@@ -601,7 +601,7 @@ alias cdls="lscd"
 # File browser
 alias dir="ranger"
 
-# Timer and Alarms
+# Timer / Alarms / Time based functions
 function notify() {
     if [ $# -eq 2 ]; then
 	osascript -e "display notification \"$2\" with title \"$1\" sound name \"Glass\""
@@ -631,6 +631,8 @@ function timer() {
     fi
 }
 
+alias dateiso="date +%F"
+
 # Visual Studio Code Editor Related
 alias vscode="code"
 
@@ -657,6 +659,7 @@ alias .5="cd ......"
 alias .6="cd ......."
 alias .7="cd ........"
 alias cdp="cd $PROJECTS_PATH"
+alias zp="cdp"
 alias cddownloads="cd ~/downloads/"
 alias cdd="cddownloads"
 alias cdh="cd $HOME"
@@ -747,7 +750,7 @@ alias pls=please
 alias suda=please
 
 # Command line arithmetic (ej:  `math 10 * 10`)
-alias math="amm --silent $PROJECTS_PATH/cli_math/CLIMath.sc"
+alias math="amm --silent $PROJECTS_PATH/CLIMath/CLIMath.sc"
 alias calc=math
 alias calculate=math
 alias m=math
@@ -833,6 +836,8 @@ alias gbrowsepr="gpropen"
 alias gprbrowse="gpropen"
 alias grepo="gh repo view -w"
 alias grepoview="grepo"
+alias grepobrowse="grepo"
+alias grepob="grepo"
 
 alias gf="git fetch"
 alias gfetch="git fetch"
