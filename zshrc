@@ -883,6 +883,17 @@ function gcurrent_branch_name() { git rev-parse --abbrev-ref HEAD ; }
 alias git_branch_name=gcurrent_branch_name
 alias gbname=gcurrent_branch_name
 
+function gcurrent_commit_hash_cp() {
+  echo "Hash was copied from commit: "	
+  echo ""
+  git --no-pager log -n 1 
+  git rev-parse HEAD | pbcopy
+};
+
+alias gchashcp=gcurrent_commit_hash_cp
+alias gcommit_hash_cp=gcurrent_commit_hash_cp
+alias ghashcp=gcurrent_commit_hash_cp
+
 alias grh="git reset --hard"
 function grh_same_branch_origin() { git reset --hard "origin/$(gcurrent_branch_name)" ; }
 
