@@ -887,7 +887,7 @@ function gcurrent_commit_hash_cp() {
   echo "Hash was copied from commit: "	
   echo ""
   git --no-pager log -n 1 
-  git rev-parse HEAD | pbcopy
+  git rev-parse HEAD | tr -d '\n' | pbcopy
 };
 
 alias gchashcp=gcurrent_commit_hash_cp
