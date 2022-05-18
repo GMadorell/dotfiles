@@ -893,6 +893,10 @@ function gcurrent_commit_hash_cp() {
 alias gchashcp=gcurrent_commit_hash_cp
 alias gcommit_hash_cp=gcurrent_commit_hash_cp
 alias ghashcp=gcurrent_commit_hash_cp
+alias gcopylastcommithash=gcurrent_commit_hash_cp
+alias gcopy_last_commit_hash=gcurrent_commit_hash_cp
+alias gcplastcommithash=gcurrent_commit_hash_cp
+alias glastcommithashcp=gcurrent_commit_hash_cp
 
 alias grh="git reset --hard"
 function grh_same_branch_origin() { git reset --hard "origin/$(gcurrent_branch_name)" ; }
