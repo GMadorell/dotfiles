@@ -1,4 +1,4 @@
-# Language flags (set to 1 if you want language specific things to be loaded)
+ Language flags (set to 1 if you want language specific things to be loaded)
 PHP_MODE=0
 PYTHON_MODE=1
 RUBY_MODE=0
@@ -956,11 +956,11 @@ alias gbd="git branch -d"
 alias gbD="git branch -D --"
 alias gbd_remote="git push origin --no-verify --delete"
 function git_branch_rename_local() {
-    if [ $# -eq 1 ]; then
-        git branch -m $1
-    else
-        echo "$LOG_ERROR git_branch_rename_local accepts a single parameter only (the new branch name)"
-    fi
+  echo "$(gcurrent_branch_name)" > /tmp/git_branch_name_for_rename.txt
+
+  vim /tmp/git_branch_name_for_rename.txt 
+  
+  git branch -m $(cat /tmp/git_branch_name_for_rename.txt)
 }
 alias gbrename=git_branch_rename_local
 alias grename_branch=git_branch_rename_local

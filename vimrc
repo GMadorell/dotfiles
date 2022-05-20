@@ -25,6 +25,13 @@ color dracula
 
 :set number "Line numbers
 
+" Identation configuration
+"" tabstop    -> Indentation width in spaces
+"" shiftwidth -> Autoindentation width in spaces
+"" expandtab  -> Use actual spaces instead of tabs
+:set tabstop=2 shiftwidth=2 expandtab
+
+
 " Commands
 "" Json Formatting
 com! FormatJSON %!python -m json.tool
