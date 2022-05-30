@@ -1,4 +1,4 @@
- Language flags (set to 1 if you want language specific things to be loaded)
+# Language flags (set to 1 if you want language specific things to be loaded)
 PHP_MODE=0
 PYTHON_MODE=1
 RUBY_MODE=0
