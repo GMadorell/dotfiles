@@ -569,6 +569,8 @@ alias copy="pbcopy"
 alias paste="pbpaste"
 alias cbcopy=copy
 alias cbpaste=paste
+alias kbcopy=copy
+alias kbpaste=paste
 
 # lst is the default to list files, abstracting away the used tool
 # the --extended flag checks the extended extensions on files, useful to see if they are quarantined in MacOS, for example.
