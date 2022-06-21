@@ -570,6 +570,7 @@ alias paste="pbpaste"
 alias cbcopy=copy
 alias cbpaste=paste
 alias kbcopy=copy
+alias kbcp=copy
 alias kbpaste=paste
 
 # lst is the default to list files, abstracting away the used tool
