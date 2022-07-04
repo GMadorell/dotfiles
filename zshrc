@@ -2,6 +2,7 @@
 PHP_MODE=0
 PYTHON_MODE=1
 RUBY_MODE=0
+JS_MODE=1
 
 # Setup zsh with oh-my-zsh
 export ZSH=$HOME/.oh-my-zsh
@@ -162,6 +163,17 @@ function setup_php() {
 
 if (($PHP_MODE)) ; then
   setup_php
+fi
+
+# JS (JavaScript) Setup
+function setup_js() {
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+}
+
+if (($JS_MODE)) ; then
+  setup_js
 fi
 
 # Scala setup
