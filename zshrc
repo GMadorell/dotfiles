@@ -886,12 +886,14 @@ function gmaintenance() {
   git remote prune origin
   # Store gone branches
   git branch -vv | grep ': gone]'|  grep -v "\*" | awk '{ print $1; }' > /tmp/gmaintenance.txt 
-  
-  # Give some room to edit branches
-  vim /tmp/gmaintenance.txt
 
-  # Delete them
-  xargs git branch -D </tmp/gmaintenance.txt
+  if [ -s /tmp/gmaintenance.txt ]; then
+    # Give some room to edit branches
+    vim /tmp/gmaintenance.txt
+
+    # Delete them
+    xargs git branch -D </tmp/gmaintenance.txt
+  fi
 }
 
 function gcurrent_branch_name() { git rev-parse --abbrev-ref HEAD ; }
