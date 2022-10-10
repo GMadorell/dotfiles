@@ -589,9 +589,9 @@ alias kbpaste=paste
 # the --extended flag checks the extended extensions on files, useful to see if they are quarantined in MacOS, for example.
 alias lst="exa -l -h -a -a --time-style long-iso --extended" 
 alias l=lst
-alias lst_date_created="exa -l -h -t created --sort created -a -a --time-style long-iso"
+alias lst_date_created="exa -l -h -t created --sort created -r -a -a --time-style long-iso"
 alias lst_created="lst_date_created"
-alias lstcreated="lst_data_created"
+alias lstcreated="lst_date_created"
 alias lstc="lst_date_created"
 alias lc="lst_date_created"
 alias lst_date_modified="exa -l -h -t modified --sort modified -a -a --time-style long-iso"
