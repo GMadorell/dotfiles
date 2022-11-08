@@ -599,8 +599,10 @@ alias kbpaste=paste
 
 # lst is the default to list files, abstracting away the used tool
 # the --extended flag checks the extended extensions on files, useful to see if they are quarantined in MacOS, for example.
-alias lst="exa -l -h -a -a --time-style long-iso --extended" 
+alias lst="exa -l -h -a -a --time-style long-iso" 
 alias l=lst
+alias lst_extended="exa -l -h -a -a --time-style long-iso --extended"
+alias lste="lst_extended"
 alias lst_date_created="exa -l -h -t created --sort created -r -a -a --time-style long-iso"
 alias lst_created="lst_date_created"
 alias lstcreated="lst_date_created"
@@ -624,6 +626,21 @@ function lscd() {
   cd "$chosen_directory"
 }
 alias cdls="lscd"
+
+function lst_open() {
+  local chosen_lst_row=$(lst  | percol --prompt='<green>Select file to open:</green> %q')
+  local chosen_file=$(echo $chosen_lst_row | awk '{print $NF}')
+  $EDITOR $chosen_file
+}
+alias lsto="lst_open"
+alias lo="lst_open"
+
+function lstc_open() {
+  local chosen_lst_row=$(lstc  | percol --prompt='<green>Select file to open:</green> %q')
+  local chosen_file=$(echo $chosen_lst_row | awk '{print $NF}')
+  $EDITOR $chosen_file
+}
+alias lstco="lstc_open"
 
 # File browser
 alias dir="ranger"
