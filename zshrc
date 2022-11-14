@@ -641,6 +641,7 @@ function lstc_open() {
   $EDITOR $chosen_file
 }
 alias lstco="lstc_open"
+alias lco="lstc_open"
 
 # File browser
 alias dir="ranger"
