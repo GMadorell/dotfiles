@@ -13,6 +13,7 @@ Plugin 'dracula/vim'
 Plugin 'GEverding/vim-hocon'
 Plugin 'terryma/vim-expand-region'
 Plugin 'chaoren/vim-wordmotion'
+Plugin 'terryma/vim-multiple-cursors'
 
 
 " All of your Plugins must be added before the following line
@@ -35,3 +36,7 @@ color dracula
 " Commands
 "" Json Formatting
 com! FormatJSON %!python -m json.tool
+"Copy all content to clipboard"
+command CopyAll %y+
+command Copy y+
+
