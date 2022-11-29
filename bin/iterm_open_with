@@ -16,6 +16,7 @@ import datetime
 PHPSTORM_EXTENSIONS = ["php", "feature"]
 INTELLIJ_IDEA_EXTENSIONS = ["scala", "java", "clj"]
 VIDEO_EXTENSIONS = ["mkv", "mp4", "avi"]
+VSCODE_EXTENSIONS = ["js", "ts"]
 
 with open("/var/log/iterm_open_with.log", "a+") as log_file:
     log_file.write(
@@ -56,11 +57,13 @@ with open("/var/log/iterm_open_with.log", "a+") as log_file:
             cmd = ["/usr/local/bin/idea", filename]
         else:
             cmd = ["/usr/local/bin/idea", "--line", line_number, filename]
-
     elif extension in VIDEO_EXTENSIONS:
         cmd = ["/usr/local/bin/vlc", filename]
+    elif extension in VSCODE_EXTENSIONS:
+        cmd = ["/opt/homebrew/bin/code", filename]
     else:
-        cmd = ["/usr/local/bin/code", filename]
+        log_file.write("ERROR - Cannot match extension: {0}\n".format(extension))
+        exit(1)
 
     log_file.write("Executing cmd: {0}".format(cmd))
     p = Popen(cmd, shell=False, stdin=PIPE, stdout=PIPE,
