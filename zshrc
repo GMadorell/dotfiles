@@ -1,7 +1,7 @@
 # Language flags (set to 1 if you want language specific things to be loaded)
 PHP_MODE=0
 PYTHON_MODE=1
-RUBY_MODE=0
+RUBY_MODE=1
 JS_MODE=1
 
 # Setup zsh with oh-my-zsh
@@ -17,6 +17,8 @@ export GOPATH="$HOME/golang_workspace"
 export PATH="/usr/local/sbin:/usr/local/bin:bin:/usr/sbin:/sbin:$HOME/bin:/usr/bin:$GOPATH/bin:$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/anaconda/bin:$PATH"
 export PATH="$HOME/miniconda3/bin:$PATH"
+export PATH="$HOME/.rbenv/shims:$PATH"
+export PATH="$HOME/.rbenv/bin:$PATH"
 export DOTFILES_PATH="$HOME/.dotfiles"
 export MANPATH="/usr/local/man:$MANPATH"
 
@@ -902,6 +904,8 @@ alias gplr="git pull --rebase"
 alias ga="git add"
 alias gaa="ga ."  # Git add all
 alias ga.="ga ."
+
+alias gunstage_all="git restore --staged ."
 
 alias grc="git rebase --continue"
 
