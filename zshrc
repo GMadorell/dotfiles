@@ -46,6 +46,11 @@ export LOG_WARNING="[Warning]"
 export LOG_INFO="[Info]"
 
 
+# Locale constants
+export LC_CTYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+
 # Shell configuration
 ## Name console window / tab
 export DISABLE_AUTO_TITLE="true" # Don't let Oh-My-Zsh control title, control it yourself
@@ -106,7 +111,6 @@ bindkey -s "\C-r" "\eqhh\n"     # bind hh to Ctrl-r (for Vi mode check doc)
 
 ## Broot setup - improved tree command
 source "$HOME/.config/broot/launcher/bash/br"
-alias tree=br
 
 # Direnv - environment variables switcher (similar to virtualenv)
 eval "$(direnv hook zsh)"
@@ -658,24 +662,24 @@ function notify() {
 }
 
 function timer() {
-    if [ $# -eq 1 ]; then
-	local start=$(date +%s)
-	local goal=$(m "$start+60*$1")
-	echo "Setting up a timer for $1 minutes"
-        echo "Start at: $(gdate -d@$start +%H:%M:%S)" 
-	echo "Run until $(gdate -d@$goal +%H:%M:%S)"
-	while [ $goal -ge $(date +%s) ];
-	do;
-	  local secondsLeft=$(m "$goal-$(date +%s)")
-	  echo -en "\r\033[KTimer Left: $(gdate -d@$secondsLeft -u +%H:%M:%S)"
-	  sleep 1;
-        done;
-	notify "Timer is done" "Timer is done"
-	for i in {1..3}; do afplay /System/Library/Sounds/Glass.aiff; done
-        say "Timer is done"
-    else
-	echo "$LOG_ERROR timer requires one parameter (amount of minutes)"
-    fi
+  if [ $# -eq 1 ]; then
+	  local start=$(date +%s)
+	  local goal=$(m "$start+60*$1")
+	  echo "Setting up a timer for $1 minutes"
+    echo "Start at: $(gdate -d@$start +%H:%M:%S)" 
+	  echo "Run until $(gdate -d@$goal +%H:%M:%S)"
+	  while [ $goal -ge $(date +%s) ];
+	  do;
+	    local secondsLeft=$(m "$goal-$(date +%s)")
+	    echo -en "\r\033[KTimer Left: $(gdate -d@$secondsLeft -u +%H:%M:%S)"
+	    sleep 1;
+    done;
+	  notify "Timer is done" "Timer is done"
+	  for i in {1..3}; do afplay /System/Library/Sounds/Glass.aiff; done
+    say "Timer is done"
+  else
+    echo "$LOG_ERROR timer requires one parameter (amount of minutes)"
+  fi
 }
 
 alias dateiso="date +%F"
@@ -906,6 +910,9 @@ alias gaa="ga ."  # Git add all
 alias ga.="ga ."
 
 alias gunstage_all="git restore --staged ."
+
+alias gnvm="git nvm"
+alias gnevermind="git nevermind"
 
 alias grc="git rebase --continue"
 

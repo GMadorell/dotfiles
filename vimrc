@@ -32,6 +32,10 @@ color dracula
 "" expandtab  -> Use actual spaces instead of tabs
 :set tabstop=2 shiftwidth=2 expandtab
 
+" Ignore case when searching
+" Be careful, it also applies to search and replaces (aka substitutions).
+:set ignorecase
+
 
 " Commands
 "" Json Formatting

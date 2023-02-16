@@ -14,6 +14,7 @@
 	uncommit = reset --mixed HEAD~
 	amend = commit --amend
 	nevermind = !git reset --hard HEAD && git clean -d -f
+  nvm = nevermind
 [credential]
 	helper = osxkeychain
 [core]
