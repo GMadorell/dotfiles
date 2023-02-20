@@ -841,6 +841,13 @@ function kchangenamespace() { kubens ; }
 function knamespace() { kubens ; }
 function kns() { kubens ; }
 
+function kdecode_secret() {
+  percol_secret_selection=$(kubectl get secret | percol --prompt='<green>Select secret to decode:</green> %q')
+  local selected_secret=$(echo $percol_secret_selection | cut -d" " -f1)
+  echo "Selected secret: $selected_secret"
+  kubectl get secret $selected_secret -o json | jq '.data | map_values(@base64d)'
+}
+
 ## GIT ALIASES AND HELPER FUNCTIONS
 alias gp="git push"
 alias gpf="git push --force-with-lease"
