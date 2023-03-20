@@ -897,6 +897,13 @@ alias grepoview="grepo"
 alias grepobrowse="grepo"
 alias grepob="grepo"
 
+function greposearch() {
+  local organization=$1
+  local percol_repo_selection=$(gh repo list $organization --limit 1000 | percol --prompt='<green>Select repo to open:</green> %q')
+  local repo=$(echo "$percol_repo_selection" | awk '{ print $1 }')
+  open "https://www.github.com/$repo"
+}
+
 alias gf="git fetch"
 alias gfetch="git fetch"
 alias gfa="git fetch --all"
