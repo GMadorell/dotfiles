@@ -96,6 +96,9 @@ autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '\033' edit-command-line
 
+## 10ms for key sequences: https://www.johnhawthorn.com/2012/09/vi-escape-delays/
+KEYTIMEOUT=1
+
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=240'
 
 ## fasd is a command line productivity booster:
