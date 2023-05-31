@@ -10,6 +10,7 @@ export ZSH=$HOME/.oh-my-zsh
 ZSH_THEME=ukelele
 ZSH_DISABLE_COMPFIX=true
 
+DISABLE_MAGIC_FUNCTIONS=true # Allow url pasting without escape: https://github.com/ohmyzsh/ohmyzsh/issues/7632
 plugins=(zsh-autosuggestions zsh-syntax-highlighting)
 
 # Path constants
@@ -89,6 +90,11 @@ bindkey ^D forward-word              # Ctrl+D for moving a word forward
 bindkey ^F end-of-line               # Ctrl+F for moving till the end
 bindkey ^W backward-delete-word      # Ctrl+W to delete a word backward
 bindkey ^E kill-word                 # Ctrl+E to delete a word forward
+
+## Use ESC to edit the current command line: https://bugfactory.io/blog/z-shell-tip-edit-current-command-line-with-vim/
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '\033' edit-command-line
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=240'
 
@@ -1087,6 +1093,7 @@ function git_empty_commit() {
 }
 alias git_commit_empty=git_empty_commit
 alias gempty=git_empty_commit
+alias gcempty=git_empty_commit
 function gcbname() {
   # Applies a commit with the same name as the current branch name transformed to sentence case
   local branch_name=$(gbname)  
