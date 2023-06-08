@@ -637,7 +637,7 @@ function ls_grep() {
 alias lg="ls_grep"
 alias lsg="ls_grep"
 function lscd() {
-  local chosen_directory=$(ls -d .*/ */ | percol --prompt='<green>Select directory to cd into:</green> %q') 
+  local chosen_directory=$(ls -lt -d */ | awk '{print substr($0, index($0,$NF))}' |  percol --prompt='<green>Select directory to cd into:</green> %q') 
   cd "$chosen_directory"
 }
 alias cdls="lscd"
