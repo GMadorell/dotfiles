@@ -1021,6 +1021,7 @@ alias gdh7="git diff HEAD~7"
 alias gdh8="git diff HEAD~8"
 alias gdh9="git diff HEAD~9"
 alias gdhs="git diff HEAD --stat"
+alias gdhunity='git diff HEAD -- . ":(exclude)*.dwlt" ":(exclude)*.prefab" ":(exclude)*.unity" ":(exclude)*.meta" ":(exclude)*.asset" ":(exclude)*.png" ":(exclude)*.PNG" ":(exclude)*.dwlt"'
 function gdmaster() { git diff remotes/origin/master..$(gcurrent_branch_name) }
 alias gdm=gdmaster
 alias gdmaster_name_status="gdmaster --name-status"
