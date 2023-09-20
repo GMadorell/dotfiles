@@ -134,3 +134,6 @@ own-alias.sbt
 
 # Temporal notes
 tmp_note*
+
+# Local .gitignore
+.local.gitignore

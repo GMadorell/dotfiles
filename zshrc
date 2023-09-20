@@ -199,6 +199,9 @@ alias killsbt="kill_sbt"
 # C# setup
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
+# Rust setup
+alias cb="cargo test --no-run --color always 2>&1 | less -r"
+
 # PGP/GPG setup
 export GPG_TTY=$(tty)
 
@@ -597,6 +600,10 @@ alias n="new_note"
 alias compress_json="jq -c"
 alias json_compress=compress_json
 
+# Case conversion
+function title2kebab() { case_converter -f title -t kebab $1; };
+function kebab2title() { case_converter -f kebab -t title $1; };
+
 
 # Hardware related
 ## Battery status
@@ -839,6 +846,7 @@ function utc_difference () { datediff $(date_utc) $(date_utc_external) ; }
 alias k="kubectl"
 alias kgp="kubectl get pods"
 alias kgsec="kubectl get secret"
+alias kgd="kubectl get deployments"
 
 function kcurrent() { echo "$(kcurrent_context) / $(kcurrent_namespace)"; }
 function kcurrent_context() { kubectl config current-context; }
