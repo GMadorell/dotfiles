@@ -201,6 +201,8 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 # Rust setup
 alias cb="cargo test --no-run --color always 2>&1 | less -r"
+alias ct="cargo test"
+alias cj="cargo build && cargo fmt --all && cargo clippy --all-targets" # Stands for "Cargo Janitor"
 
 # PGP/GPG setup
 export GPG_TTY=$(tty)
