@@ -852,6 +852,7 @@ alias kgsec="kubectl get secret"
 alias kgd="kubectl get deployments"
 
 function kcurrent() { echo "$(kcurrent_context) / $(kcurrent_namespace)"; }
+alias kc="kcurrent"
 function kcurrent_context() { kubectl config current-context; }
 function kcurrent_namespace() { kubens --current; }
 function kchangecontext() { kubectx ; }

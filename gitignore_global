@@ -125,6 +125,7 @@ Temporary Items
 .bloop
 .ammonite
 own-alias.sbt
+.sbtops
 
 # Direnv
 .envrc
