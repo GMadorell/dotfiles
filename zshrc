@@ -20,10 +20,15 @@ export PATH="$HOME/anaconda/bin:$PATH"
 export PATH="$HOME/miniconda3/bin:$PATH"
 export PATH="$HOME/.rbenv/shims:$PATH"
 export PATH="$HOME/.rbenv/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH" # suggested by pipx
 export DOTFILES_PATH="$HOME/.dotfiles"
 export MANPATH="/usr/local/man:$MANPATH"
 
 export PROJECTS_PATH="$HOME/projects"
+
+# fpath - path for functions, used for completions 
+fpath+=~/.zfunc
+autoload -Uz compinit && compinit
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 source $ZSH/oh-my-zsh.sh
@@ -850,6 +855,7 @@ alias k="kubectl"
 alias kgp="kubectl get pods"
 alias kgsec="kubectl get secret"
 alias kgd="kubectl get deployments"
+alias kservices="kubectl get services"
 
 function kcurrent() { echo "$(kcurrent_context) / $(kcurrent_namespace)"; }
 alias kc="kcurrent"
@@ -1117,6 +1123,8 @@ function gcbname() {
   gcm "$commit_message"
 }
 alias gcwip="gcm \"WIP\""
+alias guncommit="git uncommit" # resets last commit
+alias greset_last_commit="git uncommit"
 
 function git_changed_files() { git diff --name-only HEAD~1 ; }
 alias gchanged_files=git_changed_files
@@ -1203,3 +1211,4 @@ greeting
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/Users/gerard/.sdkman"
 [[ -s "/Users/gerard/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/gerard/.sdkman/bin/sdkman-init.sh"
+
