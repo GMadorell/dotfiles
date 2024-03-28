@@ -930,6 +930,12 @@ function greposearch() {
   local repo=$(echo "$percol_repo_selection" | awk '{ print $1 }')
   open "https://www.github.com/$repo"
 }
+function gclonecd () {
+  repo_url="$1"
+  dir_name=$(basename "$repo_url" .git)
+  git clone "$repo_url"
+  cd "$dir_name"
+}
 
 alias gf="git fetch"
 alias gfetch="git fetch"
