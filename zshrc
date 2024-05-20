@@ -457,11 +457,14 @@ function encrypt_zip {
   if [ -z "$1" ]; then
     echo "Usage: encrypt_zip <path/file_name>"
   else
-    if [ -f "$1" ] ; then
-      zip -P $DOCUMENTATION_PW "$1.zip" $1
-      rm $1
+    if [ -f "$1" ]; then
+      zip -P $DOCUMENTATION_PW "$1.zip" "$1"
+      rm "$1"
+    elif [ -d "$1" ]; then
+      zip -r -P $DOCUMENTATION_PW "$1.zip" "$1"
+      rm -r "$1"
     else
-      echo "'$1' - file does not exist"
+      echo "'$1' - file or directory does not exist"
     fi
   fi
 }
