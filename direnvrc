@@ -1,0 +1,14 @@
+
+# Reference: https://github.com/direnv/direnv/wiki/Node#using-auto-installing-nvm
+# Usage: put a Node version number like v14.15.4 in .nvmrc and put 'use nvm' in .envrc
+use_nvm() {
+  watch_file .nvmrc
+  local NVM_PATH="$HOME/.nvm/nvm.sh"
+  if ! [ -f "$NVM_PATH" ]; then
+    echo "Installing NVM" >&2
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+  fi
+  . "${NVM_PATH}"
+  nvm install
+  layout node
+}
