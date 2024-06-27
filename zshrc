@@ -1207,7 +1207,8 @@ alias gmt="git machete traverse --fetch"
 alias gmadd="git machete add"
 alias gmadvance="git machete advance"
 alias gmu="git machete update"
-alias gmtall="git machete traverse --fetch --whole"
+alias gmtallrebase="git machete traverse --fetch --whole"
+alias gmtallmerge="git machete traverse --fetch --whole --merge"
 alias gmedit="git machete edit"
 
 # Greeting Message
