@@ -1065,11 +1065,18 @@ alias gbd="git branch -d"
 alias gbD="git branch -D --"
 alias gbd_remote="git push origin --no-verify --delete"
 function git_branch_rename_local() {
-  echo "$(gcurrent_branch_name)" > /tmp/git_branch_name_for_rename.txt
+  if [ "$#" -gt 1 ]; then
+    echo "Error: Too many parameters. Only one parameter is allowed." >&2
+    return 1
+  elif [ "$#" -eq 1 ]; then
+    new_branch_name="$1"
+  else
+    echo "$(gcurrent_branch_name)" > /tmp/git_branch_name_for_rename.txt
+    vim /tmp/git_branch_name_for_rename.txt
+    new_branch_name=$(cat /tmp/git_branch_name_for_rename.txt)
+  fi
 
-  vim /tmp/git_branch_name_for_rename.txt 
-  
-  git branch -m $(cat /tmp/git_branch_name_for_rename.txt)
+  git branch -m "$new_branch_name"
 }
 alias gbrename=git_branch_rename_local
 alias grename_branch=git_branch_rename_local
@@ -1138,9 +1145,11 @@ alias greset_last_commit="git uncommit"
 function git_changed_files() { git diff --name-only HEAD~1 ; }
 alias gchanged_files=git_changed_files
 
-function gmerge_upstream_master { git merge upstream/master ; }
+function gmerge_origin_master { git fetch && git merge origin/master ; }
+function gmerge_upstream_master { git fetch && git merge upstream/master ; }
 function gmerge_master { git merge master ; }
 alias gmum=gmerge_upstream_master
+alias gmom=gmerge_origin_master
 function gabort_merge { git merge --abort ; }
 
 function git_integrate_multiple() {
@@ -1206,7 +1215,8 @@ alias gms="git machete status"
 alias gmt="git machete traverse --fetch"
 alias gmadd="git machete add"
 alias gmadvance="git machete advance"
-alias gmu="git machete update"
+alias gmurebase="git machete update -n"
+alias gmumerge="git machete update --merge -n"
 alias gmtallrebase="git machete traverse --fetch --whole"
 alias gmtallmerge="git machete traverse --fetch --whole --merge"
 alias gmedit="git machete edit"
