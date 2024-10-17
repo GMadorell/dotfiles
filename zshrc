@@ -458,9 +458,19 @@ function encrypt_zip {
     echo "Usage: encrypt_zip <path/file_name>"
   else
     if [ -f "$1" ]; then
-      zip -P $DOCUMENTATION_PW "$1.zip" "$1"
-      rm "$1"
+      if [[ "$1" == *.zip ]]; then
+        # If the file is already a zip, unzip, re-zip with password, and remove original zip
+        temp_dir=$(mktemp -d)
+        unzip -q "$1" -d "$temp_dir"
+        zip -r -P $DOCUMENTATION_PW "$1" "$temp_dir"/*
+        rm -rf "$temp_dir"
+      else
+        # If it's a regular file, zip it with a password and remove the original file
+        zip -P $DOCUMENTATION_PW "$1.zip" "$1"
+        rm "$1"
+      fi
     elif [ -d "$1" ]; then
+      # If it's a directory, zip it with a password and remove the original directory
       zip -r -P $DOCUMENTATION_PW "$1.zip" "$1"
       rm -r "$1"
     else
@@ -468,6 +478,7 @@ function encrypt_zip {
     fi
   fi
 }
+
 
 function optimize_clipboard_image () {
   rm /tmp/test.png
@@ -632,16 +643,16 @@ alias kbpaste=paste
 
 # lst is the default to list files, abstracting away the used tool
 # the --extended flag checks the extended extensions on files, useful to see if they are quarantined in MacOS, for example.
-alias lst="exa -l -h -a -a --time-style long-iso" 
+alias lst="eza -l -h -a -a --time-style long-iso" 
 alias l=lst
-alias lst_extended="exa -l -h -a -a --time-style long-iso --extended"
+alias lst_extended="eza -l -h -a -a --time-style long-iso --extended"
 alias lste="lst_extended"
-alias lst_date_created="exa -l -h -t created --sort created -a -a --time-style long-iso"
+alias lst_date_created="eza -l -h -t created --sort created -a -a --time-style long-iso"
 alias lst_created="lst_date_created"
 alias lstcreated="lst_date_created"
 alias lstc="lst_date_created"
 alias lc="lst_date_created"
-alias lst_date_modified="exa -l -h -t modified --sort modified -a -a --time-style long-iso"
+alias lst_date_modified="eza -l -h -t modified --sort modified -a -a --time-style long-iso"
 alias lst_modified="lst_date_modified"
 alias lstmodified="lst_date_modified"
 alias lm="lst_date_modified"
@@ -813,6 +824,18 @@ function clear_mail() { sudo rm /var/mail/$USER }
 # Weather
 function weather() { curl wttr.in/$1 ; }
 function weatherbcn() { weather barcelona ; }
+ropa() { # usage: ropa "some city"
+    query="$*"
+    modified_query="${query// /-}"
+    url="https://puedotenderlaropa.com/$modified_query"
+    if command -v xdg-open > /dev/null; then
+        xdg-open "$url"
+    elif command -v open > /dev/null; then
+        open "$url"
+    else
+        echo "Cannot detect a method to open URLs on this system."
+    fi
+}
 
 # Vim aliases
 alias vim_install_plugins="vim +PluginInstall +qall"
@@ -1034,6 +1057,7 @@ alias gunstash="git unstash"
 function gsquash_master() { git rebase -i origin/master }
 function gsquash_same_branch() { git rebase -i origin/$(gcurrent_branch_name) }
 alias grm="git rebase master"
+alias grom="git fetch && git rebase origin/master"
 alias grum="git rebase upstream/master"
 alias grupstream_master="git rebase upstream/master"
 
