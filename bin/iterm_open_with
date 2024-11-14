@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 """
 Iterm is supposed to call this script when a click on a path of a file happens.
 
@@ -17,6 +17,21 @@ PHPSTORM_EXTENSIONS = ["php", "feature"]
 INTELLIJ_IDEA_EXTENSIONS = ["scala", "java", "clj"]
 VIDEO_EXTENSIONS = ["mkv", "mp4", "avi"]
 VSCODE_EXTENSIONS = ["js", "ts"]
+INTELLIJ_OR_VSCODE_EXTENSIONS = ["ts", "html", "scss"]
+
+def is_intellij_running():
+    """Checks if IntelliJ IDEA is running."""
+    try:
+        result = subprocess.run(
+            ["pgrep", "-f", "idea"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        return result.returncode == 0
+    except Exception as e:
+        with open("/var/log/iterm_open_with.log", "a+") as log_file:
+            log_file.write("ERROR - Exception checking IntelliJ status: {0}\n".format(e))
+        return False
 
 with open("/var/log/iterm_open_with.log", "a+") as log_file:
     log_file.write(
@@ -59,14 +74,25 @@ with open("/var/log/iterm_open_with.log", "a+") as log_file:
             cmd = ["/usr/local/bin/idea", "--line", line_number, filename]
     elif extension in VIDEO_EXTENSIONS:
         cmd = ["/usr/local/bin/vlc", filename]
+    elif extension in INTELLIJ_OR_VSCODE_EXTENSIONS:
+        if is_intellij_running():
+            if line_number is None:
+                cmd = ["/usr/local/bin/idea", filename]
+            else:
+                cmd = ["/usr/local/bin/idea", "--line", line_number, filename]
+        else:
+            cmd = ["/opt/homebrew/bin/code", filename]
     elif extension in VSCODE_EXTENSIONS:
         cmd = ["/opt/homebrew/bin/code", filename]
     else:
         log_file.write("ERROR - Cannot match extension: {0}\n".format(extension))
         exit(1)
 
-    log_file.write("Executing cmd: {0}".format(cmd))
-    p = Popen(cmd, shell=False, stdin=PIPE, stdout=PIPE,
-              stderr=STDOUT, close_fds=True)
-    output = p.stdout.read()
-    log_file.write(str(output))
+    log_file.write("Executing cmd: {0}\n".format(cmd))
+    try:
+        p = Popen(cmd, shell=False, stdin=PIPE, stdout=PIPE,
+                  stderr=STDOUT, close_fds=True)
+        output = p.stdout.read()
+        log_file.write(str(output))
+    except Exception as e:
+        log_file.write("ERROR - Exception executing command: {0}\n".format(e))

@@ -138,3 +138,6 @@ tmp_note*
 
 # Local .gitignore
 .local.gitignore
+
+# Repomix
+repomix-output.txt
