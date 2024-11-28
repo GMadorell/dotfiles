@@ -217,6 +217,14 @@ function setup_rust() {
   if [ ! -d "$CARGO_TARGET_DIR" ]; then
     mkdir -p "$CARGO_TARGET_DIR"
   fi
+
+  # Run cargo sweep in the background
+  if command -v cargo-sweep >/dev/null 2>&1; then
+    echo "$LOG_INFO Running cargo sweep in the background..."
+    nohup cargo sweep -s "$CARGO_TARGET_DIR" >/dev/null 2>&1 &
+  else
+    echo "$LOG_WARNING 'cargo-sweep' is not installed. Skipping cleanup."
+  fi
 }
 
 if (($RUST_MODE)); then
