@@ -1,8 +1,9 @@
 # Language flags (set to 1 if you want language specific things to be loaded)
 PHP_MODE=0
-PYTHON_MODE=1
-RUBY_MODE=1
+PYTHON_MODE=0
+RUBY_MODE=0
 JS_MODE=1
+RUST_MODE=1
 
 # Setup zsh with oh-my-zsh
 export ZSH=$HOME/.oh-my-zsh
@@ -209,6 +210,18 @@ alias cb="cargo test --no-run --color always 2>&1 | less -r"
 alias ct="cargo test"
 function cto() { "cargo test --test $1"; }
 alias cj="cargo build && cargo fmt --all && cargo clippy --all-targets" # Stands for "Cargo Janitor"
+
+function setup_rust() {
+  echo "$LOG_INFO Rust mode enabled - setting up Rust related utilities…"
+  export CARGO_TARGET_DIR="$HOME/.cargo/cargo_global_target_dir"
+  if [ ! -d "$CARGO_TARGET_DIR" ]; then
+    mkdir -p "$CARGO_TARGET_DIR"
+  fi
+}
+
+if (($RUST_MODE)); then
+  setup_rust
+fi
 
 # PGP/GPG setup
 export GPG_TTY=$(tty)
