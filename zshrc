@@ -1,6 +1,6 @@
 # Language flags (set to 1 if you want language specific things to be loaded)
 PHP_MODE=0
-PYTHON_MODE=0
+PYTHON_MODE=1
 RUBY_MODE=0
 JS_MODE=1
 RUST_MODE=1
@@ -1184,6 +1184,7 @@ function gcbname() {
   gcm "$commit_message"
 }
 alias gcwip="gcm \"WIP\""
+alias gcmwip=gcwip
 alias guncommit="git uncommit" # resets last commit
 alias greset_last_commit="git uncommit"
 
