@@ -14,7 +14,7 @@ from subprocess import Popen, PIPE, STDOUT
 import datetime
 
 PHPSTORM_EXTENSIONS = ["php", "feature"]
-INTELLIJ_IDEA_EXTENSIONS = ["scala", "java", "clj"]
+INTELLIJ_IDEA_EXTENSIONS = ["scala", "java", "clj", "rs", "rust"]
 VIDEO_EXTENSIONS = ["mkv", "mp4", "avi"]
 VSCODE_EXTENSIONS = ["js", "ts"]
 INTELLIJ_OR_VSCODE_EXTENSIONS = ["ts", "html", "scss"]
