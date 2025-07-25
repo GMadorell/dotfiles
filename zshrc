@@ -209,7 +209,7 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 alias cb="cargo test --no-run --color always 2>&1 | less -r"
 alias ct="cargo test"
 function cto() { "cargo test --test $1"; }
-alias cj="cargo build && cargo fmt --all && cargo clippy --all-targets" # Stands for "Cargo Janitor"
+alias cj="cargo build && cargo fmt --all && cargo clippy --fix --all-targets --allow-dirty --allow-staged && cargo clippy --all-targets -- -D warnings" # Stands for "Cargo Janitor"
 
 function setup_rust() {
   echo "$LOG_INFO Rust mode enabled - setting up Rust related utilities…"
@@ -1150,12 +1150,15 @@ alias gcamend="gca"
 alias gcammend="gca"
 alias gamend="gca"
 alias gammend="gca"
-function git_commit_with_msg() {
-    if [ $# -eq 1 ]; then
-        git commit -m $1
-    else
-        echo "$LOG_ERROR gcm accepts a single parameter only (the commit message)"
+git_commit_with_msg () {
+    if [ $# -eq 0 ]; then
+        echo "$LOG_ERROR gcm needs at least one parameter (the commit message)"
+        return 1
     fi
+
+    # "$*" joins all parameters with spaces, preserving their exact spelling & case
+    local msg="$*"
+    git commit -m "$msg"
 }
 alias gcm=git_commit_with_msg
 alias gcn="git commit --no-verify"
