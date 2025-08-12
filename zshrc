@@ -939,14 +939,37 @@ alias gpt="git push --tags"
 alias gck="git checkout"
 alias gckm="git checkout master"
 alias gckd="git checkout develop"
-alias gckb="git checkout -b"
 alias gckt="git checkout --theirs"
 alias gcko="git checkout --ours"
 alias gckmine="git checkout --ours" # Checkout the file I already had (compared to server)
 alias gdiscard_unstaged="git checkout -- ."
 alias gck_unstaged="git checkout -- ."
 alias gckunstaged="git checkout -- ."
-function function gckl_all() {
+# Create (if needed) and checkout a branch built from args joined with "_"
+function gckb() {
+  if [ $# -eq 0 ]; then
+    echo "$LOG_ERROR gckb needs at least one parameter (branch name parts)"
+    return 1
+  fi
+
+  # Join args with "_" (e.g., gckb feature user auth -> feature_user_auth)
+  local raw_name="${(j:_:)@}"
+
+  # Sanitize a bit: lowercase, keep letters/numbers/_/./-//, collapse repeats, trim edges
+  local branch_name
+  branch_name="$(echo "$raw_name" \
+    | tr '[:upper:]' '[:lower:]' \
+    | sed -E 's/[^a-z0-9_./-]+/_/g; s/_+/_/g; s|^[_./-]+||; s|[_./-]+$||')"
+
+  if git rev-parse --verify "$branch_name" >/dev/null 2>&1; then
+    echo "$LOG_INFO Branch exists, checking out '$branch_name'..."
+    git checkout "$branch_name"
+  else
+    echo "$LOG_INFO Creating and checking out '$branch_name'..."
+    git checkout -b "$branch_name"
+  fi
+}
+function gckl_all() {
   percol_branch_selection=$(git branch --sort=-committerdate -a | percol --prompt='<green>Select branch to checkout:</green> %q')
   branch=$(echo $percol_branch_selection | ltrim "*" | ltrim " " | sed 's/^remotes\/.*\///')
   git checkout $branch
