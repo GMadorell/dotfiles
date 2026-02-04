@@ -381,6 +381,143 @@ function escheck() {
 function escnf() { $EDITOR /usr/local/etc/elasticsearch/elasticsearch.yml ; }
 function esplugin() { /usr/local/opt/elasticsearch@5.6/libexec/bin/elasticsearch-plugin $@ ; }
 
+# VPN / Pritunl
+alias pritunl-client="/Applications/Pritunl.app/Contents/Resources/pritunl-client"
+alias pritunl=pritunl-client
+pritunlpick() {
+  local selected id
+  selected=$(
+    pritunl list | awk '
+      $0 ~ /^\+/ { next }
+      $0 ~ /^\|[[:space:]]*ID[[:space:]]*\|/ { next }
+
+      $0 ~ /^\|/ {
+        n = split($0, c, "|")
+        for (i=1; i<=n; i++) gsub(/^[ \t]+|[ \t]+$/, "", c[i])
+
+        id = c[2]
+        name = c[3]
+
+        # First line: has ID
+        if (id != "") {
+          cur_id = id
+          cur_name = name
+          next
+        }
+
+        # Second line: continuation, often contains "(...)"
+        if (cur_id != "") {
+          if (match(name, /\([^)]*\)/)) {
+            label = substr(name, RSTART, RLENGTH)
+          } else if (match(cur_name, /\([^)]*\)/)) {
+            label = substr(cur_name, RSTART, RLENGTH)
+          } else {
+            label = name
+          }
+
+          if (label != "" && label != "-") {
+            print cur_id " " label
+          } else {
+            print cur_id " (" cur_name ")"
+          }
+
+          cur_id = ""
+          cur_name = ""
+        }
+      }
+    ' | percol --prompt='<green>Select Pritunl profile:</green> %q'
+  )
+
+  id=$(echo "$selected" | awk '{print $1}')
+  echo "$id"
+}
+
+# Show the currently active profile (ID + label)
+vpnactive() {
+  pritunl list | awk '
+    $0 ~ /^\+/ { next }
+    $0 ~ /^\|[[:space:]]*ID[[:space:]]*\|/ { next }
+
+    $0 ~ /^\|/ {
+      n = split($0, c, "|")
+      for (i=1; i<=n; i++) gsub(/^[ \t]+|[ \t]+$/, "", c[i])
+
+      id = c[2]
+      name = c[3]
+      state = c[4]  # STATE column
+
+      if (id != "") {
+        cur_id = id
+        cur_name = name
+        cur_state = state
+        next
+      }
+
+      if (cur_id != "" && cur_state == "Active") {
+        if (match(name, /\([^)]*\)/)) label = substr(name, RSTART, RLENGTH)
+        else if (match(cur_name, /\([^)]*\)/)) label = substr(cur_name, RSTART, RLENGTH)
+        else label = cur_name
+
+        print cur_id " " label
+        found = 1
+        exit
+      }
+
+      cur_id = ""
+      cur_name = ""
+      cur_state = ""
+    }
+    END {
+      if (!found) print "No active Pritunl profile"
+    }
+  '
+}
+
+# Connect: stop any active profile, then start the selected one
+# Usage: vpnon [ovpn|wg]
+vpnon() {
+  local mode="${1:-ovpn}"
+  local id
+
+  id=$(pritunlpick)
+  [[ -z "$id" ]] && return 1
+
+  echo "→ Disconnecting any active profile…"
+  # Best-effort: stop all Active profiles (should be 0/1)
+  pritunl list | awk -F'|' '
+    $0 ~ /^\|/ {
+      gsub(/^[ \t]+|[ \t]+$/, "", $2)
+      gsub(/^[ \t]+|[ \t]+$/, "", $4)  # STATE
+      if ($2 != "" && $4 == "Active") print $2
+    }' | while read -r pid; do
+      pritunl stop "$pid" >/dev/null 2>&1 || true
+    done
+
+  echo "→ Connecting $id (mode=$mode)"
+  pritunl start "$id" --mode="$mode"
+}
+
+# Disconnect: stop the currently active profile
+vpnoff() {
+  local active_id
+  active_id=$(
+    pritunl list | awk -F'|' '
+      $0 ~ /^\|/ {
+        gsub(/^[ \t]+|[ \t]+$/, "", $2) # ID
+        gsub(/^[ \t]+|[ \t]+$/, "", $4) # STATE
+        if ($2 != "" && $4 == "Active") { print $2; exit }
+      }'
+  )
+
+  if [[ -z "$active_id" ]]; then
+    echo "No active Pritunl profile"
+    return 0
+  fi
+
+  echo "→ Disconnecting $active_id"
+  pritunl stop "$active_id"
+}
+
 # AWS
 export AWS_PROFILE=saml
 
