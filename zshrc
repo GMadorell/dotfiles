@@ -391,6 +391,20 @@ pritunlpick() {
       $0 ~ /^\+/ { next }
       $0 ~ /^\|[[:space:]]*ID[[:space:]]*\|/ { next }
 
+      function flush(    label) {
+        if (cur_id == "") return
+        if (match(cur_extra, /\([^)]*\)/)) {
+          label = substr(cur_extra, RSTART, RLENGTH)
+        } else if (match(cur_name, /\([^)]*\)/)) {
+          label = substr(cur_name, RSTART, RLENGTH)
+        } else {
+          label = cur_extra != "" ? cur_extra : cur_name
+        }
+        if (label == "" || label == "-") label = "(" cur_name ")"
+        print cur_id " " label
+        cur_id = ""; cur_name = ""; cur_extra = ""
+      }
+
       $0 ~ /^\|/ {
         n = split($0, c, "|")
         for (i=1; i<=n; i++) gsub(/^[ \t]+|[ \t]+$/, "", c[i])
@@ -398,38 +412,21 @@ pritunlpick() {
         id = c[2]
         name = c[3]
 
-        # First line: has ID
         if (id != "") {
+          flush()
           cur_id = id
           cur_name = name
-          next
-        }
-
-        # Second line: continuation, often contains "(...)"
-        if (cur_id != "") {
-          if (match(name, /\([^)]*\)/)) {
-            label = substr(name, RSTART, RLENGTH)
-          } else if (match(cur_name, /\([^)]*\)/)) {
-            label = substr(cur_name, RSTART, RLENGTH)
-          } else {
-            label = name
-          }
-
-          if (label != "" && label != "-") {
-            print cur_id " " label
-          } else {
-            print cur_id " (" cur_name ")"
-          }
-
-          cur_id = ""
-          cur_name = ""
+          cur_extra = ""
+        } else if (cur_id != "") {
+          cur_extra = name
         }
       }
+
+      END { flush() }
     ' | percol --prompt='<green>Select Pritunl profile:</green> %q'
   )
 
-  id=$(echo "$selected" | awk '{print $1}')
-  echo "$id"
+  echo "$selected"  # outputs "id label"
 }
 
 # Show the currently active profile (ID + label)
@@ -477,10 +474,12 @@ vpnactive() {
 # Usage: vpnon [ovpn|wg]
 vpnon() {
   local mode="${1:-ovpn}"
-  local id
+  local selected id label
 
-  id=$(pritunlpick)
-  [[ -z "$id" ]] && return 1
+  selected=$(pritunlpick)
+  [[ -z "$selected" ]] && return 1
+  id="${selected%% *}"
+  label="${selected#* }"
 
   echo "→ Disconnecting any active profile…"
   # Best-effort: stop all Active profiles (should be 0/1)
@@ -493,28 +492,53 @@ vpnon() {
       pritunl stop "$pid" >/dev/null 2>&1 || true
     done
 
-  echo "→ Connecting $id (mode=$mode)"
+  echo "→ Connecting $label (mode=$mode)"
   pritunl start "$id" --mode="$mode"
 }
 
 # Disconnect: stop the currently active profile
 vpnoff() {
-  local active_id
-  active_id=$(
-    pritunl list | awk -F'|' '
+  local active_line active_id active_label
+  active_line=$(
+    pritunl list | awk '
+      $0 ~ /^\+/ { next }
+      $0 ~ /^\|[[:space:]]*ID[[:space:]]*\|/ { next }
+
+      function flush(    label) {
+        if (cur_id == "" || cur_state != "Active") {
+          cur_id = ""; cur_name = ""; cur_state = ""; cur_extra = ""; return
+        }
+        if (match(cur_extra, /\([^)]*\)/)) label = substr(cur_extra, RSTART, RLENGTH)
+        else if (match(cur_name, /\([^)]*\)/)) label = substr(cur_name, RSTART, RLENGTH)
+        else label = cur_extra != "" ? cur_extra : cur_name
+        if (label == "" || label == "-") label = "(" cur_name ")"
+        print cur_id " " label
+      }
+
       $0 ~ /^\|/ {
-        gsub(/^[ \t]+|[ \t]+$/, "", $2) # ID
-        gsub(/^[ \t]+|[ \t]+$/, "", $4) # STATE
-        if ($2 != "" && $4 == "Active") { print $2; exit }
-      }'
+        n = split($0, c, "|")
+        for (i=1; i<=n; i++) gsub(/^[ \t]+|[ \t]+$/, "", c[i])
+        id = c[2]; name = c[3]; state = c[4]
+        if (id != "") {
+          flush()
+          cur_id = id; cur_name = name; cur_state = state; cur_extra = ""
+        } else if (cur_id != "") {
+          cur_extra = name
+        }
+      }
+      END { flush() }
+    '
   )
 
-  if [[ -z "$active_id" ]]; then
+  if [[ -z "$active_line" ]]; then
     echo "No active Pritunl profile"
     return 0
   fi
 
-  echo "→ Disconnecting $active_id"
+  active_id="${active_line%% *}"
+  active_label="${active_line#* }"
+
+  echo "→ Disconnecting $active_label"
   pritunl stop "$active_id"
 }
 

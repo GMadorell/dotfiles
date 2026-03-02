@@ -149,3 +149,4 @@ findings
 # Cursor
 .localplans
 .localscripts
+.cursor/plans
