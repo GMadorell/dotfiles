@@ -150,3 +150,12 @@ findings
 .localplans
 .localscripts
 .cursor/plans
+
+# Claude
+.claude/settings.local.json
+.claude/worktrees
+# Superpowers plan artifacts (local working docs, not for VCS)
+docs/superpowers/plans/
+docs/superpowers/specs/
+docs/plans/
+.worktrees

@@ -130,9 +130,6 @@ source "$HOME/.config/broot/launcher/bash/br"
 # Direnv - environment variables switcher (similar to virtualenv)
 eval "$(direnv hook zsh)"
 
-# Fix command line mistakes (write fuck after failing something)
-eval $(thefuck --alias)
-
 # Python setup
 function setup_python() {
   echo "$LOG_INFO Python mode enabled - setting up python related utilities…"
@@ -230,6 +227,13 @@ function setup_rust() {
 if (($RUST_MODE)); then
   setup_rust
 fi
+
+# Claude setup
+## Headroom — wrap Claude Code with context compression
+alias claude='headroom wrap claude'
+## raw, un-wrapped claude when you need it:
+alias claude-raw='command claude'
+
 
 # PGP/GPG setup
 export GPG_TTY=$(tty)
@@ -1465,3 +1469,16 @@ greeting
 export SDKMAN_DIR="/Users/gerard/.sdkman"
 [[ -s "/Users/gerard/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/gerard/.sdkman/bin/sdkman-init.sh"
 
+
+# peon-ping quick controls
+alias peon="bash /Users/gerard/.claude/hooks/peon-ping/peon.sh"
+[ -f /Users/gerard/.claude/hooks/peon-ping/completions.bash ] && source /Users/gerard/.claude/hooks/peon-ping/completions.bash
+
+# bun completions
+[ -s "/Users/gerard/.bun/_bun" ] && source "/Users/gerard/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+alias claude-mem='/Users/gerard/.bun/bin/bun "/Users/gerard/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
