@@ -22,6 +22,7 @@ export PATH="$HOME/miniconda3/bin:$PATH"
 export PATH="$HOME/.rbenv/shims:$PATH"
 export PATH="$HOME/.rbenv/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH" # suggested by pipx
+export PATH="$(brew --prefix rustup)/bin:$PATH"
 export DOTFILES_PATH="$HOME/.dotfiles"
 export MANPATH="/usr/local/man:$MANPATH"
 
