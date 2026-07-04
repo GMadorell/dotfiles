@@ -109,7 +109,9 @@ KEYTIMEOUT=1
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=240'
 
 ## zoxide setup (https://github.com/ajeetdsouza/zoxide) -- use z to jump around directories
+## also acts as a better cd
 eval "$(zoxide init zsh)"
+alias cd="z"
 
 ## hstr setup - improved history
 export HISTFILE=~/.zsh_history  # ensure history file visibility
