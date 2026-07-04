@@ -9,9 +9,6 @@ config.font = wezterm.font_with_fallback({
 })
 config.font_size = 16.0
 config.line_height = 1.1
-config.cell_width = 0.95
-config.window_background_opacity = 0.98
-config.macos_window_background_blur = 30
 config.inactive_pane_hsb = {
   brightness = 0.9, 
 }
