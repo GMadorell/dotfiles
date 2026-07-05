@@ -1,0 +1,98 @@
+{
+  "version": 3,
+  "lines": [
+    [
+      {
+        "id": "1",
+        "type": "model",
+        "color": "magenta"
+      },
+      {
+        "id": "59c30b5e-a98a-4a8e-a7dc-5aaef24be247",
+        "type": "thinking-effort",
+        "color": "magenta",
+        "dim": "parens"
+      },
+      {
+        "id": "ae458193-5d54-4910-86b7-67d3b4c93532",
+        "type": "context-percentage"
+      },
+      {
+        "id": "64c8e5ba-4d6b-4d46-8df9-fef413419ec3",
+        "type": "session-usage",
+        "color": "blue",
+        "merge": true
+      },
+      {
+        "id": "61ce7b73-609d-40af-a40a-25dbbed4dffb",
+        "type": "reset-timer",
+        "color": "blue"
+      },
+      {
+        "id": "a8dc9517-e06a-45bc-ba1d-2aa57ef05e7d",
+        "type": "weekly-usage",
+        "color": "blue",
+        "merge": true
+      },
+      {
+        "id": "f8bdd949-57c8-4c2e-affb-6d0cd48bc6a1",
+        "type": "weekly-reset-timer",
+        "color": "blue"
+      }
+    ],
+    [
+      {
+        "id": "fc152090-7377-4e74-9ac9-24f27b16253a",
+        "type": "git-branch",
+        "color": "brightMagenta",
+        "dim": true
+      },
+      {
+        "id": "227347dc-c650-4b01-956e-03f19301f6fb",
+        "type": "git-worktree",
+        "color": "brightMagenta",
+        "dim": true
+      },
+      {
+        "id": "84a1433f-62f1-417f-92bf-823520a814a4",
+        "type": "git-changes",
+        "color": "brightMagenta",
+        "dim": true
+      },
+      {
+        "id": "d4adc768-3697-4c38-b715-9e21caf19c60",
+        "type": "current-working-dir",
+        "color": "blue",
+        "dim": "parens"
+      }
+    ],
+    []
+  ],
+  "flexMode": "full-minus-40",
+  "compactThreshold": 60,
+  "colorLevel": 3,
+  "defaultSeparator": "|",
+  "defaultPadding": " ",
+  "inheritSeparatorColors": false,
+  "globalBold": false,
+  "gitCacheTtlSeconds": 5,
+  "minimalistMode": true,
+  "powerline": {
+    "enabled": false,
+    "separators": [
+      ""
+    ],
+    "separatorInvertBackground": [
+      false
+    ],
+    "startCaps": [],
+    "endCaps": [],
+    "theme": "nord-aurora",
+    "autoAlign": false,
+    "continueThemeAcrossLines": false
+  },
+  "installation": {
+    "method": "auto-update",
+    "packageManager": "npm"
+  }
+}

@@ -141,6 +141,9 @@ function br {
 # Direnv - environment variables switcher (similar to virtualenv)
 eval "$(direnv hook zsh)"
 
+# Mise setup - tool to manage installations and version pins (eg choose specific python version)
+eval "$(mise activate zsh)"
+
 # Python setup
 function setup_python() {
   echo "$LOG_INFO Python mode enabled - setting up python related utilities…"
