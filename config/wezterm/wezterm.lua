@@ -30,6 +30,7 @@ config.window_padding = {
 config.enable_tab_bar = true
 config.use_fancy_tab_bar = false -- Gives us a clean, flat bar instead of retro 3D tabs
 config.tab_bar_at_bottom = true
+config.tab_max_width  = 26
 local function get_tab_title(tab_info)
   local title = tab_info.tab_title
   if title and #title > 0 then
