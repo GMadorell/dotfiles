@@ -34,18 +34,11 @@ defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
 Scripts meant to run on a schedule live in `bin/cronjobs/`, symlinked undotted into `~/bin/cronjobs/`
 (see `UNDOTTED` above).
 
-`rcup` only creates the symlinks — it does **not** install anything into crontab. After adding a new
-script here, wire it up manually:
-
-```
-crontab -e
-```
-
-Each entry points at the symlinked path in `~/bin/cronjobs/` (not the dotfiles path directly) and logs
-to the same shared files, e.g.:
-
+The actual schedule is kept in the `crontab` file at the repo root (excluded from `rcup`, since crontab
+isn't something you symlink into) — entries point at `~/bin/cronjobs/*`, e.g.:
 ```
 0 * * * * /Users/gmadorell/bin/cronjobs/brew_maintenance >>/tmp/crontab_stdout.log 2>>/tmp/crontab_stderr.log
 ```
 
-The crontab itself isn't tracked in this repo, only the scripts are.
+- Install it: `crontab crontab`
+- Edit it: `crontab -e`, then back up with `crontab -l > crontab`

@@ -1,0 +1,4 @@
+SHELL=/bin/bash
+BASH_ENV="/Users/gmadorell/.bashrc"
+0 * * * * /Users/gmadorell/bin/cronjobs/brew_maintenance >>/tmp/crontab_stdout.log 2>>/tmp/crontab_stderr.log
+30 * * * * /Users/gmadorell/bin/cronjobs/cargo_sweep >>/tmp/crontab_stdout.log 2>>/tmp/crontab_stderr.log
