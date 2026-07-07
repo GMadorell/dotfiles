@@ -1,0 +1,16 @@
+#!/bin/bash
+CARGO_TARGET_DIR="$HOME/.cargo/cargo_global_target_dir"
+
+echo "`date`: RUNNING: cargo sweep"
+
+if [ ! -d "$CARGO_TARGET_DIR" ]; then
+  echo "`date`: SKIPPING: cargo sweep ($CARGO_TARGET_DIR does not exist)"
+  exit 0
+fi
+
+if command -v cargo-sweep >/dev/null 2>&1; then
+  cargo sweep -s "$CARGO_TARGET_DIR"
+  echo "`date`: FINISHED: cargo sweep"
+else
+  echo "`date`: SKIPPING: cargo sweep ('cargo-sweep' is not installed)"
+fi

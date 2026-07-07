@@ -146,7 +146,6 @@ eval "$(mise activate zsh)"
 
 # Python setup
 function setup_python() {
-  echo "$LOG_INFO Python mode enabled - setting up python related utilities…"
   # Pyenv setup
   if command -v pyenv 1>/dev/null 2>&1; then
     eval "$(pyenv init -)"
@@ -164,7 +163,6 @@ fi
 
 # Ruby setup
 function setup_ruby() {
-  echo "$LOG_INFO Ruby mode enabled - setting up ruby related utilities…"
   eval "$(rbenv init -)"
 }
   
@@ -181,7 +179,6 @@ fi
 # PHP setup
 function setup_php() {
   DEFAULT_PHP_VERSION="7"
-  echo "$LOG_INFO PHP mode enabled - setting up PHP related utilities…"
 
   ## Php specific aliases
   function php_find_ini() { php --ini ; }
@@ -223,18 +220,9 @@ function cto() { "cargo test --test $1"; }
 alias cj="cargo build && cargo fmt --all && cargo clippy --fix --all-targets --allow-dirty --allow-staged && cargo clippy --all-targets -- -D warnings" # Stands for "Cargo Janitor"
 
 function setup_rust() {
-  echo "$LOG_INFO Rust mode enabled - setting up Rust related utilities…"
   export CARGO_TARGET_DIR="$HOME/.cargo/cargo_global_target_dir"
   if [ ! -d "$CARGO_TARGET_DIR" ]; then
     mkdir -p "$CARGO_TARGET_DIR"
-  fi
-
-  # Run cargo sweep in the background
-  if command -v cargo-sweep >/dev/null 2>&1; then
-    echo "$LOG_INFO Running cargo sweep in the background..."
-    nohup cargo sweep -s "$CARGO_TARGET_DIR" >/dev/null 2>&1 &
-  else
-    echo "$LOG_WARNING 'cargo-sweep' is not installed. Skipping cleanup."
   fi
 }
 
@@ -742,11 +730,6 @@ function mkcdir() {
 
 function randomuuid() {	echo $(uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]') ; }
 function uuidcp() { randomuuid | tr -d '\n' | pbcopy && pbpaste && echo ; }
-
-function randomcowsay() {
-  cow=(`cowsay -l | tail -n +2 | tr  " "  "\n" | sort -R | head -n 1`)
-  cowsay -f $cow "$@"
-}
 
 # Find / Search files or file contents related
 function searchfaq() { 
@@ -1473,20 +1456,11 @@ alias gmtallmerge="git machete traverse --fetch --whole --merge"
 alias gmedit="git machete edit"
 
 # Greeting Message
-function greeting() {
-  fortune | randomcowsay | lolcat -F 0.05
-}
 touch ~/.hushlogin # Disable the 'Last login: .....' message that appears as the first line on a new shell.
-greeting
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/Users/gerard/.sdkman"
 [[ -s "/Users/gerard/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/gerard/.sdkman/bin/sdkman-init.sh"
-
-
-# peon-ping quick controls
-alias peon="bash /Users/gerard/.claude/hooks/peon-ping/peon.sh"
-[ -f /Users/gerard/.claude/hooks/peon-ping/completions.bash ] && source /Users/gerard/.claude/hooks/peon-ping/completions.bash
 
 # bun completions
 [ -s "/Users/gerard/.bun/_bun" ] && source "/Users/gerard/.bun/_bun"
@@ -1494,5 +1468,3 @@ alias peon="bash /Users/gerard/.claude/hooks/peon-ping/peon.sh"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-
-alias claude-mem='/Users/gerard/.bun/bin/bun "/Users/gerard/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
