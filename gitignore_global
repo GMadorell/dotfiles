@@ -159,3 +159,4 @@ docs/superpowers/plans/
 docs/superpowers/specs/
 docs/plans/
 .worktrees
+.tokensave # used by tool inside Headroom for token efficiency

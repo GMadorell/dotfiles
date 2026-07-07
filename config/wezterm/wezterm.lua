@@ -1,5 +1,10 @@
 local wezterm = require 'wezterm'
+local sessions = wezterm.plugin.require(
+  "https://github.com/abidibo/wezterm-sessions"
+)
+
 local config = wezterm.config_builder()
+local act = wezterm.action
 
 -- Visual settings
 config.color_scheme = 'Darcula (base16)'
@@ -109,15 +114,112 @@ end)
 
 -- Keybindings
 config.keys = {
+  { mods = "CMD", key = "w", action = act.CloseCurrentPane { confirm = false } },
+  { mods = "CMD|SHIFT", key = "w", action = act.CloseCurrentTab { confirm = true } },
   {
     key = 'd',
     mods = 'CMD',
-    action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' },
+    action = act.SplitHorizontal { domain = 'CurrentPaneDomain' },
   },
   {
     key = 'd',
     mods = 'CMD|OPT',
-    action = wezterm.action.SplitVertical { domain = 'CurrentPaneDomain' },
+    action = act.SplitVertical { domain = 'CurrentPaneDomain' },
+  },
+  {
+    key = 'E',
+    mods = 'CTRL|SHIFT',
+    action = act.PromptInputLine {
+      description = 'Enter new name for tab',
+      action = wezterm.action_callback(function(window, pane, line)
+        if line then
+          window:active_tab():set_title(line)
+        end
+      end),
+    },
+  },
+  {
+    key = 't',
+    mods = 'CMD|SHIFT',
+    action = wezterm.action_callback(function(window, pane)
+      local overrides = window:get_config_overrides() or {}
+      overrides.enable_tab_bar = not (overrides.enable_tab_bar ~= false)
+      window:set_config_overrides(overrides)
+    end),
+  },
+  {
+    key = 'k',
+    mods = 'CMD',
+    action = act.ShowLauncherArgs {
+      flags = 'FUZZY|COMMANDS'
+    },
+  },
+  {
+    key = 'p',
+    mods = 'CMD',
+    action = act.ShowLauncherArgs {
+      flags = 'FUZZY|TABS',
+    },
+  },
+  {
+    key = 'p',
+    mods = 'CMD|SHIFT',
+    action = act.ShowLauncherArgs {
+      flags = 'FUZZY|WORKSPACES',
+    },
+  },
+  {
+    key = 'N',
+    mods = 'CMD|SHIFT',
+    action = act.PromptInputLine {
+      description = wezterm.format {
+        { Attribute = { Intensity = 'Bold' } },
+        { Foreground = { AnsiColor = 'Fuchsia' } },
+        { Text = 'Enter name for new workspace' },
+      },
+      action = wezterm.action_callback(function(window, pane, line)
+        if line then
+          window:perform_action(
+            act.SwitchToWorkspace {
+              name = line,
+            },
+            pane
+          )
+        end
+      end),
+    },
+  },
+  {
+    key = 'E',
+    mods = 'CMD|SHIFT',
+    action = act.PromptInputLine {
+      description = wezterm.format {
+        { Attribute = { Intensity = 'Bold' } },
+        { Foreground = { AnsiColor = 'Fuchsia' } },
+        { Text = 'Enter new name for current workspace' },
+      },
+      action = wezterm.action_callback(function(window, pane, line)
+        if line then
+          wezterm.mux.rename_workspace(window:active_workspace(), line)
+        end
+      end),
+    },
+  },
+  -- Sessions plugin
+  {
+    key = 's',
+    mods = 'OPT',
+    action = act({ EmitEvent = "save_session" }),
+  },
+  {
+    key = 'l',
+    mods = 'OPT',
+    action = act({ EmitEvent = "load_session" }),
+  },
+  {
+    key = 'r',
+    mods = 'OPT',
+    action = act({ EmitEvent = "restore_session" }),
   },
 }
 
