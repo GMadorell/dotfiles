@@ -140,7 +140,7 @@ config.keys = {
   },
   {
     key = 't',
-    mods = 'CMD|SHIFT',
+    mods = 'CMD|OPT',
     action = wezterm.action_callback(function(window, pane)
       local overrides = window:get_config_overrides() or {}
       overrides.enable_tab_bar = not (overrides.enable_tab_bar ~= false)
