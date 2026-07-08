@@ -1,0 +1,9 @@
+[ui.toast]
+delivery = "system"
+
+[theme]
+name = "dracula"
+auto_switch = false
+
+[keys]
+prefix = "ctrl+space"
