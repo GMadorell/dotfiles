@@ -1,2 +1,3 @@
 EXCLUDES="jetbrains better-touch-tool iterm2 README.md vimium Brewfile rcrc crontab"
 UNDOTTED="bin"
+SYMLINK_DIRS="nvim"

@@ -9,9 +9,14 @@ Hello! Welcome to where I store my configuration files!
 3. Check what symlinks are going to be created: `lsrc`
 4. Create the symlinks: `rcup`
 
-To track a new file/dir, move it into this repo and symlink it back with `mkrc $PATH` (add `-S` to
-symlink a directory as a whole instead of file-by-file, `-U` to link it undotted, e.g. `bin` -> `~/bin`
-per `UNDOTTED` in `rcrc`), then re-run `rcup`. `EXCLUDES` in `rcrc` lists paths `rcup` should skip.
+To track a new file/dir, move it into this repo and symlink it back with `mkrc $PATH` (add `-U` to
+link it undotted, e.g. `bin` -> `~/bin` per `UNDOTTED` in `rcrc`), then re-run `rcup`. `EXCLUDES` in
+`rcrc` lists paths `rcup` should skip.
+
+By default `rcup` mirrors a directory's structure and symlinks each file individually (so new files
+added on either side need a re-run of `rcup` to pick up). To make an entire directory sync as a single
+symlink instead — new files added on either side show up immediately, no re-run needed — add its name
+to `SYMLINK_DIRS` in `rcrc` (e.g. `config/nvim`, see `nvim` entry).
 
 Some configuration files need extra work though!
 
