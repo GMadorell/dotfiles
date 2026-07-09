@@ -37,7 +37,7 @@ source $ZSH/oh-my-zsh.sh
 
 if [[ -s $HOME/.secrets ]] ; then source $HOME/.secrets ; fi
 
-export EDITOR='vim'
+export EDITOR='nvim'
 
 
 # Brew constants
@@ -785,19 +785,6 @@ function find_by_name_globally() {
 }
 alias fsg="find_by_name_globally"
 
-# Notes related
-function new_note() {
-  if [ $# -eq 1 ]; then
-    formatted_date=$(date '+%Y-%m-%d')
-    $EDITOR "$formatted_date-$1.md"
-  else
-      echo "$LOG_ERROR new_note accepts a single parameter only (note name)"
-  fi
-}
-alias n="new_note"
-
-
-
 # JSON related
 alias compress_json="jq -c"
 alias json_compress=compress_json
@@ -1017,9 +1004,8 @@ ropa() { # usage: ropa "some city"
     fi
 }
 
-# Vim aliases
-alias vim_install_plugins="vim +PluginInstall +qall"
-alias vim_plugin_update=vim_install_plugins
+# NeoVim aliases
+alias n='nvim'
 
 # HTTPie aliases
 alias get="http GET"
