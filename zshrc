@@ -231,10 +231,7 @@ if (($RUST_MODE)); then
 fi
 
 # Claude setup
-## Headroom — wrap Claude Code with context compression
-alias claude='headroom wrap claude'
-## raw, un-wrapped claude when you need it:
-alias claude-raw='command claude'
+alias cc="claude"
 
 
 # PGP/GPG setup
