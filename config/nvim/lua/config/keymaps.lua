@@ -73,7 +73,7 @@ vim.keymap.set("n", "<leader>tc", function()
 end, opts)
 
 -- Toggle markdown rendering (render-markdown.nvim) on/off
-vim.keymap.set("n", "<leader>tm", "<cmd>RenderMarkdownToggle<CR>", opts)
+vim.keymap.set("n", "<leader>tm", "<cmd>RenderMarkdown toggle<CR>", opts)
 
 -- Stay in visual mode when indenting or de-indenting
 vim.keymap.set("v", "<", "<gv", opts)
