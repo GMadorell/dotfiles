@@ -1,4 +1,8 @@
 {
+  "env": {
+    "CLAUDE_CODE_SUBAGENT_MODEL": "haiku",
+    "MAX_MCP_OUTPUT_TOKENS": "10000"
+  },
   "hooks": {
     "PreToolUse": [
       {
@@ -30,10 +34,19 @@
     "padding": 0,
     "refreshInterval": 20
   },
+  "enabledPlugins": {
+    "crit@crit": true
+  },
+  "extraKnownMarketplaces": {
+    "crit": {
+      "source": {
+        "source": "github",
+        "repo": "tomasz-tomczyk/crit"
+      }
+    }
+  },
+  "feedbackSurveyRate": 0,
   "effortLevel": "medium",
   "theme": "dark",
-  "env": {
-    "CLAUDE_CODE_SUBAGENT_MODEL": "haiku",
-    "MAX_MCP_OUTPUT_TOKENS": "10000"
-  }
+  "model": "sonnet"
 }

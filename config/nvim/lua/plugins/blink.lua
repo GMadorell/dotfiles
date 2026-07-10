@@ -30,6 +30,10 @@ return {
 	---@type blink.cmp.Config
 	opts = {
 		enabled = function()
+			-- Global toggle (see keymap <leader>tc). Default on.
+			if vim.g.blink_cmp_enabled == false then
+				return false
+			end
 			-- Disable the completions in some file types and when in comment
 			local ft = vim.bo.filetype
 			if ft == "markdown" or ft == "text" then

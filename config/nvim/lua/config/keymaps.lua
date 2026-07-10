@@ -66,6 +66,15 @@ vim.keymap.set("n", "<leader>tl", ":tabp<CR>", opts) --  go to previous tab
 -- Toggle line wrapping
 vim.keymap.set("n", "<leader>lw", "<cmd>set wrap!<CR>", opts)
 
+-- Toggle autocompletion (blink.cmp) on/off globally
+vim.keymap.set("n", "<leader>tc", function()
+	vim.g.blink_cmp_enabled = (vim.g.blink_cmp_enabled == false)
+	vim.notify("Autocompletion " .. (vim.g.blink_cmp_enabled == false and "disabled" or "enabled"))
+end, opts)
+
+-- Toggle markdown rendering (render-markdown.nvim) on/off
+vim.keymap.set("n", "<leader>tm", "<cmd>RenderMarkdownToggle<CR>", opts)
+
 -- Stay in visual mode when indenting or de-indenting
 vim.keymap.set("v", "<", "<gv", opts)
 vim.keymap.set("v", ">", ">gv", opts)
