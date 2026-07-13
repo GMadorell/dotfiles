@@ -1,0 +1,4 @@
+# Zsh caches and history
+.zsh_cache
+.zsh_history
+**/.zsh_history

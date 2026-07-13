@@ -20,6 +20,12 @@ to `SYMLINK_DIRS` in `rcrc` (e.g. `config/nvim`, see `nvim` entry).
 
 Some configuration files need extra work though!
 
+### Zsh
+`~/.zshrc` forwards to `config/zsh/init.zsh`, which is synced as a single directory to
+`~/.config/zsh/` via `SYMLINK_DIRS`. See `config/zsh/CLAUDE.md` for its structure.
+
+After running `rcup`, test with: `zsh -i -c "echo OK"` (should not error)
+
 ### Brew
 Execute `brew bundle install Brewfile`, or `brew bundle dump` for exporting.
 
