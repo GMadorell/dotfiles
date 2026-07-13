@@ -1,6 +1,5 @@
 {
   "env": {
-    "CLAUDE_CODE_SUBAGENT_MODEL": "haiku",
     "MAX_MCP_OUTPUT_TOKENS": "10000"
   },
   "model": "sonnet",

@@ -161,3 +161,8 @@ docs/plans/
 .worktrees
 # used by tool inside Headroom for token efficiency
 .tokensave/
+
+**/.claude/settings.local.json
+
+# Heist
+.heist

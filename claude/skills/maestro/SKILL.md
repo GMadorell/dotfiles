@@ -17,3 +17,5 @@ description: Use when the user wants a nontrivial task planned, architected, or 
 3. Invoke the `crit` skill on the plan file so the user can leave inline review comments.
 
 4. After the user finishes commenting, use `crit-cli` to read the comments and address them yourself with Edit directly on the plan file — no new subagent needed for most feedback, since maestro's research is already captured in the doc. Only re-invoke `maestro` (step 1) if a comment requires genuinely new codebase research the doc doesn't cover.
+
+5. After the plan is approved, move directly to implementation.
