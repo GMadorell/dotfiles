@@ -4,59 +4,61 @@
 
 ```
 config/zsh/
-├── init.zsh              # Main entry point, sources all modules in order
-├── conf.d/               # Configuration snippets (sourced first, numeric order)
-│   ├── 00-paths.zsh
-│   ├── 10-oh-my-zsh.zsh
-│   ├── 20-locale.zsh
-│   └── ...
-├── modules/              # Modular feature groups
-│   ├── languages/        # Language-specific setup (Python, Ruby, JS, PHP, Rust)
+├── init.zsh                  # Main entry point, sources all modules in order
+├── conf.d/                   # Configuration snippets (sourced first, numeric order)
+│   ├── 01-exports.zsh        # PATH, GOPATH, MANPATH, DOTFILES_PATH, PROJECTS_PATH
+│   ├── 02-brew.zsh           # Homebrew environment setup
+│   ├── 03-logging.zsh        # LOG_ERROR, LOG_WARNING, LOG_INFO constants
+│   ├── 04-localization.zsh   # Locale and character encoding (LC_ALL, LANG)
+│   ├── 05-editor.zsh         # EDITOR and PAGER configuration
+│   ├── 06-keybindings.zsh    # Keybindings (Ctrl+A, Ctrl+S, etc.) and KEYTIMEOUT
+│   ├── 07-shell-options.zsh  # Shell behavior (expandable for HIST*, COMP* options)
+│   ├── 08-xdg.zsh            # XDG Base Directory paths for caches and state
+│   └── 09-completion.zsh     # fpath, compinit, zstyle rules, bracketed-paste fix
+├── modules/                  # Modular feature groups
+│   ├── language-modes.zsh    # MODE flags for selective language initialization
+│   ├── aliases.zsh           # Basic aliases (ls colors, shortcuts, etc.)
+│   ├── git.zsh               # Git functions and aliases
+│   ├── precmd-hooks.zsh      # Precmd functions (window title, prompts)
+│   ├── productivity-tools.zsh # zoxide, hstr, broot, direnv, mise
+│   ├── shell-final.zsh       # sdkman, bun (must run last)
+│   ├── languages/            # Language-specific setup (conditional on MODE flags)
 │   │   ├── python.zsh
 │   │   ├── ruby.zsh
 │   │   ├── js.zsh
 │   │   ├── php.zsh
 │   │   └── rust.zsh
-│   ├── services/         # Service management (MySQL, PostgreSQL, Redis, etc.)
-│   │   ├── mysql.zsh
-│   │   ├── postgresql.zsh
-│   │   ├── redis.zsh
-│   │   ├── elasticsearch.zsh
-│   │   ├── kafka.zsh
-│   │   └── ...
-│   ├── utils/            # Utility functions (file ops, string manipulation, etc.)
-│   │   ├── file.zsh
-│   │   ├── string.zsh
-│   │   ├── git.zsh
-│   │   ├── k8s.zsh
-│   │   ├── docker.zsh
-│   │   └── ...
-│   └── shell-final/      # Late initialization (shell state, keybindings, etc.)
-│       └── finalize.zsh
+│   ├── utils/                # Utility functions organized by category
+│   │   ├── string.zsh        # String manipulation (trim, case conversion, etc.)
+│   │   ├── files.zsh         # File operations, search, browser functions
+│   │   ├── hardware.zsh      # Hardware info (battery, CPU, ports, load)
+│   │   └── formatting.zsh    # JSON, regex, math, time/date functions
+│   └── services/             # Service management (optional, can be commented out)
+│       ├── databases.zsh     # MySQL, PostgreSQL, InfluxDB
+│       ├── messaging.zsh     # Kafka, RabbitMQ, Zookeeper
+│       ├── docker.zsh        # Docker and Docker Compose
+│       ├── datastores.zsh    # Redis, Elasticsearch
+│       ├── vpn.zsh           # Pritunl and VPN functions
+│       ├── cloud.zsh         # AWS setup
+│       └── tools.zsh         # Apache, Grafana, misc tools
+└── .gitignore                # Exclude caches and history
 ```
 
 ## Sourcing Order in init.zsh
 
-The initialization follows a strict order to ensure dependencies are met:
+The initialization follows a strict order to ensure dependencies are met. See init.zsh for the actual source statements.
 
-```zsh
-# 1. Configuration snippets (numeric prefixes, low to high)
-for file in conf.d/*.zsh; do
-  [[ -f "$file" ]] && source "$file"
-done
-
-# 2. Language modules (set up MODE flags)
-source modules/languages/*.zsh
-
-# 3. Utility modules (no dependencies)
-source modules/utils/*.zsh
-
-# 4. Service modules (typically standalone, commented ones skip)
-source modules/services/*.zsh
-
-# 5. Shell finalization (runs last)
-source modules/shell-final/finalize.zsh
-```
+Current order:
+1. **conf.d/** (numeric prefixes 01-09, automatically sourced in order)
+2. **modules/language-modes.zsh** (sets MODE flags for languages)
+3. **modules/aliases.zsh** (basic aliases)
+4. **modules/git.zsh** (git functions and aliases)
+5. **modules/precmd-hooks.zsh** (shell hook functions)
+6. **modules/productivity-tools.zsh** (zoxide, hstr, broot, direnv, mise)
+7. **modules/languages/** (language-specific setup, conditional on MODE)
+8. **modules/utils/** (utility functions by category)
+9. **modules/services/** (optional service aliases and functions)
+10. **modules/shell-final.zsh** (must be last: sdkman, bun)
 
 ## Module Conventions
 
@@ -132,17 +134,19 @@ fi
 
 ## Service Modules
 
-Located in `modules/services/`. Each service module provides:
+Located in `modules/services/`. Each service module provides aliases and functions for service management.
 
-1. **Init/start**: `SERVICE+init` — Start the service
-2. **Stop**: `SERVICE+stop` — Stop the service
-3. **Restart**: `SERVICE+restart` — Stop and restart
-4. **Check/status**: `SERVICE+check` — Verify it's running
-5. **CLI access**: `SERVICE+cli` — Open CLI interface (if applicable)
-6. **Config**: `SERVICE+cnf` — Edit service configuration
-7. **Port**: `SERVICE+port` — Show listening port
+Naming convention: Use short abbreviations + operation (e.g., `myinit` for MySQL init, `pgstop` for PostgreSQL stop, `rediscli` for Redis CLI).
 
-Naming convention: Use short abbreviations (e.g., `my` for MySQL, `pg` for PostgreSQL).
+Common operations:
+- **init**: `ABBREV+init` or `ABBREVinit` — Start the service (e.g., `myinit`, `redisinit`)
+- **stop**: `ABBREVstop` — Stop the service (e.g., `mystop`, `redisstop`)
+- **restart**: `ABBREVrestart` — Restart the service
+- **check**: `ABBREVcheck` — Check service status
+- **cli**: `ABBREVcli` — Open CLI interface (e.g., `rediscli`)
+- **port**: `ABBREVport` — Show listening port
+
+Example abbreviations: `my` (MySQL), `pg` (PostgreSQL), `redis`, `elastic`/`es` (Elasticsearch), `kafka`, `rabbit` (RabbitMQ), `docker`/`d`, `k8s`
 
 ### Example Service Module
 ```zsh

@@ -6,10 +6,10 @@
 touch ~/.hushlogin
 
 # sdkman - Software Development Kit Manager
-export SDKMAN_DIR="/Users/gerard/.sdkman"
-[[ -s "/Users/gerard/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/gerard/.sdkman/bin/sdkman-init.sh"
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # bun - JavaScript runtime
-[ -s "/Users/gerard/.bun/_bun" ] && source "/Users/gerard/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"

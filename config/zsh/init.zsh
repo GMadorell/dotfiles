@@ -16,9 +16,10 @@ fi
 
 # Minimal oh-my-zsh setup (ZSH_THEME, plugins, HIST settings)
 export ZSH="${ZSH:-$HOME/.oh-my-zsh}"
-export ZSH_THEME="robbyrussell"
+export ZSH_THEME="ukelele"
 export ZSH_DISABLE_COMPFIX=true
-plugins=(git)
+export DISABLE_MAGIC_FUNCTIONS=true
+plugins=(zsh-autosuggestions zsh-syntax-highlighting)
 
 # Load secrets if available
 [ -f ~/.secrets ] && source ~/.secrets
@@ -26,41 +27,45 @@ plugins=(git)
 # Source oh-my-zsh
 source "$ZSH/oh-my-zsh.sh"
 
-# Source all conf.d files (01-09) in order
-for conf in "$ZSH_CONFIG"/conf.d/*.zsh; do
-  [ -f "$conf" ] && source "$conf"
-done
+# Load conf.d (core settings, in numeric order)
+[ -f "$ZSH_CONFIG"/conf.d/01-exports.zsh ] && source "$ZSH_CONFIG"/conf.d/01-exports.zsh
+[ -f "$ZSH_CONFIG"/conf.d/02-brew.zsh ] && source "$ZSH_CONFIG"/conf.d/02-brew.zsh
+[ -f "$ZSH_CONFIG"/conf.d/03-logging.zsh ] && source "$ZSH_CONFIG"/conf.d/03-logging.zsh
+[ -f "$ZSH_CONFIG"/conf.d/04-localization.zsh ] && source "$ZSH_CONFIG"/conf.d/04-localization.zsh
+[ -f "$ZSH_CONFIG"/conf.d/05-editor.zsh ] && source "$ZSH_CONFIG"/conf.d/05-editor.zsh
+[ -f "$ZSH_CONFIG"/conf.d/06-keybindings.zsh ] && source "$ZSH_CONFIG"/conf.d/06-keybindings.zsh
+[ -f "$ZSH_CONFIG"/conf.d/07-shell-options.zsh ] && source "$ZSH_CONFIG"/conf.d/07-shell-options.zsh
+[ -f "$ZSH_CONFIG"/conf.d/08-xdg.zsh ] && source "$ZSH_CONFIG"/conf.d/08-xdg.zsh
+[ -f "$ZSH_CONFIG"/conf.d/09-completion.zsh ] && source "$ZSH_CONFIG"/conf.d/09-completion.zsh
 
-# Source all module files in strict order
-# 1. language-modes (for MODE flags)
+# Load modules (features)
 [ -f "$ZSH_CONFIG"/modules/language-modes.zsh ] && source "$ZSH_CONFIG"/modules/language-modes.zsh
-
-# 2. aliases
 [ -f "$ZSH_CONFIG"/modules/aliases.zsh ] && source "$ZSH_CONFIG"/modules/aliases.zsh
-
-# 3. git
 [ -f "$ZSH_CONFIG"/modules/git.zsh ] && source "$ZSH_CONFIG"/modules/git.zsh
-
-# 4. precmd-hooks
 [ -f "$ZSH_CONFIG"/modules/precmd-hooks.zsh ] && source "$ZSH_CONFIG"/modules/precmd-hooks.zsh
-
-# 5. productivity-tools
 [ -f "$ZSH_CONFIG"/modules/productivity-tools.zsh ] && source "$ZSH_CONFIG"/modules/productivity-tools.zsh
 
-# 6. languages
-for lang in "$ZSH_CONFIG"/modules/languages/*.zsh; do
-  [ -f "$lang" ] && source "$lang"
-done
+# Load language-specific setups (conditional initialization)
+[ -f "$ZSH_CONFIG"/modules/languages/python.zsh ] && source "$ZSH_CONFIG"/modules/languages/python.zsh
+[ -f "$ZSH_CONFIG"/modules/languages/ruby.zsh ] && source "$ZSH_CONFIG"/modules/languages/ruby.zsh
+[ -f "$ZSH_CONFIG"/modules/languages/php.zsh ] && source "$ZSH_CONFIG"/modules/languages/php.zsh
+[ -f "$ZSH_CONFIG"/modules/languages/js.zsh ] && source "$ZSH_CONFIG"/modules/languages/js.zsh
+[ -f "$ZSH_CONFIG"/modules/languages/rust.zsh ] && source "$ZSH_CONFIG"/modules/languages/rust.zsh
 
-# 7. utils
-for util in "$ZSH_CONFIG"/modules/utils/*.zsh; do
-  [ -f "$util" ] && source "$util"
-done
+# Load utilities
+[ -f "$ZSH_CONFIG"/modules/utils/string.zsh ] && source "$ZSH_CONFIG"/modules/utils/string.zsh
+[ -f "$ZSH_CONFIG"/modules/utils/files.zsh ] && source "$ZSH_CONFIG"/modules/utils/files.zsh
+[ -f "$ZSH_CONFIG"/modules/utils/hardware.zsh ] && source "$ZSH_CONFIG"/modules/utils/hardware.zsh
+[ -f "$ZSH_CONFIG"/modules/utils/formatting.zsh ] && source "$ZSH_CONFIG"/modules/utils/formatting.zsh
 
-# 8. services (optional, can be commented out)
-for service in "$ZSH_CONFIG"/modules/services/*.zsh; do
-  [ -f "$service" ] && source "$service"
-done
+# Load service modules (optional, can be commented out)
+[ -f "$ZSH_CONFIG"/modules/services/databases.zsh ] && source "$ZSH_CONFIG"/modules/services/databases.zsh
+[ -f "$ZSH_CONFIG"/modules/services/messaging.zsh ] && source "$ZSH_CONFIG"/modules/services/messaging.zsh
+[ -f "$ZSH_CONFIG"/modules/services/docker.zsh ] && source "$ZSH_CONFIG"/modules/services/docker.zsh
+[ -f "$ZSH_CONFIG"/modules/services/datastores.zsh ] && source "$ZSH_CONFIG"/modules/services/datastores.zsh
+[ -f "$ZSH_CONFIG"/modules/services/vpn.zsh ] && source "$ZSH_CONFIG"/modules/services/vpn.zsh
+[ -f "$ZSH_CONFIG"/modules/services/cloud.zsh ] && source "$ZSH_CONFIG"/modules/services/cloud.zsh
+[ -f "$ZSH_CONFIG"/modules/services/tools.zsh ] && source "$ZSH_CONFIG"/modules/services/tools.zsh
 
-# 9. shell-final LAST
+# Must be last
 [ -f "$ZSH_CONFIG"/modules/shell-final.zsh ] && source "$ZSH_CONFIG"/modules/shell-final.zsh
