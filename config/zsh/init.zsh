@@ -1,14 +1,14 @@
 #!/bin/zsh
 
 # Set ZSH_CONFIG early
-# Use ZDOTDIR if set, otherwise derive from script location, fallback to ~/.config/zsh
-if [[ -n "$ZDOTDIR" ]]; then
-  export ZSH_CONFIG="$ZDOTDIR"
-else
+# Use ZSH_CONFIG if already set, otherwise derive from script location, ZDOTDIR, fallback to ~/.config/zsh
+if [[ -z "$ZSH_CONFIG" ]]; then
   # Get the directory of this script
   local script_dir="${${(%):-%x}:h}"
   if [[ -d "$script_dir" && -f "$script_dir/init.zsh" ]]; then
     export ZSH_CONFIG="$script_dir"
+  elif [[ -n "$ZDOTDIR" ]]; then
+    export ZSH_CONFIG="$ZDOTDIR"
   else
     export ZSH_CONFIG="$HOME/.config/zsh"
   fi
