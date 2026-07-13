@@ -1,6 +1,4 @@
 #!/bin/zsh
-# Exports: PATH, GOPATH, MANPATH, PROJECTS_PATH, DOTFILES_PATH
-# Order: early (no dependencies, referenced by later modules like 02-brew)
 
 export GOPATH="$HOME/golang_workspace"
 export PATH="/usr/local/sbin:/usr/local/bin:bin:/usr/sbin:/sbin:$HOME/bin:/usr/bin:$GOPATH/bin:$HOME/.cargo/bin:$PATH"

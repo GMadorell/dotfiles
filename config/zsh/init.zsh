@@ -1,18 +1,11 @@
 #!/bin/zsh
 
-# Set ZSH_CONFIG early
-# Use ZSH_CONFIG if already set, otherwise derive from script location, ZDOTDIR, fallback to ~/.config/zsh
-if [[ -z "$ZSH_CONFIG" ]]; then
-  # Get the directory of this script
-  local script_dir="${${(%):-%x}:h}"
-  if [[ -d "$script_dir" && -f "$script_dir/init.zsh" ]]; then
-    export ZSH_CONFIG="$script_dir"
-  elif [[ -n "$ZDOTDIR" ]]; then
-    export ZSH_CONFIG="$ZDOTDIR"
-  else
-    export ZSH_CONFIG="$HOME/.config/zsh"
-  fi
-fi
+# ZSH_CONFIG is normally set by the root zshrc before this file is sourced
+# (works after `rcup` regardless of where config/zsh ends up symlinked to).
+# Fall back to this script's own directory so init.zsh is also directly
+# sourceable for testing (e.g. from a worktree, without going through zshrc).
+: "${ZSH_CONFIG:=${${(%):-%x}:h}}"
+export ZSH_CONFIG
 
 # Minimal oh-my-zsh setup (ZSH_THEME, plugins, HIST settings)
 export ZSH="${ZSH:-$HOME/.oh-my-zsh}"
@@ -56,6 +49,7 @@ source "$ZSH/oh-my-zsh.sh"
 [ -f "$ZSH_CONFIG"/modules/utils/string.zsh ] && source "$ZSH_CONFIG"/modules/utils/string.zsh
 [ -f "$ZSH_CONFIG"/modules/utils/files.zsh ] && source "$ZSH_CONFIG"/modules/utils/files.zsh
 [ -f "$ZSH_CONFIG"/modules/utils/hardware.zsh ] && source "$ZSH_CONFIG"/modules/utils/hardware.zsh
+[ -f "$ZSH_CONFIG"/modules/utils/network.zsh ] && source "$ZSH_CONFIG"/modules/utils/network.zsh
 [ -f "$ZSH_CONFIG"/modules/utils/formatting.zsh ] && source "$ZSH_CONFIG"/modules/utils/formatting.zsh
 
 # Load service modules (optional, can be commented out)

@@ -34,3 +34,12 @@ function regex_escape() {
 # Case conversion
 function title2kebab() { case_converter -f title -t kebab "$1"; }
 function kebab2title() { case_converter -f kebab -t title "$1"; }
+
+# ID generation
+function randomuuid() {
+  echo $(uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]')
+}
+
+function uuidcp() {
+  randomuuid | tr -d '\n' | pbcopy && pbpaste && echo
+}

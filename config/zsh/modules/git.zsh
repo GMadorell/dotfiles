@@ -110,7 +110,6 @@ alias ga.="ga ."
 alias gunstage_all="git restore --staged ."
 
 alias gnvm="git nvm"
-alias gnevermind="git nevermind"
 
 alias grc="git rebase --continue"
 

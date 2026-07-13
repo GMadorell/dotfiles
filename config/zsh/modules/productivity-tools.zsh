@@ -6,7 +6,6 @@ eval "$(zoxide init zsh)"
 alias cd="z"
 
 # hstr setup - improved history
-export HISTFILE=~/.zsh_history
 export HH_CONFIG=hicolor,keywords,rawhistory
 bindkey -s "\C-r" "\eqhh\n"
 

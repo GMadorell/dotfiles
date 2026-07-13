@@ -1,5 +1,5 @@
 #!/bin/zsh
-# File handling, extraction, encryption utilities
+# File handling: extraction, encryption, listing, search, mail
 
 # Deal with documents/files (files management, working with files)
 function extract {
@@ -127,34 +127,15 @@ function subtitles_dir() {
   fi
 }
 
-function benchmark_shell() {
-  for i in $(seq 1 10); do /usr/bin/time $SHELL -i -c exit; done
-}
-
-function echo_return_code() {
-  echo $?
-}
-
 ## Get .gitignore info easily - ej: gi python,java,linux,osx
 function fetch_gitignore() {
     curl -L -s https://www.gitignore.io/api/$@ | sed '/^# Created/ d' | sed '/./,$!d' | sed $'1s/^/\\\n/'
 }
 alias gi="fetch_gitignore"
 
-function is_running_on_mac() {
-  if [[ `uname` == "Darwin" ]]; then
-    return true
-  else
-    return false
-  fi
-}
-
 function mkcdir() {
     mkdir -p "$1" && cd "$1"
 }
-
-function randomuuid() {	echo $(uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]') ; }
-function uuidcp() { randomuuid | tr -d '\n' | pbcopy && pbpaste && echo ; }
 
 # Find / Search files or file contents related
 function searchfaq() {
@@ -212,3 +193,63 @@ function find_by_name_globally() {
   fi
 }
 alias fsg="find_by_name_globally"
+
+function copy_file_to_clipboard() {
+  if [ $# -eq 1 ]; then
+      cat $1 | pbcopy
+  else
+      echo "$LOG_ERROR copy_file_to_clipboard accepts a single parameter only (file path)"
+  fi
+}
+
+# File listing (ls abstractions with eza)
+alias lst="eza -l -h -a -a --time-style long-iso"
+alias l=lst
+alias lst_extended="eza -l -h -a -a --time-style long-iso --extended"
+alias lste="lst_extended"
+alias lst_date_created="eza -l -h -t created --sort created -a -a --time-style long-iso"
+alias lst_created="lst_date_created"
+alias lstcreated="lst_date_created"
+alias lstc="lst_date_created"
+alias lc="lst_date_created"
+alias lst_date_modified="eza -l -h -t modified --sort modified -a -a --time-style long-iso"
+alias lst_modified="lst_date_modified"
+alias lstmodified="lst_date_modified"
+alias lm="lst_date_modified"
+function ls_grep() {
+    if [ $# -eq 1 ]; then
+        lst | grep --ignore-case $1
+    else
+        echo "$LOG_ERROR ls_grep accepts a single parameter only (what to grep the ls result for)"
+    fi
+}
+alias lg="ls_grep"
+alias lsg="ls_grep"
+function lscd() {
+  local chosen_directory=$(ls -lt -d */ | awk '{print substr($0, index($0,$NF))}' |  percol --prompt='<green>Select directory to cd into:</green> %q')
+  cd "$chosen_directory"
+}
+alias cdls="lscd"
+
+function lst_open() {
+  local chosen_lst_row=$(lst  | percol --prompt='<green>Select file to open:</green> %q')
+  local chosen_file=$(echo $chosen_lst_row | awk '{print $NF}')
+  $EDITOR $chosen_file
+}
+alias lsto="lst_open"
+alias lo="lst_open"
+
+function lstc_open() {
+  local chosen_lst_row=$(lstc  | percol --prompt='<green>Select file to open:</green> %q')
+  local chosen_file=$(echo $chosen_lst_row | awk '{print $NF}')
+  $EDITOR $chosen_file
+}
+alias lstco="lstc_open"
+alias lco="lstc_open"
+
+# File browser
+alias dir="ranger"
+
+# Mail
+function check_mail() { $EDITOR /var/mail/$USER }
+function clear_mail() { sudo rm /var/mail/$USER }

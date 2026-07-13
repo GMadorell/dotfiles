@@ -54,31 +54,6 @@ alias cddownloads="cd ~/downloads/"
 alias cdd="cddownloads"
 alias cdh="cd $HOME"
 
-# Listing shortcuts (ls abstractions with eza)
-alias lst="eza -l -h -a -a --time-style long-iso"
-alias l=lst
-alias lst_extended="eza -l -h -a -a --time-style long-iso --extended"
-alias lste="lst_extended"
-alias lst_date_created="eza -l -h -t created --sort created -a -a --time-style long-iso"
-alias lst_created="lst_date_created"
-alias lstcreated="lst_date_created"
-alias lstc="lst_date_created"
-alias lc="lst_date_created"
-alias lst_date_modified="eza -l -h -t modified --sort modified -a -a --time-style long-iso"
-alias lst_modified="lst_date_modified"
-alias lstmodified="lst_date_modified"
-alias lm="lst_date_modified"
-alias lg="ls_grep"
-alias lsg="ls_grep"
-alias cdls="lscd"
-alias lsto="lst_open"
-alias lo="lst_open"
-alias lstco="lstc_open"
-alias lco="lstc_open"
-
-# File browser
-alias dir="ranger"
-
 # Clipboard
 alias copy="pbcopy"
 alias paste="pbpaste"
@@ -93,6 +68,13 @@ alias cl="printf \"\033c\""
 alias clean="cl"
 
 # History
+function history_grep() {
+  if [ $# -eq 1 ]; then
+      history | grep $1
+  else
+      echo "$LOG_ERROR history_grep accepts a single parameter only (what to grep the history for)"
+  fi
+}
 alias h="history"
 alias hist="history"
 alias hgrep="history_grep"
@@ -108,21 +90,3 @@ alias editzshrc="$EDITOR $HOME/.zshrc"
 
 # Network
 alias pingg="ping www.google.com"
-
-# JSON
-alias compress_json="jq -c"
-alias json_compress=compress_json
-
-# Git (basic)
-alias gp="git push"
-alias gpf="git push --force-with-lease"
-alias gpfn="git push --force-with-lease --no-verify"
-alias gpumaster="git push upstream HEAD:master"
-alias gpoh="git push origin HEAD"
-alias gp_same_name="gpoh"
-alias gp_skip_hooks="git push --no-verify"
-alias gpskiphooks="git push --no-verify"
-alias gp_no_hooks="git push --no-verify"
-alias gpnohooks="git push --no-verify"
-alias gpn="git push --no-verify"
-alias gpt="git push --tags"
