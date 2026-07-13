@@ -22,11 +22,15 @@ config/zsh/
 │   ├── shell-final.zsh       # sdkman, bun — must load LAST
 │   ├── languages/             # python, ruby, php, js, rust — each conditional on its MODE flag
 │   ├── utils/
-│   │   ├── string.zsh        # trim, case conversion, uuid
+│   │   ├── string.zsh        # trim, case conversion
+│   │   ├── uuid.zsh          # uuid generation
 │   │   ├── files.zsh         # extract/encrypt, file listing, search, mail
-│   │   ├── hardware.zsh      # battery, cores, benchmark
-│   │   ├── network.zsh       # connectivity, weather
-│   │   └── formatting.zsh    # JSON, math/units, time/date, notify/timer
+│   │   ├── hardware.zsh      # battery, cpu core count
+│   │   ├── shell.zsh         # OS detection, shell benchmarking
+│   │   ├── network.zsh       # connectivity checks
+│   │   ├── weather.zsh       # weather/city lookups
+│   │   ├── formatting.zsh    # JSON, math/units
+│   │   └── time.zsh          # time/date, notify, timer
 │   └── services/              # databases, messaging, docker, datastores, vpn, cloud, tools
 │                               # each can be commented out of init.zsh if unused
 └── .gitignore

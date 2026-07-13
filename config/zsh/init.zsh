@@ -1,11 +1,12 @@
 #!/bin/zsh
 
-# ZSH_CONFIG is normally set by the root zshrc before this file is sourced
-# (works after `rcup` regardless of where config/zsh ends up symlinked to).
-# Fall back to this script's own directory so init.zsh is also directly
-# sourceable for testing (e.g. from a worktree, without going through zshrc).
-: "${ZSH_CONFIG:=${${(%):-%x}:h}}"
-export ZSH_CONFIG
+# ZSH_CONFIG must be set by the caller (the root zshrc sets it before
+# sourcing this file). Fail fast instead of guessing — a missing/wrong
+# ZSH_CONFIG is a config error, not something to silently paper over.
+if [[ -z "$ZSH_CONFIG" ]]; then
+  echo "init.zsh: \$ZSH_CONFIG is not set, refusing to load. Set it to this file's directory before sourcing (the root zshrc does this)." >&2
+  return 1
+fi
 
 # Minimal oh-my-zsh setup (ZSH_THEME, plugins, HIST settings)
 export ZSH="${ZSH:-$HOME/.oh-my-zsh}"
@@ -47,10 +48,14 @@ source "$ZSH/oh-my-zsh.sh"
 
 # Load utilities
 [ -f "$ZSH_CONFIG"/modules/utils/string.zsh ] && source "$ZSH_CONFIG"/modules/utils/string.zsh
+[ -f "$ZSH_CONFIG"/modules/utils/uuid.zsh ] && source "$ZSH_CONFIG"/modules/utils/uuid.zsh
 [ -f "$ZSH_CONFIG"/modules/utils/files.zsh ] && source "$ZSH_CONFIG"/modules/utils/files.zsh
 [ -f "$ZSH_CONFIG"/modules/utils/hardware.zsh ] && source "$ZSH_CONFIG"/modules/utils/hardware.zsh
+[ -f "$ZSH_CONFIG"/modules/utils/shell.zsh ] && source "$ZSH_CONFIG"/modules/utils/shell.zsh
 [ -f "$ZSH_CONFIG"/modules/utils/network.zsh ] && source "$ZSH_CONFIG"/modules/utils/network.zsh
+[ -f "$ZSH_CONFIG"/modules/utils/weather.zsh ] && source "$ZSH_CONFIG"/modules/utils/weather.zsh
 [ -f "$ZSH_CONFIG"/modules/utils/formatting.zsh ] && source "$ZSH_CONFIG"/modules/utils/formatting.zsh
+[ -f "$ZSH_CONFIG"/modules/utils/time.zsh ] && source "$ZSH_CONFIG"/modules/utils/time.zsh
 
 # Load service modules (optional, can be commented out)
 [ -f "$ZSH_CONFIG"/modules/services/databases.zsh ] && source "$ZSH_CONFIG"/modules/services/databases.zsh
