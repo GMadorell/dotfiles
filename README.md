@@ -20,6 +20,18 @@ to `SYMLINK_DIRS` in `rcrc` (e.g. `config/nvim`, see `nvim` entry).
 
 Some configuration files need extra work though!
 
+### Zsh
+The zsh configuration is modular and synced as a single directory via RCM's `SYMLINK_DIRS`:
+- `~/.zshrc` (at repo root) forwards to the modular config
+- `~/.config/zsh/` (via `SYMLINK_DIRS`) contains the modular structure:
+  - `conf.d/`: core settings (exports, keybindings, completion, etc.)
+  - `modules/`: features (aliases, git, languages, utilities, services)
+  - `init.zsh`: entry point that sources everything in order
+
+After running `rcup`, test with: `zsh -i -c "echo OK"` (should not error)
+
+For maintainers: See `config/zsh/CLAUDE.md` for structure, conventions, and how to add new modules.
+
 ### Brew
 Execute `brew bundle install Brewfile`, or `brew bundle dump` for exporting.
 
