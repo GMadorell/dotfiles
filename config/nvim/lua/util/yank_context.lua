@@ -3,6 +3,17 @@
 
 local M = {}
 
+-- Path to the current buffer, relative to the git root when inside a repo,
+-- otherwise relative to Neovim's cwd.
+local function relative_path(bufnr)
+	local abs_path = vim.api.nvim_buf_get_name(bufnr)
+	local git_root = vim.fs.root(bufnr, ".git")
+	if git_root then
+		return vim.fs.relpath(git_root, abs_path) or vim.fn.fnamemodify(abs_path, ":.")
+	end
+	return vim.fn.fnamemodify(abs_path, ":.")
+end
+
 local ts_container_types = {
 	function_declaration = true,
 	function_definition = true,
@@ -65,7 +76,7 @@ function M.yank()
 	end
 
 	local lines = vim.api.nvim_buf_get_lines(bufnr, start_line - 1, end_line, false)
-	local path = vim.fn.expand("%:.")
+	local path = relative_path(bufnr)
 	local location = (start_line == end_line) and (path .. ":" .. start_line)
 		or (path .. ":" .. start_line .. "-" .. end_line)
 
