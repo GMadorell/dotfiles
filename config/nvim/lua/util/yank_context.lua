@@ -5,9 +5,8 @@ local M = {}
 
 -- Path to the current buffer, relative to the git root when inside a repo,
 -- otherwise relative to Neovim's cwd.
-local function relative_path(bufnr)
+local function relative_path(bufnr, git_root)
 	local abs_path = vim.api.nvim_buf_get_name(bufnr)
-	local git_root = vim.fs.root(bufnr, ".git")
 	if git_root then
 		return vim.fs.relpath(git_root, abs_path) or vim.fn.fnamemodify(abs_path, ":.")
 	end
@@ -76,7 +75,8 @@ function M.yank()
 	end
 
 	local lines = vim.api.nvim_buf_get_lines(bufnr, start_line - 1, end_line, false)
-	local path = relative_path(bufnr)
+	local git_root = vim.fs.root(bufnr, ".git")
+	local path = relative_path(bufnr, git_root)
 	local location = (start_line == end_line) and (path .. ":" .. start_line)
 		or (path .. ":" .. start_line .. "-" .. end_line)
 
@@ -85,11 +85,14 @@ function M.yank()
 		location = location .. " (" .. breadcrumb .. ")"
 	end
 
+	if git_root then
+		location = "Worktree: " .. git_root .. "\n" .. location
+	end
+
 	local lang = vim.bo[bufnr].filetype
 	local result = location .. "\n```" .. lang .. "\n" .. table.concat(lines, "\n") .. "\n```"
 
 	vim.fn.setreg("+", result)
-	vim.notify("Copied " .. location)
 end
 
 return M
