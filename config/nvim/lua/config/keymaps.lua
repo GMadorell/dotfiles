@@ -84,3 +84,8 @@ vim.keymap.set("v", "p", '"_dP', opts)
 
 -- Make escape clear last search result highlight
 vim.keymap.set("n", "<Esc>", "<Esc>:nohlsearch<CR>", opts)
+
+-- Yank current line/selection with path, treesitter breadcrumb, and code fence (for LLM context)
+vim.keymap.set({ "n", "v" }, "<leader>yc", function()
+	require("util.yank_context").yank()
+end, opts)
