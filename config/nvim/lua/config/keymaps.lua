@@ -8,9 +8,8 @@ vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 local opts = { noremap = true, silent = true }
 
 -- use leader and yank commands to copy to system clipboard
-vim.keymap.set("v", "<leader>y", '"+y', opts)
+vim.keymap.set("v", "<leader>yy", '"+y', opts)
 vim.keymap.set("n", "<leader>Y", '"+yg_', opts)
-vim.keymap.set("n", "<leader>y", '"+y', opts)
 vim.keymap.set("n", "<leader>yy", '"+yy', opts)
 
 -- use leader and paste commands to paste from system clipboard
