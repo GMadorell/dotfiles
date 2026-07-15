@@ -36,6 +36,7 @@
   },
   "enabledPlugins": {
     "crit@crit": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
     "heist@heist-marketplace": true
   },
   "extraKnownMarketplaces": {
