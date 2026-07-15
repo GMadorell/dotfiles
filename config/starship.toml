@@ -1,0 +1,96 @@
+palette = "dracula"
+
+format = """
+
+$username$hostname$directory${custom.git_worktree}$git_branch$git_state$git_status${custom.git_wip}$docker_context$kubernetes$direnv$aws
+$character"""
+
+right_format = """$cmd_duration"""
+
+[username]
+show_always = false
+format = "[$user]($style):"
+style_user = "cyan"
+
+[hostname]
+ssh_only = true
+format = "[$hostname]($style):"
+style = "purple"
+
+[directory]
+style = "yellow"
+format = "[$path]($style) "
+truncation_length = 3
+truncate_to_repo = false
+
+[custom.git_worktree]
+command = "basename \"$(git rev-parse --show-toplevel)\""
+when = "test \"$(git rev-parse --git-dir 2>/dev/null)\" != \"$(git rev-parse --git-common-dir 2>/dev/null)\""
+style = "purple"
+format = "[🌲 $output]($style) "
+
+[git_branch]
+style = "green"
+format = "[$symbol$branch]($style) "
+
+[git_state]
+style = "bold yellow"
+format = "[\\($state( $progress_current/$progress_total)\\)]($style) "
+
+[git_status]
+style = "red"
+format = "([$all_status$ahead_behind]($style)) "
+conflicted = "[§](bold cyan)"
+ahead = "[⇡$count](green)"
+behind = "[⇣$count](red)"
+diverged = "[⇕⇡$ahead_count⇣$behind_count](yellow)"
+staged = "[✚](green)"
+modified = "[⚑](yellow)"
+deleted = "[✖](red)"
+renamed = "[▴](blue)"
+untracked = "[◒](white)"
+stashed = "[≡](cyan)"
+
+[custom.git_wip]
+command = "echo '🚧 WIP 🚧'"
+when = "git log -1 --pretty=%s 2>/dev/null | grep -q WIP"
+style = "yellow"
+format = "[$output]($style) "
+
+[docker_context]
+style = "blue"
+format = "[$symbol$context]($style) "
+
+[kubernetes]
+disabled = false
+style = "cyan"
+format = "[$symbol$context( \\($namespace\\))]($style) "
+
+[direnv]
+disabled = false
+style = "yellow"
+format = "[$symbol$loaded/$allowed]($style) "
+
+[aws]
+style = "orange"
+
+[character]
+success_symbol = "[](white)"
+error_symbol = "[](bold red)"
+
+[cmd_duration]
+style = "yellow"
+format = "[$duration]($style)"
+
+[palettes.dracula]
+background = "#282a36"
+current_line = "#44475a"
+foreground = "#f8f8f2"
+comment = "#6272a4"
+cyan = "#8be9fd"
+green = "#50fa7b"
+orange = "#ffb86c"
+pink = "#ff79c6"
+purple = "#bd93f9"
+red = "#ff5555"
+yellow = "#f1fa8c"

@@ -10,7 +10,7 @@ fi
 
 # Minimal oh-my-zsh setup (ZSH_THEME, plugins, HIST settings)
 export ZSH="${ZSH:-$HOME/.oh-my-zsh}"
-export ZSH_THEME="ukelele"
+export ZSH_THEME=""
 export ZSH_DISABLE_COMPFIX=true
 export DISABLE_MAGIC_FUNCTIONS=true
 plugins=(zsh-autosuggestions zsh-syntax-highlighting)

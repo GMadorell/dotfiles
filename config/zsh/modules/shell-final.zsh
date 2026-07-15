@@ -13,3 +13,6 @@ export SDKMAN_DIR="$HOME/.sdkman"
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# starship prompt - must init after oh-my-zsh so nothing clobbers PROMPT
+command -v starship &>/dev/null && eval "$(starship init zsh)"
