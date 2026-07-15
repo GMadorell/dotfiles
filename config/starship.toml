@@ -1,7 +1,6 @@
 palette = "dracula"
 
 format = """
-
 $username$hostname$directory${custom.git_worktree}$git_branch$git_state$git_status${custom.git_wip}$docker_context$kubernetes$direnv$aws
 $character"""
 
