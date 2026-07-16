@@ -4,10 +4,12 @@
 # Consolidates all git-related shell customizations
 
 ## GIT ALIASES AND HELPER FUNCTIONS
+function gdefault_branch() { git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@' }
+
 alias gp="git push"
 alias gpf="git push --force-with-lease"
 alias gpfn="git push --force-with-lease --no-verify"
-alias gpumaster="git push upstream HEAD:master"  # Pushes current branch to upstream master
+alias gpudefault='git push upstream HEAD:$(gdefault_branch)'  # Pushes current branch to upstream default branch
 alias gpoh="git push origin HEAD"  # Push current branch to a branch with same name on the remote (useful after creating new branch)
 alias gp_same_name="gpoh"
 alias gp_skip_hooks="git push --no-verify"
@@ -18,7 +20,7 @@ alias gpn="git push --no-verify"
 alias gpt="git push --tags"
 
 alias gck="git checkout"
-alias gckm="git checkout master"
+alias gckm='git checkout $(gdefault_branch)'
 alias gckd="git checkout develop"
 alias gckt="git checkout --theirs"
 alias gcko="git checkout --ours"
@@ -95,8 +97,8 @@ alias gfo="git fetch origin"
 alias gfu="git fetch upstream"
 alias gfupstream="git fetch upstream"
 
-alias gfommerge="git fetch origin && git merge origin/master"
-alias gfomrebase="git fetch origin && git rebase origin/master"
+alias gfommerge='git fetch origin && git merge origin/$(gdefault_branch)'
+alias gfomrebase='git fetch origin && git rebase origin/$(gdefault_branch)'
 alias gfodmerge="git fetch origin && git merge origin/develop"
 alias gfodrebase="git fetch origin && git rebase origin/develop"
 
@@ -178,12 +180,12 @@ function gstash_save() { gstashs ; }
 function gstash_save_current_branch_name() { gstashs $(gcurrent_branch_name) ; }
 alias gunstash="git unstash"
 
-function gsquash_master() { git rebase -i origin/master }
+function gsquash_default() { git rebase -i origin/$(gdefault_branch) }
 function gsquash_same_branch() { git rebase -i origin/$(gcurrent_branch_name) }
-alias grm="git rebase master"
-alias grom="git fetch && git rebase origin/master"
-alias grum="git rebase upstream/master"
-alias grupstream_master="git rebase upstream/master"
+alias grm='git rebase $(gdefault_branch)'
+alias grom='git fetch && git rebase origin/$(gdefault_branch)'
+alias grum='git rebase upstream/$(gdefault_branch)'
+alias grupstream_default='git rebase upstream/$(gdefault_branch)'
 
 alias gdh="git diff HEAD"
 alias gdh1="git diff HEAD~1"
@@ -197,11 +199,11 @@ alias gdh8="git diff HEAD~8"
 alias gdh9="git diff HEAD~9"
 alias gdhs="git diff HEAD --stat"
 alias gdhunity='git diff HEAD -- . ":(exclude)*.dwlt" ":(exclude)*.prefab" ":(exclude)*.unity" ":(exclude)*.meta" ":(exclude)*.asset" ":(exclude)*.png" ":(exclude)*.PNG" ":(exclude)*.dwlt"'
-function gdmaster() { git diff remotes/origin/master..$(gcurrent_branch_name) }
-alias gdm=gdmaster
-alias gdmaster_name_status="gdmaster --name-status"
-function gdupstream_master { git diff upstream/master $(gcurrent_branch_name) }
-alias gdum=gdupstream_master
+function gddefault() { git diff remotes/origin/$(gdefault_branch)..$(gcurrent_branch_name) }
+alias gdm=gddefault
+alias gddefault_name_status="gddefault --name-status"
+function gdupstream_default { git diff upstream/$(gdefault_branch) $(gcurrent_branch_name) }
+alias gdum=gdupstream_default
 function gddevelop() { git diff remotes/origin/develop..$(gcurrent_branch_name) }
 alias gdd=gddevelop
 alias gtodo="git diff-index --name-only -U --cached -G TODO HEAD" # Find files that contain "TODO" in last index (remember to add the files!)
@@ -297,11 +299,11 @@ alias greset_last_commit="git uncommit"
 function git_changed_files() { git diff --name-only HEAD~1 ; }
 alias gchanged_files=git_changed_files
 
-function gmerge_origin_master { git fetch && git merge origin/master ; }
-function gmerge_upstream_master { git fetch && git merge upstream/master ; }
-function gmerge_master { git merge master ; }
-alias gmum=gmerge_upstream_master
-alias gmom=gmerge_origin_master
+function gmerge_origin_default { git fetch && git merge origin/$(gdefault_branch) ; }
+function gmerge_upstream_default { git fetch && git merge upstream/$(gdefault_branch) ; }
+function gmerge_default { git merge $(gdefault_branch) ; }
+alias gmum=gmerge_upstream_default
+alias gmom=gmerge_origin_default
 function gabort_merge { git merge --abort ; }
 
 function git_integrate_multiple() {
@@ -310,8 +312,8 @@ function git_integrate_multiple() {
   local most_recent_commit=$(gl | percol --prompt="select MOST RECENT commit to pick for cherry-picking (first one was $oldest_commit)" | trim "*" | trim " " | cut -d " " -f1)
   vared -p 'Input branch name for the new branch to be created: ' -c branch_name
 
-  echo ">>>>>> Checking out master and getting it updated..."
-  git checkout master
+  echo ">>>>>> Checking out default branch and getting it updated..."
+  git checkout $(gdefault_branch)
   git pull
   echo ">>>>>> Done!"
 
@@ -340,8 +342,8 @@ function git_integrate_single() {
   echo "Commit message: $(git log --format=%B -n 1 $commit_hash)"
   vared -p 'Input branch name for the new branch to be created: ' -c branch_name
 
-  echo ">>>>>> Checking out master and getting it updated..."
-  git checkout master
+  echo ">>>>>> Checking out default branch and getting it updated..."
+  git checkout $(gdefault_branch)
   git pull
   echo ">>>>>> Done!"
 
