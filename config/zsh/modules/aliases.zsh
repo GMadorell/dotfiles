@@ -3,6 +3,7 @@
 
 # NeoVim
 alias n='nvim'
+alias nv='nvim'
 
 # HTTPie
 alias get="http GET"
