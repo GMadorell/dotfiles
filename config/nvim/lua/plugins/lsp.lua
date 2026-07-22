@@ -12,6 +12,17 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
+-- Isolate rust-analyzer's background cargo check/build script runs from the
+-- shared CARGO_TARGET_DIR (see rust.zsh) so they don't contend on fingerprint
+-- state with manually run cargo test/build.
+vim.lsp.config("rust_analyzer", {
+  settings = {
+    ["rust-analyzer"] = {
+      cargo = { targetDir = true },
+    },
+  },
+})
+
 return {
   "mason-org/mason-lspconfig.nvim",
   opts = {
