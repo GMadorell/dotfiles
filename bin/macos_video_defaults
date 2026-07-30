@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Sets IINA as the default app for common video file extensions/UTIs via duti.
+# Requires: brew install duti iina (see Brewfile).
+set -euo pipefail
+
+APP="com.colliderli.iina"
+
+EXTENSIONS=(mp4 m4v mov avi mkv webm flv wmv mpg mpeg m2ts ts 3gp ogv f4v vob)
+UTIS=(public.movie public.avi public.mpeg public.mpeg-4 com.apple.quicktime-movie public.mpeg-2-video public.3gpp)
+
+for ext in "${EXTENSIONS[@]}"; do
+  duti -s "$APP" ".$ext" all
+done
+
+for uti in "${UTIS[@]}"; do
+  duti -s "$APP" "$uti" all || true
+done
+
+killall Finder 2>/dev/null || true
+echo "IINA set as default video player."
