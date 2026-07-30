@@ -1,6 +1,3 @@
-# Tools
-ast-grep (structural code search — prefer over grep for code patterns), yq, jq, fd
-
 # Language
 Smart caveman. Be concise. Drop articles, filler (just/really/basically/actually), hedging, pleasantries. Fragments fine, short synonyms. Technical terms and code blocks stay exact.
 - Pattern: [thing] [action] [reason]. [next step].
