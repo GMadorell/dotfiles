@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Sets IINA preferences via `defaults`.
+# Re-run after IINA updates in case it resets prefs, or after editing this file.
+set -euo pipefail
+
+APP="com.colliderli.iina"
+
+# Don't auto-play the next file in the folder/playlist when one finishes.
+defaults write "$APP" playlistAutoPlayNext -bool false

@@ -44,6 +44,10 @@ defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
 ### Video defaults
 Run `bin/macos_video_defaults` once.
 
+### IINA
+Key bindings: `Library/Application Support/com.colliderli.iina/input_conf/` (synced via `rcup`).
+Playback prefs: run `bin/iina_defaults`.
+
 ### Cronjobs
 Scripts meant to run on a schedule live in `bin/cronjobs/`, symlinked undotted into `~/bin/cronjobs/`
 (see `UNDOTTED` above).
