@@ -1,0 +1,7 @@
+#!/bin/bash
+echo "`date`: RUNNING: kdeconnect restart"
+pkill -x kdeconnectd
+pkill -x "KDE Connect"
+sleep 15
+open -g -a "KDE Connect"
+echo "`date`: FINISHED: kdeconnect restart"
