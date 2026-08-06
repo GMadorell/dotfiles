@@ -1,0 +1,3 @@
+#!/bin/bash
+# Run by sleepwatcher (brew services start sleepwatcher) on wake from sleep.
+/Users/gmadorell/bin/wake/kdeconnect_restart >>/tmp/crontab_stdout.log 2>>/tmp/crontab_stderr.log

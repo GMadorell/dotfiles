@@ -60,3 +60,9 @@ isn't something you symlink into) — entries point at `~/bin/cronjobs/*`, e.g.:
 
 - Install it: `crontab crontab`
 - Edit it: `crontab -e`, then back up with `crontab -l > crontab`
+
+### Wake scripts
+Scripts to run on wake-from-sleep live in `bin/wake/` (mirrors `bin/cronjobs/`), dispatched from the
+tracked `~/.wakeup` via [sleepwatcher](https://formulae.brew.sh/formula/sleepwatcher).
+
+- Install: `brew bundle install Brewfile && brew services start sleepwatcher`

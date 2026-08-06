@@ -2,6 +2,8 @@
 echo "`date`: RUNNING: kdeconnect restart"
 pkill -x kdeconnectd
 pkill -x "KDE Connect"
+pkill -f "KDE Connect.app/Contents/MacOS/dbus-daemon"
 sleep 15
-open -g -a "KDE Connect"
+nohup "/Applications/KDE Connect.app/Contents/MacOS/kdeconnectd" >/dev/null 2>&1 &
+disown
 echo "`date`: FINISHED: kdeconnect restart"
