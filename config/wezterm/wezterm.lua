@@ -1,5 +1,6 @@
 local wezterm = require("wezterm")
 local sessions = wezterm.plugin.require("https://github.com/abidibo/wezterm-sessions")
+local pane_move = require("pane_move")
 
 local config = wezterm.config_builder()
 local act = wezterm.action
@@ -78,6 +79,8 @@ end)
 
 -- Workspace info on the bottom bar
 wezterm.on("update-status", function(window, pane)
+  pane_move.check_pending_cleanup(window, pane)
+
   local workspace = window:active_workspace()
   workspace = workspace == "default" and " 󰋜 main " or " 󰋜 " .. workspace .. " "
   local date_time = wezterm.strftime(" 󱑒 %b %d %H:%M ")
@@ -114,13 +117,29 @@ end)
 
 -- Keybindings
 config.keys = {
-  { mods = "CMD",       key = "w", action = act.CloseCurrentPane({ confirm = false }) },
-  { mods = "CMD|SHIFT", key = "w", action = act.CloseCurrentTab({ confirm = true }) },
+  { mods = "CMD",       key = "w",        action = act.CloseCurrentPane({ confirm = false }) },
+  { mods = "CMD|SHIFT", key = "w",        action = act.CloseCurrentTab({ confirm = true }) },
   -- Pane splitting
-  { key = "d", mods = "CMD",           action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-  { key = "d", mods = "CMD|OPT",       action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
-  { key = "d", mods = "CMD|SHIFT",     action = act.SplitPane({ direction = "Left", command = { domain = "CurrentPaneDomain" } }) },
-  { key = "d", mods = "CMD|OPT|SHIFT", action = act.SplitPane({ direction = "Up", command = { domain = "CurrentPaneDomain" } }) },
+  { key = "d",          mods = "CMD",     action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+  { key = "d",          mods = "CMD|OPT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+  {
+    key = "d",
+    mods = "CMD|SHIFT",
+    action = act.SplitPane({ direction = "Left", command = { domain = "CurrentPaneDomain" } }),
+  },
+  {
+    key = "d",
+    mods = "CMD|OPT|SHIFT",
+    action = act.SplitPane({ direction = "Up", command = { domain = "CurrentPaneDomain" } }),
+  },
+  -- Pane moving: focus destination, press direction to move a pane into a new
+  -- slot there. Leftover placeholder is auto-cleaned via update-status.
+  -- Using cmd ctrl 9, remapped from cmd ctrl d on BTT as that interfeers with
+  -- MacOS shortcut.
+  { key = "9", mods = "CMD|CTRL",           action = pane_move.move_into("Right") },
+  { key = "d", mods = "CMD|CTRL|OPT",       action = pane_move.move_into("Bottom") },
+  { key = "d", mods = "CMD|CTRL|SHIFT",     action = pane_move.move_into("Left") },
+  { key = "d", mods = "CMD|CTRL|OPT|SHIFT", action = pane_move.move_into("Top") },
   {
     key = "E",
     mods = "CTRL|SHIFT",

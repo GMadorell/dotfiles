@@ -32,6 +32,28 @@ Execute `brew bundle install Brewfile`, or `brew bundle dump` for exporting.
 ### Better touch tool
 Import inside the program (click on manage presets for exporting / importing).
 
+#### Fixing a shortcut macOS steals (e.g. wezterm's Cmd+Ctrl+D)
+
+**Problem:** macOS sometimes hijacks a shortcut before the app ever sees it.
+Example: `Cmd+Ctrl+D` = "Look Up in Dictionary". Turning that off in System
+Settings does NOT fix it — it's a different, hidden setting. No app can win
+against this.
+
+**Fix:** use BTT to grab the shortcut first, then redirect it to a free one.
+
+Steps:
+1. BTT Preferences → Keyboard
+2. Scope it to one app only (e.g. WezTerm), so nothing else breaks
+3. New Shortcut → record the stolen combo (e.g. `Cmd+Ctrl+D`)
+4. Action → "Keyboard Shortcuts" → "Send Keyboard Shortcut" → pick a free combo (e.g. `Cmd+Ctrl+9`)
+5. Bind the app to that free combo instead
+
+Example already set up: `Cmd+Ctrl+D` → `Cmd+Ctrl+9` for wezterm (pane move
+right), config in `config/wezterm/wezterm.lua`.
+
+⚠️ After adding a rule like this, re-export the BTT preset
+(`better-touch-tool/Skabed.bttpreset`) or it's lost from this repo.
+
 ### Iterm2
 Thanks to: http://stratus3d.com/blog/2015/02/28/sync-iterm2-profile-with-dotfiles-repository/
 ```
