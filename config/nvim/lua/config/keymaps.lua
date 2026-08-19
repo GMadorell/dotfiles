@@ -38,16 +38,16 @@ vim.keymap.set("n", "<Left>", ":vertical resize -2<CR>", opts)
 vim.keymap.set("n", "<Right>", ":vertical resize +2<CR>", opts)
 
 -- Buffers
-vim.keymap.set("n", "<Tab>", ":bnext<CR>", opts) -- move buffer forward (eg next file)
-vim.keymap.set("n", "<S-Tab>", ":bprevious<CR>", opts) -- move buffer bw (eg prev file)
-vim.keymap.set("n", "<C-i>", "<C-i>", opts) -- to restore jump forward
-vim.keymap.set("n", "<leader>x", ":Bdelete!<CR>", opts) -- close buffer
+vim.keymap.set("n", "<Tab>", ":bnext<CR>", opts)          -- move buffer forward (eg next file)
+vim.keymap.set("n", "<S-Tab>", ":bprevious<CR>", opts)    -- move buffer bw (eg prev file)
+vim.keymap.set("n", "<C-i>", "<C-i>", opts)               -- to restore jump forward
+vim.keymap.set("n", "<leader>x", ":Bdelete!<CR>", opts)   -- close buffer
 vim.keymap.set("n", "<leader>b", "<cmd> enew <CR>", opts) -- new buffer
 
 -- Window management
-vim.keymap.set("n", "<leader>v", "<C-w>v", opts) -- split window vertically
-vim.keymap.set("n", "<leader>h", "<C-w>s", opts) -- split window horizontally
-vim.keymap.set("n", "<leader>se", "<C-w>=", opts) -- make split windows equal width & height
+vim.keymap.set("n", "<leader>v", "<C-w>v", opts)      -- split window vertically
+vim.keymap.set("n", "<leader>h", "<C-w>s", opts)      -- split window horizontally
+vim.keymap.set("n", "<leader>se", "<C-w>=", opts)     -- make split windows equal width & height
 vim.keymap.set("n", "<leader>xs", ":close<CR>", opts) -- close current split window
 
 -- Navigate between splits
@@ -57,18 +57,18 @@ vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", opts)
 vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", opts)
 
 -- Tabs
-vim.keymap.set("n", "<leader>tt", ":tabnew<CR>", opts) -- open new tab
+vim.keymap.set("n", "<leader>tt", ":tabnew<CR>", opts)   -- open new tab
 vim.keymap.set("n", "<leader>tx", ":tabclose<CR>", opts) -- close current tab
-vim.keymap.set("n", "<leader>th", ":tabn<CR>", opts) --  go to next tab
-vim.keymap.set("n", "<leader>tl", ":tabp<CR>", opts) --  go to previous tab
+vim.keymap.set("n", "<leader>th", ":tabn<CR>", opts)     --  go to next tab
+vim.keymap.set("n", "<leader>tl", ":tabp<CR>", opts)     --  go to previous tab
 
 -- Toggle line wrapping
 vim.keymap.set("n", "<leader>lw", "<cmd>set wrap!<CR>", opts)
 
 -- Toggle autocompletion (blink.cmp) on/off globally
 vim.keymap.set("n", "<leader>tc", function()
-	vim.g.blink_cmp_enabled = (vim.g.blink_cmp_enabled == false)
-	vim.notify("Autocompletion " .. (vim.g.blink_cmp_enabled == false and "disabled" or "enabled"))
+  vim.g.blink_cmp_enabled = (vim.g.blink_cmp_enabled == false)
+  vim.notify("Autocompletion " .. (vim.g.blink_cmp_enabled == false and "disabled" or "enabled"))
 end, opts)
 
 -- Toggle markdown rendering (render-markdown.nvim) on/off
@@ -86,5 +86,19 @@ vim.keymap.set("n", "<Esc>", "<Esc>:nohlsearch<CR>", opts)
 
 -- Yank current line/selection with path, treesitter breadcrumb, and code fence (for LLM context)
 vim.keymap.set({ "n", "v" }, "<leader>yc", function()
-	require("util.yank_context").yank()
+  require("util.yank_context").yank()
 end, opts)
+
+-- Treesitter incremental/decremental node selection
+local function ts_select(fn)
+  return function()
+    require("vim.treesitter._select")[fn](vim.v.count1)
+  end
+end
+
+vim.keymap.set("n", "<CR>", function()
+  vim.cmd("normal! v")
+  ts_select("select_child")()
+end, { desc = "Init treesitter node selection" })
+vim.keymap.set("x", "<CR>", ts_select("select_parent"), { desc = "Grow to parent node" })
+vim.keymap.set("x", "<BS>", ts_select("select_child"), { desc = "Shrink to child node" })
