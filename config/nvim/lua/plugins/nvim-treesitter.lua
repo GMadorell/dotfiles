@@ -1,4 +1,4 @@
-local parsers = { "rust", "markdown", "markdown_inline" }
+local parsers = { "rust", "markdown", "markdown_inline", "toml" }
 
 return {
 	"nvim-treesitter/nvim-treesitter",

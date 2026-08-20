@@ -26,7 +26,7 @@ vim.lsp.config("rust_analyzer", {
 return {
   "mason-org/mason-lspconfig.nvim",
   opts = {
-    ensure_installed = { "rust_analyzer", "lua_ls" },
+    ensure_installed = { "rust_analyzer", "lua_ls", "taplo" },
   },
   dependencies = {
     { "mason-org/mason.nvim", opts = {} },
