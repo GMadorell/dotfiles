@@ -29,6 +29,24 @@ After running `rcup`, test with: `zsh -i -c "echo OK"` (should not error)
 ### Brew
 Execute `brew bundle install Brewfile`, or `brew bundle dump` for exporting.
 
+### Terminal (wezterm + herdr)
+
+`config/wezterm/` is the outer shell and `config/herdr/` the multiplexer that runs inside it. Both use
+the same keymap vocabulary, so only the leader differs:
+
+| layer | leader | owns |
+| --- | --- | --- |
+| wezterm | `opt + space` | window, panes (fallback when herdr isn't running) |
+| herdr | `ctrl + space` | panes, tabs, workspaces, worktrees |
+| nvim | `space` | buffers, splits |
+
+The vocabulary: **`hjkl` = direction**, **letter = verb** (`n` new, `x` close, `r` rename, `f` find,
+`z` zoom), **modifier = tier** (bare = pane, `ctrl` = tab, `alt` = workspace, `ctrl+alt` = window).
+
+wezterm hides its tab bar by default since herdr draws its own chrome — `<leader> b` toggles it back
+along with the status line. Validate herdr's keymap after editing with `herdr server reload-config`
+(reports `applied` / `partial` plus per-binding diagnostics).
+
 ### Better touch tool
 Import inside the program (click on manage presets for exporting / importing).
 
@@ -48,8 +66,9 @@ Steps:
 4. Action → "Keyboard Shortcuts" → "Send Keyboard Shortcut" → pick a free combo (e.g. `Cmd+Ctrl+9`)
 5. Bind the app to that free combo instead
 
-Example already set up: `Cmd+Ctrl+D` → `Cmd+Ctrl+9` for wezterm (pane move
-right), config in `config/wezterm/wezterm.lua`.
+Example previously set up: `Cmd+Ctrl+D` → `Cmd+Ctrl+9` for wezterm (pane move
+right). No longer needed — wezterm now routes everything through its `opt+space`
+leader, which macOS doesn't touch — but the BTT rule is kept as a worked example.
 
 ⚠️ After adding a rule like this, re-export the BTT preset
 (`better-touch-tool/Skabed.bttpreset`) or it's lost from this repo.
