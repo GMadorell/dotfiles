@@ -239,8 +239,8 @@ config.keys = {
   { mods = "LEADER|CTRL|ALT", key = "z",   action = act.ToggleFullScreen },
 
   -- Tab navigation
-  { mods = "LEADER",          key = "[",   action = act.ActivateTabRelative(-1) },
-  { mods = "LEADER",          key = "]",   action = act.ActivateTabRelative(1) },
+  { mods = "LEADER", key = ",", action = act.ActivateTabRelative(-1) },
+  { mods = "LEADER", key = ".", action = act.ActivateTabRelative(1) },
 
   -- Pane cycling
   { mods = "LEADER",          key = "Tab", action = act.ActivatePaneDirection("Next") },
@@ -248,6 +248,7 @@ config.keys = {
 
   -- Singletons
   { mods = "LEADER",          key = "b",   action = wezterm.action_callback(toggle_tab_bar) },
+  { mods = "LEADER",          key = "g",   action = act.ActivateKeyTable({ name = "resize_pane", one_shot = false, timeout_milliseconds = 2000 }) },
   { mods = "LEADER",          key = "v",   action = act.ActivateCopyMode },
   { mods = "LEADER|SHIFT",    key = "S",   action = act.ReloadConfiguration },
   { mods = "LEADER|SHIFT",    key = "?",   action = act.ActivateCommandPalette },
@@ -258,6 +259,19 @@ config.keys = {
   { mods = "LEADER|SHIFT",    key = "+",   action = act.IncreaseFontSize },
   { mods = "LEADER",          key = "-",   action = act.DecreaseFontSize },
   { mods = "LEADER",          key = "0",   action = act.ResetFontSize },
+}
+
+-- Resize mode: prefix+g enters it, hjkl grows/shrinks the focused pane,
+-- Escape/Enter exits. Mirrors herdr's resize_mode.
+config.key_tables = {
+  resize_pane = {
+    { key = "h",      action = act.AdjustPaneSize({ "Left", 5 }) },
+    { key = "j",      action = act.AdjustPaneSize({ "Down", 5 }) },
+    { key = "k",      action = act.AdjustPaneSize({ "Up", 5 }) },
+    { key = "l",      action = act.AdjustPaneSize({ "Right", 5 }) },
+    { key = "Escape", action = "PopKeyTable" },
+    { key = "Enter",  action = "PopKeyTable" },
+  },
 }
 
 -- Switch tabs by index, mirroring herdr's `prefix + 1..9`.
