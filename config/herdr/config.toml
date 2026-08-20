@@ -63,8 +63,16 @@ rename_tab = "prefix+ctrl+r"
 rename_workspace = "prefix+ctrl+alt+r"
 
 # --- verb: f = find --------------------------------------------------------
-goto = "prefix+ctrl+f"
+goto = "prefix+f"
 workspace_picker = "prefix+ctrl+alt+f"
+
+# --- workspace navigation ---------------------------------------------------
+switch_workspace = "prefix+ctrl+alt+1..9"
+previous_workspace = "prefix+ctrl+alt+,"
+next_workspace = "prefix+ctrl+alt+."
+
+navigate_workspace_up = "k"
+navigate_workspace_down = "j"
 
 # --- tab navigation --------------------------------------------------------
 switch_tab = "prefix+1..9"

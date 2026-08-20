@@ -231,6 +231,7 @@ config.keys = {
   },
 
   -- Verb: f = find
+  { mods = "LEADER",          key = "f",   action = act.ShowLauncherArgs({ flags = "FUZZY|TABS|WORKSPACES" }) },
   { mods = "LEADER|CTRL",     key = "f",   action = act.ShowLauncherArgs({ flags = "FUZZY|TABS" }) },
   { mods = "LEADER|CTRL|ALT", key = "f",   action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) },
 
