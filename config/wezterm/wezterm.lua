@@ -200,19 +200,19 @@ config.keys = {
   },
   { mods = "LEADER|CTRL",     key = "n", action = act.SpawnTab("CurrentPaneDomain") },
   {
-    mods = "LEADER|ALT",
+    mods = "LEADER|CTRL|ALT",
     key = "n",
     action = prompt("Enter name for new workspace", function(window, pane, line)
       window:perform_action(act.SwitchToWorkspace({ name = line }), pane)
     end),
   },
-  { mods = "LEADER|CTRL|ALT", key = "n", action = act.SpawnWindow },
+  { mods = "LEADER|CTRL|SHIFT", key = "N", action = act.SpawnWindow },
 
   -- Verb: x = close
-  { mods = "LEADER",          key = "x", action = act.CloseCurrentPane({ confirm = false }) },
-  { mods = "LEADER|CTRL",     key = "x", action = act.CloseCurrentTab({ confirm = true }) },
-  { mods = "LEADER|ALT",      key = "x", action = wezterm.action_callback(close_workspace) },
-  { mods = "LEADER|CTRL|ALT", key = "x", action = wezterm.action_callback(close_window) },
+  { mods = "LEADER",            key = "x", action = act.CloseCurrentPane({ confirm = false }) },
+  { mods = "LEADER|CTRL",       key = "x", action = act.CloseCurrentTab({ confirm = true }) },
+  { mods = "LEADER|CTRL|ALT",   key = "x", action = wezterm.action_callback(close_workspace) },
+  { mods = "LEADER|CTRL|SHIFT", key = "X", action = wezterm.action_callback(close_window) },
 
   -- Verb: r = rename
   {
@@ -223,7 +223,7 @@ config.keys = {
     end),
   },
   {
-    mods = "LEADER|ALT",
+    mods = "LEADER|CTRL|ALT",
     key = "r",
     action = prompt("Enter new name for workspace", function(window, _, line)
       wezterm.mux.rename_workspace(window:active_workspace(), line)
@@ -232,11 +232,11 @@ config.keys = {
 
   -- Verb: f = find
   { mods = "LEADER|CTRL",     key = "f",   action = act.ShowLauncherArgs({ flags = "FUZZY|TABS" }) },
-  { mods = "LEADER|ALT",      key = "f",   action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) },
+  { mods = "LEADER|CTRL|ALT", key = "f",   action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) },
 
   -- Verb: z = zoom
-  { mods = "LEADER",          key = "z",   action = act.TogglePaneZoomState },
-  { mods = "LEADER|CTRL|ALT", key = "z",   action = act.ToggleFullScreen },
+  { mods = "LEADER",            key = "z", action = act.TogglePaneZoomState },
+  { mods = "LEADER|CTRL|SHIFT", key = "Z", action = act.ToggleFullScreen },
 
   -- Tab navigation
   { mods = "LEADER", key = ",", action = act.ActivateTabRelative(-1) },

@@ -31,7 +31,8 @@ prefix = "ctrl+space"
 # Keymap vocabulary (shared with wezterm):
 #   hjkl     = where   (direction)
 #   letter   = what    (verb)
-#   modifier = which tier: bare = pane, ctrl = tab, alt = workspace
+#   modifier = which tier: bare = pane, ctrl = tab, ctrl+alt = workspace
+#   (plain alt is avoided: macOS composes alt+letter into accented chars)
 
 # --- direction: hjkl -------------------------------------------------------
 focus_pane_left = "prefix+h"
@@ -48,22 +49,22 @@ swap_pane_right = "prefix+shift+l"
 split_vertical = "prefix+n"         # new pane to the right
 split_horizontal = "prefix+shift+n" # new pane below
 new_tab = "prefix+ctrl+n"
-new_workspace = "prefix+alt+n"
-new_worktree = "prefix+alt+shift+n"
+new_workspace = "prefix+ctrl+alt+n"
+new_worktree = "prefix+ctrl+alt+shift+n"
 
 # --- verb: x = close -------------------------------------------------------
 close_pane = "prefix+x"
 close_tab = "prefix+ctrl+x"
-close_workspace = "prefix+alt+x"
+close_workspace = "prefix+ctrl+alt+x"
 
 # --- verb: r = rename ------------------------------------------------------
 rename_pane = "prefix+r"
 rename_tab = "prefix+ctrl+r"
-rename_workspace = "prefix+alt+r"
+rename_workspace = "prefix+ctrl+alt+r"
 
 # --- verb: f = find --------------------------------------------------------
 goto = "prefix+ctrl+f"
-workspace_picker = "prefix+alt+f"
+workspace_picker = "prefix+ctrl+alt+f"
 
 # --- tab navigation --------------------------------------------------------
 switch_tab = "prefix+1..9"
