@@ -1,3 +1,5 @@
+onboarding = false
+
 [ui.toast]
 delivery = "system"
 
@@ -5,5 +7,62 @@ delivery = "system"
 name = "dracula"
 auto_switch = false
 
+# Keymap vocabulary (shared with wezterm):
+#   hjkl     = where   (direction)
+#   letter   = what    (verb)
+#   modifier = which tier: bare = pane, ctrl = tab, alt = workspace
 [keys]
 prefix = "ctrl+space"
+
+# --- direction: hjkl -------------------------------------------------------
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
+
+swap_pane_left = "prefix+shift+h"
+swap_pane_down = "prefix+shift+j"
+swap_pane_up = "prefix+shift+k"
+swap_pane_right = "prefix+shift+l"
+
+# --- verb: n = new ---------------------------------------------------------
+split_vertical = "prefix+n"         # new pane to the right
+split_horizontal = "prefix+shift+n" # new pane below
+new_tab = "prefix+ctrl+n"
+new_workspace = "prefix+alt+n"
+new_worktree = "prefix+alt+shift+n"
+
+# --- verb: x = close -------------------------------------------------------
+close_pane = "prefix+x"
+close_tab = "prefix+ctrl+x"
+close_workspace = "prefix+alt+x"
+
+# --- verb: r = rename ------------------------------------------------------
+rename_pane = "prefix+r"
+rename_tab = "prefix+ctrl+r"
+rename_workspace = "prefix+alt+r"
+
+# --- verb: f = find --------------------------------------------------------
+goto = "prefix+ctrl+f"
+workspace_picker = "prefix+alt+f"
+
+# --- tab navigation --------------------------------------------------------
+switch_tab = "prefix+1..9"
+previous_tab = "prefix+["
+next_tab = "prefix+]"
+
+# --- pane cycling ----------------------------------------------------------
+cycle_pane_next = "prefix+tab"
+cycle_pane_previous = "prefix+shift+tab"
+
+# --- singletons ------------------------------------------------------------
+zoom = "prefix+z"
+resize_mode = "prefix+shift+z"
+copy_mode = "prefix+v"
+edit_scrollback = "prefix+e"
+settings = "prefix+s"
+reload_config = "prefix+shift+s"
+toggle_sidebar = "prefix+b"
+detach = "prefix+q"
+help = "prefix+?"
+open_notification_target = "prefix+o"

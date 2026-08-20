@@ -3,6 +3,7 @@
     "MAX_MCP_OUTPUT_TOKENS": "10000"
   },
   "model": "sonnet",
+  "outputStyle": "Concise",
   "hooks": {
     "PreToolUse": [
       {

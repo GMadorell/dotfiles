@@ -1,5 +1,4 @@
 local wezterm = require("wezterm")
-local sessions = wezterm.plugin.require("https://github.com/abidibo/wezterm-sessions")
 local pane_move = require("pane_move")
 
 local config = wezterm.config_builder()
@@ -31,12 +30,14 @@ config.window_padding = {
   top = 3,
   bottom = 3,
 }
-
--- Tabs
-config.enable_tab_bar = true
+-- default to full screen, as the plan is to use herdr for multiplexing
+config.enable_tab_bar = false
 config.use_fancy_tab_bar = false -- Gives us a clean, flat bar instead of retro 3D tabs
 config.tab_bar_at_bottom = true
 config.tab_max_width = 26
+-- Default is 1s, far too laggy for the leader indicator to feel responsive.
+config.status_update_interval = 100
+
 local function get_tab_title(tab_info)
   local title = tab_info.tab_title
   if title and #title > 0 then
@@ -51,7 +52,7 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config_opts, hover, ma
 
   local title = get_tab_title(tab)
   if tab.active_pane.is_zoomed then
-    title = title .. " 󰁌"
+    title = title .. " \u{f004c}"
   end
 
   local background = "#151515"
@@ -77,13 +78,13 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config_opts, hover, ma
   }
 end)
 
--- Workspace info on the bottom bar
 wezterm.on("update-status", function(window, pane)
+  -- pane_move rides on update-status to clean up its placeholder pane.
   pane_move.check_pending_cleanup(window, pane)
 
   local workspace = window:active_workspace()
-  workspace = workspace == "default" and " 󰋜 main " or " 󰋜 " .. workspace .. " "
-  local date_time = wezterm.strftime(" 󱑒 %b %d %H:%M ")
+  workspace = workspace == "default" and " \u{f085c} main " or " \u{f085c} " .. workspace .. " "
+  local date_time = wezterm.strftime(" \u{f1452} %b %d %H:%M ")
 
   local our_tab = pane:tab()
   local is_zoomed = false
@@ -95,11 +96,20 @@ wezterm.on("update-status", function(window, pane)
 
   local status_modules = {}
 
+  -- Mirrors herdr's PREFIX badge: shows while the leader is armed.
+  if window:leader_is_active() then
+    table.insert(status_modules, { Background = { Color = "#bd93f9" } })
+    table.insert(status_modules, { Foreground = { Color = "#282a36" } })
+    table.insert(status_modules, { Attribute = { Intensity = "Bold" } })
+    table.insert(status_modules, { Text = " LEADER " })
+    table.insert(status_modules, { Attribute = { Intensity = "Normal" } })
+  end
+
   -- Only inject the styled block if the pane is actively zoomed
   if is_zoomed then
     table.insert(status_modules, { Background = { Color = "#ff5555" } })
     table.insert(status_modules, { Foreground = { Color = "#f8f8f2" } })
-    table.insert(status_modules, { Text = " 󰁌 ZOOMED " })
+    table.insert(status_modules, { Text = " \u{f004c} ZOOMED " })
   end
 
   -- Workspace section
@@ -115,127 +125,145 @@ wezterm.on("update-status", function(window, pane)
   window:set_right_status(wezterm.format(status_modules))
 end)
 
--- Keybindings
-config.keys = {
-  { mods = "CMD",       key = "w",        action = act.CloseCurrentPane({ confirm = false }) },
-  { mods = "CMD|SHIFT", key = "w",        action = act.CloseCurrentTab({ confirm = true }) },
-  -- Pane splitting
-  { key = "d",          mods = "CMD",     action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-  { key = "d",          mods = "CMD|OPT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
-  {
-    key = "d",
-    mods = "CMD|SHIFT",
-    action = act.SplitPane({ direction = "Left", command = { domain = "CurrentPaneDomain" } }),
-  },
-  {
-    key = "d",
-    mods = "CMD|OPT|SHIFT",
-    action = act.SplitPane({ direction = "Up", command = { domain = "CurrentPaneDomain" } }),
-  },
-  -- Pane moving: focus destination, press direction to move a pane into a new
-  -- slot there. Leftover placeholder is auto-cleaned via update-status.
-  -- Using cmd ctrl 9, remapped from cmd ctrl d on BTT as that interfeers with
-  -- MacOS shortcut.
-  { key = "9", mods = "CMD|CTRL",           action = pane_move.move_into("Right") },
-  { key = "d", mods = "CMD|CTRL|OPT",       action = pane_move.move_into("Bottom") },
-  { key = "d", mods = "CMD|CTRL|SHIFT",     action = pane_move.move_into("Left") },
-  { key = "d", mods = "CMD|CTRL|OPT|SHIFT", action = pane_move.move_into("Top") },
-  {
-    key = "E",
-    mods = "CTRL|SHIFT",
-    action = act.PromptInputLine({
-      description = "Enter new name for tab",
-      action = wezterm.action_callback(function(window, pane, line)
-        if line then
-          window:active_tab():set_title(line)
+-- Prompt for a line of input, then run `fn(window, pane, line)` unless cancelled.
+local function prompt(description, fn)
+  return act.PromptInputLine({
+    description = description,
+    action = wezterm.action_callback(function(window, pane, line)
+      if line then
+        fn(window, pane, line)
+      end
+    end),
+  })
+end
+
+local function toggle_tab_bar(window, _pane)
+  local overrides = window:get_config_overrides() or {}
+  overrides.enable_tab_bar = not overrides.enable_tab_bar
+  -- Overrides outlive a config reload, so an earlier build of this config that
+  -- hid the tabs themselves would keep them hidden forever. Drop those keys.
+  overrides.show_tabs_in_tab_bar = nil
+  overrides.show_new_tab_button_in_tab_bar = nil
+  window:set_config_overrides(overrides)
+end
+
+-- wezterm has no "close window" / "close workspace" action, so close every
+-- pane that makes them up.
+local function close_window(window, _pane)
+  for _, tab in ipairs(window:mux_window():tabs()) do
+    for _, pane in ipairs(tab:panes()) do
+      pane:activate()
+      window:perform_action(act.CloseCurrentPane({ confirm = false }), pane)
+    end
+  end
+end
+
+local function close_workspace(window, _pane)
+  local workspace = window:active_workspace()
+  for _, mux_window in ipairs(wezterm.mux.all_windows()) do
+    if mux_window:get_workspace() == workspace then
+      for _, tab in ipairs(mux_window:tabs()) do
+        for _, pane in ipairs(tab:panes()) do
+          window:perform_action(act.CloseCurrentPane({ confirm = false }), pane)
         end
-      end),
-    }),
+      end
+    end
+  end
+end
+
+config.leader = { key = "Space", mods = "OPT", timeout_milliseconds = 2000 }
+
+config.keys = {
+  -- Direction: focus pane
+  { mods = "LEADER",       key = "h", action = act.ActivatePaneDirection("Left") },
+  { mods = "LEADER",       key = "j", action = act.ActivatePaneDirection("Down") },
+  { mods = "LEADER",       key = "k", action = act.ActivatePaneDirection("Up") },
+  { mods = "LEADER",       key = "l", action = act.ActivatePaneDirection("Right") },
+
+  -- Direction: move pane into a new slot there. Focus the destination, press
+  -- the direction, then pick the pane to move in the swap overlay.
+  { mods = "LEADER|SHIFT", key = "H", action = pane_move.move_into("Left") },
+  { mods = "LEADER|SHIFT", key = "J", action = pane_move.move_into("Bottom") },
+  { mods = "LEADER|SHIFT", key = "K", action = pane_move.move_into("Top") },
+  { mods = "LEADER|SHIFT", key = "L", action = pane_move.move_into("Right") },
+
+  -- Verb: n = new
+  {
+    mods = "LEADER",
+    key = "n",
+    action = act.SplitPane({ direction = "Right", command = { domain = "CurrentPaneDomain" } }),
   },
   {
-    key = "t",
-    mods = "CMD|OPT",
-    action = wezterm.action_callback(function(window, pane)
-      local overrides = window:get_config_overrides() or {}
-      overrides.enable_tab_bar = not (overrides.enable_tab_bar ~= false)
-      window:set_config_overrides(overrides)
+    mods = "LEADER|SHIFT",
+    key = "N",
+    action = act.SplitPane({ direction = "Down", command = { domain = "CurrentPaneDomain" } }),
+  },
+  { mods = "LEADER|CTRL",     key = "n", action = act.SpawnTab("CurrentPaneDomain") },
+  {
+    mods = "LEADER|ALT",
+    key = "n",
+    action = prompt("Enter name for new workspace", function(window, pane, line)
+      window:perform_action(act.SwitchToWorkspace({ name = line }), pane)
+    end),
+  },
+  { mods = "LEADER|CTRL|ALT", key = "n", action = act.SpawnWindow },
+
+  -- Verb: x = close
+  { mods = "LEADER",          key = "x", action = act.CloseCurrentPane({ confirm = false }) },
+  { mods = "LEADER|CTRL",     key = "x", action = act.CloseCurrentTab({ confirm = true }) },
+  { mods = "LEADER|ALT",      key = "x", action = wezterm.action_callback(close_workspace) },
+  { mods = "LEADER|CTRL|ALT", key = "x", action = wezterm.action_callback(close_window) },
+
+  -- Verb: r = rename
+  {
+    mods = "LEADER|CTRL",
+    key = "r",
+    action = prompt("Enter new name for tab", function(window, _, line)
+      window:active_tab():set_title(line)
     end),
   },
   {
-    key = "k",
-    mods = "CMD",
-    action = act.ShowLauncherArgs({
-      flags = "FUZZY|COMMANDS",
-    }),
-  },
-  {
-    key = "p",
-    mods = "CMD",
-    action = act.ShowLauncherArgs({
-      flags = "FUZZY|TABS",
-    }),
-  },
-  {
-    key = "p",
-    mods = "CMD|SHIFT",
-    action = act.ShowLauncherArgs({
-      flags = "FUZZY|WORKSPACES",
-    }),
-  },
-  {
-    key = "N",
-    mods = "CMD|SHIFT",
-    action = act.PromptInputLine({
-      description = wezterm.format({
-        { Attribute = { Intensity = "Bold" } },
-        { Foreground = { AnsiColor = "Fuchsia" } },
-        { Text = "Enter name for new workspace" },
-      }),
-      action = wezterm.action_callback(function(window, pane, line)
-        if line then
-          window:perform_action(
-            act.SwitchToWorkspace({
-              name = line,
-            }),
-            pane
-          )
-        end
-      end),
-    }),
-  },
-  {
-    key = "E",
-    mods = "CMD|SHIFT",
-    action = act.PromptInputLine({
-      description = wezterm.format({
-        { Attribute = { Intensity = "Bold" } },
-        { Foreground = { AnsiColor = "Fuchsia" } },
-        { Text = "Enter new name for current workspace" },
-      }),
-      action = wezterm.action_callback(function(window, pane, line)
-        if line then
-          wezterm.mux.rename_workspace(window:active_workspace(), line)
-        end
-      end),
-    }),
-  },
-  -- Sessions plugin
-  {
-    key = "s",
-    mods = "OPT",
-    action = act({ EmitEvent = "save_session" }),
-  },
-  {
-    key = "l",
-    mods = "OPT",
-    action = act({ EmitEvent = "load_session" }),
-  },
-  {
+    mods = "LEADER|ALT",
     key = "r",
-    mods = "OPT",
-    action = act({ EmitEvent = "restore_session" }),
+    action = prompt("Enter new name for workspace", function(window, _, line)
+      wezterm.mux.rename_workspace(window:active_workspace(), line)
+    end),
   },
+
+  -- Verb: f = find
+  { mods = "LEADER|CTRL",     key = "f",   action = act.ShowLauncherArgs({ flags = "FUZZY|TABS" }) },
+  { mods = "LEADER|ALT",      key = "f",   action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) },
+
+  -- Verb: z = zoom
+  { mods = "LEADER",          key = "z",   action = act.TogglePaneZoomState },
+  { mods = "LEADER|CTRL|ALT", key = "z",   action = act.ToggleFullScreen },
+
+  -- Tab navigation
+  { mods = "LEADER",          key = "[",   action = act.ActivateTabRelative(-1) },
+  { mods = "LEADER",          key = "]",   action = act.ActivateTabRelative(1) },
+
+  -- Pane cycling
+  { mods = "LEADER",          key = "Tab", action = act.ActivatePaneDirection("Next") },
+  { mods = "LEADER|SHIFT",    key = "Tab", action = act.ActivatePaneDirection("Prev") },
+
+  -- Singletons
+  { mods = "LEADER",          key = "b",   action = wezterm.action_callback(toggle_tab_bar) },
+  { mods = "LEADER",          key = "v",   action = act.ActivateCopyMode },
+  { mods = "LEADER|SHIFT",    key = "S",   action = act.ReloadConfiguration },
+  { mods = "LEADER|SHIFT",    key = "?",   action = act.ActivateCommandPalette },
+  { mods = "LEADER|CTRL",     key = "?",   action = act.ShowLauncherArgs({ flags = "FUZZY|COMMANDS" }) },
+
+  -- Font size
+  { mods = "LEADER",          key = "=",   action = act.IncreaseFontSize },
+  { mods = "LEADER|SHIFT",    key = "+",   action = act.IncreaseFontSize },
+  { mods = "LEADER",          key = "-",   action = act.DecreaseFontSize },
+  { mods = "LEADER",          key = "0",   action = act.ResetFontSize },
 }
+
+-- Switch tabs by index, mirroring herdr's `prefix + 1..9`.
+for i = 1, 9 do
+  table.insert(config.keys, { mods = "LEADER", key = tostring(i), action = act.ActivateTab(i - 1) })
+end
 
 -- Start maximized
 wezterm.on("gui-startup", function(cmd)
