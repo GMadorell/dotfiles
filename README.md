@@ -102,8 +102,15 @@ isn't something you symlink into) — entries point at `~/bin/cronjobs/*`, e.g.:
 - Install it: `crontab crontab`
 - Edit it: `crontab -e`, then back up with `crontab -l > crontab`
 
-### Wake scripts
-Scripts to run on wake-from-sleep live in `bin/wake/` (mirrors `bin/cronjobs/`), dispatched from the
-tracked `~/.wakeup` via [sleepwatcher](https://formulae.brew.sh/formula/sleepwatcher).
+### LaunchAgents
+Per-user background jobs live in `Library/LaunchAgents/` and are symlinked into `~/Library/LaunchAgents/`
+by `rcup` (`Library` is listed in `UNDOTTED`, so it does not become `~/.Library`).
 
-- Install: `brew bundle install Brewfile && brew services start sleepwatcher`
+- `com.gmadorell.kdeconnect-supervisor` — runs `bin/kdeconnect_supervisor` every 60s. KDE Connect's
+  daemon dies on its own and cannot recover ([bug 463636](https://bugs.kde.org/show_bug.cgi?id=463636)),
+  which silently breaks phone -> mac transfers; the supervisor detects that and relaunches the app.
+  Logs to `~/.local/state/kdeconnect-supervisor/supervisor.log`.
+
+- Load: `launchctl bootstrap gui/$UID ~/Library/LaunchAgents/<label>.plist`
+- Unload: `launchctl bootout gui/$UID/<label>`
+- Reload after editing a plist: bootout, then bootstrap again.

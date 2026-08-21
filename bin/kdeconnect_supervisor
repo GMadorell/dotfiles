@@ -1,0 +1,138 @@
+#!/bin/bash
+# Keeps KDE Connect alive. Run every 60s by
+# ~/Library/LaunchAgents/com.gmadorell.kdeconnect-supervisor.plist
+#
+# Why: kdeconnectd exits on its own (typically after sleep, sometimes
+# spontaneously) and the bundled DBus cannot re-activate it, so phone -> mac
+# transfers silently stop working until the app is relaunched by hand.
+# Upstream, still open: https://bugs.kde.org/show_bug.cgi?id=463636
+#
+# Set KDECONNECT_SUPERVISOR_DRY_RUN=1 to log decisions without restarting.
+
+set -uo pipefail
+
+APP="/Applications/KDE Connect.app"
+CLI="/opt/homebrew/bin/kdeconnect"
+[[ -x "$CLI" ]] || CLI="$APP/Contents/MacOS/kdeconnect-cli"
+
+STATE_DIR="$HOME/.local/state/kdeconnect-supervisor"
+LOG="$STATE_DIR/supervisor.log"
+STATE="$STATE_DIR/state"
+LOG_MAX_BYTES=$((5 * 1024 * 1024))
+
+# Consecutive unhealthy probes before restarting. Absorbs the phone simply
+# being off the LAN or in doze, which looks identical to a dead daemon.
+FAILURES_BEFORE_RESTART=3
+# Never restart more than once per this window.
+RESTART_COOLDOWN_SECONDS=600
+# Give up after this many restarts in a row that fail to restore health,
+# until a healthy probe is seen again.
+MAX_CONSECUTIVE_RESTARTS=3
+
+DRY_RUN="${KDECONNECT_SUPERVISOR_DRY_RUN:-0}"
+
+mkdir -p "$STATE_DIR"
+
+log() {
+  printf '%s %s\n' "$(date '+%Y-%m-%dT%H:%M:%S%z')" "$*" >>"$LOG"
+}
+
+rotate_log() {
+  local size
+  size=$(stat -f %z "$LOG" 2>/dev/null || echo 0)
+  ((size > LOG_MAX_BYTES)) && mv -f "$LOG" "$LOG.1"
+}
+
+fail_streak=0
+restart_streak=0
+last_restart=0
+# shellcheck source=/dev/null
+[[ -f $STATE ]] && source "$STATE"
+
+save_state() {
+  cat >"$STATE" <<EOF
+fail_streak=$fail_streak
+restart_streak=$restart_streak
+last_restart=$last_restart
+EOF
+}
+
+# The daemon that does the actual talking. Gone == definitely broken.
+probe_daemon() { pgrep -x kdeconnectd >/dev/null 2>&1; }
+
+# Any paired device the daemon currently considers reachable. Note that
+# kdeconnect-cli always prints a "not provided by any .service files" DBus
+# activation error to stderr; it is expected noise, judge on stdout only.
+probe_device() { "$CLI" -a --id-name-only 2>/dev/null | grep -q .; }
+
+# The phone holds a persistent TCP connection to our listener on 1716. This is
+# the closest proxy for "the phone can actually reach us right now".
+probe_socket() { lsof -nP -iTCP:1716 -sTCP:ESTABLISHED >/dev/null 2>&1; }
+
+restart_app() {
+  osascript -e 'quit app "KDE Connect"' >/dev/null 2>&1
+  sleep 3
+  pkill -x kdeconnectd
+  pkill -x "KDE Connect"
+  pkill -f "KDE Connect.app/Contents/MacOS/dbus-daemon"
+  sleep 2
+  # Must go through LaunchServices: launching kdeconnectd directly gives it the
+  # wrong environment and the wrong TCC owner for the Local Network permission.
+  open -a "$APP"
+}
+
+rotate_log
+
+if [[ ! -d $APP ]]; then
+  log "action=abort reason=app_missing path=$APP"
+  exit 0
+fi
+
+probe_daemon && daemon=1 || daemon=0
+probe_device && device=1 || device=0
+probe_socket && socket=1 || socket=0
+
+if ((daemon && device && socket)); then
+  if ((fail_streak || restart_streak)); then
+    log "event=recovered after_failures=$fail_streak after_restarts=$restart_streak"
+  fi
+  fail_streak=0
+  restart_streak=0
+  log "health=ok daemon=1 device=1 socket=1 fail_streak=0"
+  save_state
+  exit 0
+fi
+
+((fail_streak++))
+log "health=bad daemon=$daemon device=$device socket=$socket fail_streak=$fail_streak"
+
+((fail_streak < FAILURES_BEFORE_RESTART)) && { save_state; exit 0; }
+
+if ((restart_streak >= MAX_CONSECUTIVE_RESTARTS)); then
+  log "action=skip reason=breaker_open restarts=$restart_streak"
+  save_state
+  exit 0
+fi
+
+now=$(date +%s)
+since=$((now - last_restart))
+if ((last_restart && since < RESTART_COOLDOWN_SECONDS)); then
+  log "action=skip reason=cooldown since_last=${since}s"
+  save_state
+  exit 0
+fi
+
+if [[ $DRY_RUN != 0 ]]; then
+  log "action=restart_skipped reason=dry_run daemon=$daemon device=$device socket=$socket"
+  fail_streak=0
+  save_state
+  exit 0
+fi
+
+log "action=restart daemon=$daemon device=$device socket=$socket restart_streak=$((restart_streak + 1))"
+restart_app
+last_restart=$(date +%s)
+((restart_streak++))
+fail_streak=0
+save_state
+log "action=restart_done"
