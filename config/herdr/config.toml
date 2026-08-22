@@ -9,7 +9,7 @@ auto_switch = false
 
 [ui]
 tab_bar_position = "bottom"
-hide_tab_bar_when_single_tab = true
+hide_tab_bar_when_single_tab = false
 sidebar_start_collapsed = true
 sidebar_collapsed_mode = "hidden"
 status_indicators = "symbols"
@@ -94,3 +94,8 @@ toggle_sidebar = "prefix+b"
 detach = "prefix+q"
 help = "prefix+?"
 open_notification_target = "prefix+o"
+
+[[keys.command]]
+key = "prefix+t"
+type = "plugin_action"
+command = "herdr-navigator.open"
