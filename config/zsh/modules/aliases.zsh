@@ -5,6 +5,12 @@
 alias n='nvim'
 alias nv='nvim'
 
+# Claude Code
+alias c='claude'
+
+# Yazi
+alias y='yazi'
+
 # HTTPie
 alias get="http GET"
 alias post="http POST"
