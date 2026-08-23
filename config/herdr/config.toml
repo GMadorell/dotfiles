@@ -4,7 +4,10 @@ onboarding = false
 kitty_graphics = true
 
 [ui.toast]
-delivery = "system"
+# The system toast can't route a click back to the specific agent pane that
+# raised it (see the smart-notify plugin for that). Disabled here in favor of
+# it; leaving on would double-fire notifications.
+delivery = "off"
 
 [theme]
 name = "dracula"

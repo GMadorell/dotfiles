@@ -1,0 +1,10 @@
+id = "gmadorell.smart-notify"
+name = "Smart Notify"
+version = "0.1.0"
+min_herdr_version = "0.8.2"
+description = "Click a macOS notification to jump straight to the agent pane that raised it"
+platforms = ["macos"]
+
+[[events]]
+on = "pane.agent_status_changed"
+command = ["bash", "notify.sh"]
