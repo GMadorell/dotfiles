@@ -78,7 +78,10 @@ restart_app() {
   sleep 2
   # Must go through LaunchServices: launching kdeconnectd directly gives it the
   # wrong environment and the wrong TCC owner for the Local Network permission.
-  open -a "$APP"
+  # -g: launch in the background, don't steal focus (KDE Connect has no
+  # window to show anyway, so activating it just yanks focus from wherever
+  # you're working).
+  open -g -a "$APP"
 }
 
 rotate_log
