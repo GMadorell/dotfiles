@@ -70,6 +70,13 @@ probe_device() { "$CLI" -a --id-name-only 2>/dev/null | grep -q .; }
 probe_socket() { lsof -nP -iTCP:1716 -sTCP:ESTABLISHED >/dev/null 2>&1; }
 
 restart_app() {
+  # -g on launch (below) asks LaunchServices not to activate KDE Connect, but
+  # Qt apps commonly self-activate on startup regardless of how they were
+  # launched. Belt and suspenders: snapshot whatever's frontmost and force it
+  # back afterward, so a self-activation can't steal focus either.
+  local prev_app
+  prev_app=$(osascript -e 'tell application "System Events" to name of first process whose frontmost is true' 2>/dev/null || true)
+
   osascript -e 'quit app "KDE Connect"' >/dev/null 2>&1
   sleep 3
   pkill -x kdeconnectd
@@ -78,10 +85,12 @@ restart_app() {
   sleep 2
   # Must go through LaunchServices: launching kdeconnectd directly gives it the
   # wrong environment and the wrong TCC owner for the Local Network permission.
-  # -g: launch in the background, don't steal focus (KDE Connect has no
-  # window to show anyway, so activating it just yanks focus from wherever
-  # you're working).
   open -g -a "$APP"
+  sleep 2
+
+  if [[ -n "$prev_app" ]]; then
+    osascript -e "tell application \"$prev_app\" to activate" >/dev/null 2>&1
+  fi
 }
 
 rotate_log
