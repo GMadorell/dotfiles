@@ -35,6 +35,17 @@ else
   echo "$wezterm_bundle_id" >"$cache"
 fi
 
+# Homebrew's terminal-notifier bottle ships with a broken ad-hoc signature
+# (CodeDirectory claims sealed resources but none are present), which makes
+# macOS silently deny UNUserNotificationCenter authorization (no prompt, no
+# error visible here) -- every `brew upgrade terminal-notifier` reintroduces
+# this. Verify-then-repair on each run rather than requiring a manual fix.
+herdr_tn_bin="$(command -v terminal-notifier)"
+tn_app="$(grep -m1 -oE '/[^"[:space:]]*terminal-notifier\.app' "$herdr_tn_bin" 2>/dev/null || true)"
+if [[ -n "$tn_app" && -d "$tn_app" ]] && ! codesign --verify --deep "$tn_app" >/dev/null 2>&1; then
+  codesign --force --deep --sign - "$tn_app" >/dev/null 2>&1 || true
+fi
+
 plugin_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 terminal-notifier \
   -title "$title" \
