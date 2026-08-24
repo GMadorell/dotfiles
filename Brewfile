@@ -59,6 +59,7 @@ brew "yq"
 brew "yt-dlp"
 brew "zoxide"
 
+cask "bettercmdtab"
 cask "bluesnooze"
 cask "claudebar"
 cask "codexbar"

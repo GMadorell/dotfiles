@@ -1,0 +1,40 @@
+{
+  "$schema" : "schema.json",
+  "animationsEnabled" : true,
+  "appExceptions" : [
+    {
+      "bundleID" : "com.apple.finder",
+      "hide" : "whenNoWindows",
+      "ignore" : "never"
+    }
+  ],
+  "applicationsOnly" : false,
+  "boldSelectedLabel" : true,
+  "clickOutsideToDismiss" : false,
+  "expandBrowserTabsAsWindows" : false,
+  "experimentalLivePreviews" : false,
+  "fontFace" : "monospaced",
+  "fontScale" : "large",
+  "hideMenuBarIcon" : true,
+  "hoverActionsEnabled" : false,
+  "layoutMode" : "list",
+  "listWidthPercent" : 100,
+  "livePreviews" : false,
+  "mouseHoverSelectionEnabled" : true,
+  "nextScopedShortcutID" : 0,
+  "panelCornerRadius" : 0,
+  "panelOpacity" : 100,
+  "panelScalePercent" : 80,
+  "previewTitleAlignment" : "center",
+  "scopedShortcutList" : [
+
+  ],
+  "scrollReverseDirection" : true,
+  "showApplicationNames" : false,
+  "showRecentlyClosed" : false,
+  "showWindowStatusIcons" : true,
+  "stayOpenOnQuickTap" : true,
+  "stayOpenOnRelease" : true,
+  "titleTruncationMode" : "middle",
+  "vimNavigationEnabled" : true
+}
