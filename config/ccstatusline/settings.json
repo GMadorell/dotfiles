@@ -51,7 +51,8 @@
         "id": "227347dc-c650-4b01-956e-03f19301f6fb",
         "type": "git-worktree",
         "color": "brightMagenta",
-        "dim": true
+        "dim": true,
+        "character": "⎇"
       },
       {
         "id": "84a1433f-62f1-417f-92bf-823520a814a4",
