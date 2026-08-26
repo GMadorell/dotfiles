@@ -2,12 +2,11 @@
 # Keeps KDE Connect alive. Run every 60s by
 # ~/Library/LaunchAgents/com.gmadorell.kdeconnect-supervisor.plist
 #
-# Why: kdeconnectd exits on its own (typically after sleep, sometimes
-# spontaneously) and the bundled DBus cannot re-activate it, so phone -> mac
-# transfers silently stop working until the app is relaunched by hand.
-# Upstream, still open: https://bugs.kde.org/show_bug.cgi?id=463636
+# kdeconnectd dies on its own (usually after sleep) and the bundled DBus can't
+# re-activate it: https://bugs.kde.org/show_bug.cgi?id=463636
+# The app doesn't respawn it either, so recovery means relaunching the bundle.
 #
-# Set KDECONNECT_SUPERVISOR_DRY_RUN=1 to log decisions without restarting.
+# KDECONNECT_SUPERVISOR_DRY_RUN=1 logs decisions without restarting.
 
 set -uo pipefail
 
@@ -20,13 +19,10 @@ LOG="$STATE_DIR/supervisor.log"
 STATE="$STATE_DIR/state"
 LOG_MAX_BYTES=$((5 * 1024 * 1024))
 
-# Consecutive unhealthy probes before restarting. Absorbs the phone simply
-# being off the LAN or in doze, which looks identical to a dead daemon.
+# Absorbs our own relaunch window, so a probe landing mid-restart isn't a fault.
 FAILURES_BEFORE_RESTART=3
-# Never restart more than once per this window.
 RESTART_COOLDOWN_SECONDS=600
-# Give up after this many restarts in a row that fail to restore health,
-# until a healthy probe is seen again.
+# Breaker: stop restarting after this many failed attempts, until healthy again.
 MAX_CONSECUTIVE_RESTARTS=3
 
 DRY_RUN="${KDECONNECT_SUPERVISOR_DRY_RUN:-0}"
@@ -57,26 +53,19 @@ last_restart=$last_restart
 EOF
 }
 
-# The daemon that does the actual talking. Gone == definitely broken.
+# Restart triggers: only local faults, the only thing a restart can fix.
 probe_daemon() { pgrep -x kdeconnectd >/dev/null 2>&1; }
+# Alive but unbound == wedged.
+probe_listen() { lsof -nP -iTCP:1716 -sTCP:LISTEN >/dev/null 2>&1; }
 
-# Any paired device the daemon currently considers reachable. Note that
-# kdeconnect-cli always prints a "not provided by any .service files" DBus
-# activation error to stderr; it is expected noise, judge on stdout only.
+# Logged for context, never a trigger: both go 0 whenever the phone is simply
+# away, and restarting on that only churns the app (multi-hour outages in the
+# logs recovered on their own, after the breaker had stopped restarting).
+# kdeconnect-cli always prints a DBus activation error to stderr; judge stdout.
 probe_device() { "$CLI" -a --id-name-only 2>/dev/null | grep -q .; }
-
-# The phone holds a persistent TCP connection to our listener on 1716. This is
-# the closest proxy for "the phone can actually reach us right now".
 probe_socket() { lsof -nP -iTCP:1716 -sTCP:ESTABLISHED >/dev/null 2>&1; }
 
 restart_app() {
-  # -g on launch (below) asks LaunchServices not to activate KDE Connect, but
-  # Qt apps commonly self-activate on startup regardless of how they were
-  # launched. Belt and suspenders: snapshot whatever's frontmost and force it
-  # back afterward, so a self-activation can't steal focus either.
-  local prev_app
-  prev_app=$(osascript -e 'tell application "System Events" to name of first process whose frontmost is true' 2>/dev/null || true)
-
   osascript -e 'quit app "KDE Connect"' >/dev/null 2>&1
   sleep 3
   pkill -x kdeconnectd
@@ -84,13 +73,9 @@ restart_app() {
   pkill -f "KDE Connect.app/Contents/MacOS/dbus-daemon"
   sleep 2
   # Must go through LaunchServices: launching kdeconnectd directly gives it the
-  # wrong environment and the wrong TCC owner for the Local Network permission.
+  # wrong environment and the wrong TCC owner for Local Network.
+  # -g plus LSUIElement=1 means it can't take focus.
   open -g -a "$APP"
-  sleep 2
-
-  if [[ -n "$prev_app" ]]; then
-    osascript -e "tell application \"$prev_app\" to activate" >/dev/null 2>&1
-  fi
 }
 
 rotate_log
@@ -101,22 +86,23 @@ if [[ ! -d $APP ]]; then
 fi
 
 probe_daemon && daemon=1 || daemon=0
+probe_listen && listen=1 || listen=0
 probe_device && device=1 || device=0
 probe_socket && socket=1 || socket=0
 
-if ((daemon && device && socket)); then
+if ((daemon && listen)); then
   if ((fail_streak || restart_streak)); then
     log "event=recovered after_failures=$fail_streak after_restarts=$restart_streak"
   fi
   fail_streak=0
   restart_streak=0
-  log "health=ok daemon=1 device=1 socket=1 fail_streak=0"
+  log "health=ok daemon=1 listen=1 device=$device socket=$socket fail_streak=0"
   save_state
   exit 0
 fi
 
 ((fail_streak++))
-log "health=bad daemon=$daemon device=$device socket=$socket fail_streak=$fail_streak"
+log "health=bad daemon=$daemon listen=$listen device=$device socket=$socket fail_streak=$fail_streak"
 
 ((fail_streak < FAILURES_BEFORE_RESTART)) && { save_state; exit 0; }
 
@@ -135,13 +121,13 @@ if ((last_restart && since < RESTART_COOLDOWN_SECONDS)); then
 fi
 
 if [[ $DRY_RUN != 0 ]]; then
-  log "action=restart_skipped reason=dry_run daemon=$daemon device=$device socket=$socket"
+  log "action=restart_skipped reason=dry_run daemon=$daemon listen=$listen device=$device socket=$socket"
   fail_streak=0
   save_state
   exit 0
 fi
 
-log "action=restart daemon=$daemon device=$device socket=$socket restart_streak=$((restart_streak + 1))"
+log "action=restart daemon=$daemon listen=$listen device=$device socket=$socket restart_streak=$((restart_streak + 1))"
 restart_app
 last_restart=$(date +%s)
 ((restart_streak++))

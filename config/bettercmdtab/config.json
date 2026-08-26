@@ -2,30 +2,49 @@
   "$schema" : "schema.json",
   "animationsEnabled" : true,
   "appExceptions" : [
-    {
-      "bundleID" : "com.apple.finder",
-      "hide" : "whenNoWindows",
-      "ignore" : "never"
-    }
+
   ],
   "applicationsOnly" : false,
   "boldSelectedLabel" : true,
   "clickOutsideToDismiss" : false,
+  "commitSoundName" : "Basso",
+  "directActivationBindings" : [
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+  ],
   "expandBrowserTabsAsWindows" : false,
   "experimentalLivePreviews" : false,
   "fontFace" : "monospaced",
   "fontScale" : "large",
+  "gridSingleRow" : true,
+  "hideFromScreenSharing" : true,
   "hideMenuBarIcon" : true,
-  "hoverActionsEnabled" : false,
+  "hoverActionsEnabled" : true,
+  "hoverShowClose" : false,
+  "hoverShowForceQuit" : true,
+  "hoverShowHide" : false,
+  "hoverShowMaximize" : false,
+  "hoverShowMinimize" : false,
+  "hoverShowQuit" : false,
   "layoutMode" : "list",
   "letterHintsEnabled" : false,
   "listWidthPercent" : 100,
   "livePreviews" : false,
   "mouseHoverSelectionEnabled" : true,
-  "nextScopedShortcutID" : 0,
+  "nextScopedShortcutID" : 1,
   "panelCornerRadius" : 0,
-  "panelOpacity" : 100,
-  "panelScalePercent" : 80,
+  "panelOpacity" : 98,
+  "panelScalePercent" : 100,
+  "pinnedBundleIDs" : [
+
+  ],
   "previewTitleAlignment" : "center",
   "scopedShortcutList" : [
 
@@ -34,8 +53,10 @@
   "showApplicationNames" : false,
   "showRecentlyClosed" : false,
   "showWindowStatusIcons" : true,
+  "sortOrder" : "mruWindows",
+  "soundOnCommit" : false,
   "stayOpenOnQuickTap" : false,
   "stayOpenOnRelease" : false,
-  "titleTruncationMode" : "middle",
+  "titleTruncationMode" : "tail",
   "vimNavigationEnabled" : true
 }
