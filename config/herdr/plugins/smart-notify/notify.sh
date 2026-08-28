@@ -17,10 +17,32 @@ pane_id=$("$jq_bin" -r '.data.pane_id // empty' <<<"$HERDR_PLUGIN_EVENT_JSON")
 [[ "$pane_id" =~ ^[A-Za-z0-9:_-]+$ ]] || exit 0
 
 case "$status" in
-  blocked) title="Agent needs input" ;;
-  done)    title="Agent finished" ;;
+  blocked) title="Agent needs input"; icon="$plugin_dir/icons/blocked.png" ;;
+  done)    title="Agent finished"; icon="$plugin_dir/icons/done.png" ;;
   *)       exit 0 ;;
 esac
+title="$title — $pane_id"
+
+# Subtitle mirrors the sidebar's "workspace · tab" grouping so the notification
+# reads the same as the UI. Message uses the pane's terminal title (what you
+# named the task) instead of a static "click to jump" instruction.
+subtitle="$pane_id"
+message="Click to jump to this agent"
+if pane_json=$("$herdr" pane get "$pane_id" 2>/dev/null); then
+  workspace_id=$("$jq_bin" -r '.result.pane.workspace_id // empty' <<<"$pane_json")
+  tab_id=$("$jq_bin" -r '.result.pane.tab_id // empty' <<<"$pane_json")
+  terminal_title=$("$jq_bin" -r '.result.pane.terminal_title_stripped // empty' <<<"$pane_json")
+  workspace_label=""
+  tab_label=""
+  [[ -n "$workspace_id" ]] && workspace_label=$("$herdr" workspace get "$workspace_id" 2>/dev/null |
+    "$jq_bin" -r '.result.workspace.label // empty')
+  [[ -n "$tab_id" ]] && tab_label=$("$herdr" tab get "$tab_id" 2>/dev/null |
+    "$jq_bin" -r '.result.tab.label // empty')
+  if [[ -n "$workspace_label" && -n "$tab_label" ]]; then
+    subtitle="$workspace_label · $tab_label"
+  fi
+  [[ -n "$terminal_title" ]] && message="$terminal_title"
+fi
 
 # Resolve by name to survive a WezTerm reinstall. osascript is ~200ms: cache it.
 cache="$state_dir/wezterm-bundle-id"
@@ -38,14 +60,16 @@ execute=$(printf '%q %q %q %q' \
 # No -sound: herdr's ui.sound already plays the cue.
 # -execute only pokes the herdr socket; -activate raises the window.
 notify() {
-  terminal-notifier \
-    -title "$title" \
-    -subtitle "$pane_id" \
-    -message "Click to jump to this agent" \
-    -group "herdr-$pane_id" \
-    -activate "$wezterm_bundle_id" \
-    -execute "$execute" \
-    >/dev/null
+  local -a args=(
+    -title "$title"
+    -subtitle "$subtitle"
+    -message "$message"
+    -group "herdr-$pane_id"
+    -activate "$wezterm_bundle_id"
+    -execute "$execute"
+  )
+  [[ -f "$icon" ]] && args+=(-contentImage "$icon")
+  terminal-notifier "${args[@]}" >/dev/null
 }
 
 lsregister=/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister
