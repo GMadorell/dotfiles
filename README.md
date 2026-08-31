@@ -102,6 +102,10 @@ isn't something you symlink into) — entries point at `~/bin/cronjobs/*`, e.g.:
 - Install it: `crontab crontab`
 - Edit it: `crontab -e`, then back up with `crontab -l > crontab`
 
+### Raycast
+Script Commands: `bin/raycast/`. Once: Raycast Preferences → Extensions → Script Commands →
+Add Script Directory → `~/bin/raycast`.
+
 ### LaunchAgents
 Per-user background jobs live in `Library/LaunchAgents/` and are symlinked into `~/Library/LaunchAgents/`
 by `rcup` (`Library` is listed in `UNDOTTED`, so it does not become `~/.Library`).

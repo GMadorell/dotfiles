@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Required parameters:
+# @raycast.schemaVersion 1
+# @raycast.title Move Tab to Firefox
+# @raycast.mode silent
+#
+# Optional parameters:
+# @raycast.icon 🦊
+# @raycast.packageName Browser Utils
+
+set -euo pipefail
+
+if ! command -v terminal-notifier >/dev/null 2>&1; then
+  osascript -e 'display notification "terminal-notifier not installed" with title "Move Tab to Firefox crashed"' >/dev/null 2>&1
+  echo "terminal-notifier not installed" >&2
+  exit 1
+fi
+
+notify() {
+  local title="$1" message="$2"
+  terminal-notifier -title "$title" -message "$message" -group move-tab-chrome-to-firefox >/dev/null 2>&1
+}
+
+pgrep -x "Google Chrome" >/dev/null 2>&1 || { notify "Move Tab to Firefox" "Chrome isn't running"; exit 0; }
+pgrep -x firefox >/dev/null 2>&1 || { notify "Move Tab to Firefox" "Firefox isn't running"; exit 0; }
+
+url=$(osascript -e 'tell application "Google Chrome" to get URL of active tab of front window' 2>/dev/null) || url=""
+if [[ -z "$url" ]]; then
+  notify "Move Tab to Firefox" "Couldn't read Chrome's active tab"
+  exit 0
+fi
+
+osascript -e "tell application \"Firefox\" to open location \"$url\"" >/dev/null 2>&1
+osascript -e 'tell application "Google Chrome" to close active tab of front window' >/dev/null 2>&1
+osascript -e 'tell application "Firefox" to activate' >/dev/null 2>&1

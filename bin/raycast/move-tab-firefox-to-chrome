@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# Required parameters:
+# @raycast.schemaVersion 1
+# @raycast.title Move Tab to Chrome
+# @raycast.mode silent
+#
+# Optional parameters:
+# @raycast.icon 🌐
+# @raycast.packageName Browser Utils
+
+set -euo pipefail
+
+if ! command -v terminal-notifier >/dev/null 2>&1; then
+  osascript -e 'display notification "terminal-notifier not installed" with title "Move Tab to Chrome crashed"' >/dev/null 2>&1
+  echo "terminal-notifier not installed" >&2
+  exit 1
+fi
+
+notify() {
+  local title="$1" message="$2"
+  terminal-notifier -title "$title" -message "$message" -group move-tab-firefox-to-chrome >/dev/null 2>&1
+}
+
+pgrep -x firefox >/dev/null 2>&1 || { notify "Move Tab to Chrome" "Firefox isn't running"; exit 0; }
+pgrep -x "Google Chrome" >/dev/null 2>&1 || { notify "Move Tab to Chrome" "Chrome isn't running"; exit 0; }
+
+# Firefox has no AppleScript tab access; read the URL via the address bar + clipboard.
+old_clipboard=$(pbpaste 2>/dev/null || true)
+
+osascript <<'EOF' >/dev/null 2>&1
+tell application "Firefox" to activate
+delay 0.3
+tell application "System Events"
+  keystroke "l" using command down
+  delay 0.1
+  keystroke "c" using command down
+  delay 0.1
+  key code 53
+end tell
+EOF
+
+url=$(pbpaste 2>/dev/null || true)
+printf '%s' "$old_clipboard" | pbcopy
+
+if [[ -z "$url" || "$url" != http* ]]; then
+  notify "Move Tab to Chrome" "Couldn't read Firefox's active tab"
+  exit 0
+fi
+
+osascript -e "tell application \"Google Chrome\" to open location \"$url\"" >/dev/null 2>&1
+osascript -e 'tell application "Firefox" to activate' >/dev/null 2>&1
+osascript -e 'tell application "System Events" to keystroke "w" using command down' >/dev/null 2>&1
+osascript -e 'tell application "Google Chrome" to activate' >/dev/null 2>&1
