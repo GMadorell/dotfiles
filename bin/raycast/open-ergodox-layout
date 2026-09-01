@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Required parameters:
+# @raycast.schemaVersion 1
+# @raycast.title Open Ergodox Keyboard Layout
+# @raycast.mode silent
+#
+# Optional parameters:
+# @raycast.icon ⌨️
+# @raycast.packageName Keyboard Utils
+
+set -euo pipefail
+
+open "$HOME/Documents/ergodox layout.pdf"
