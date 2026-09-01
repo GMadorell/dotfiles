@@ -26,11 +26,9 @@ show_agent_labels_on_pane_borders = true
 
 tab_bar_right = [
   { type = "zoom" },
-  # Claude Code quota: 5h and weekly used %, each with countdown and wall-clock reset.
-  # cclimits only reports relative resets, so jq derives the clock times.
-  # /api/oauth/usage rate-limits hard: poll no faster than ~3min, and let
-  # cclimits serve its cache (marked stale) when a call comes back 429.
-  { type = "command", command = '''npx -y cclimits --claude --json --cache-ttl 170 | jq -r '.claude as $c | def mins: [scan("(\\d+)\\s*([dhm])")] | map((.[0]|tonumber) * (if .[1]=="d" then 1440 elif .[1]=="h" then 60 else 1 end)) | add; def pct: rtrimstr("%") | tonumber | round | tostring + "%"; def compact: gsub("\\s+"; ""); (if ($c.stale_age_seconds // 0) > 300 then " (stale)" else "" end) as $stale | "\($c.five_hour.used|pct) \($c.five_hour.resets_in|compact) (\(now + (($c.five_hour.resets_in|mins)*60) | strflocaltime("%H:%M"))) │ \($c.seven_day.used|pct) \($c.seven_day.resets_in|compact) (\(now + (($c.seven_day.resets_in|mins)*60) | strflocaltime("%a %H:%M")))\($stale)"' ''', interval_seconds = 180, timeout_seconds = 10 },
+  # Claude Code quota: 5h and weekly used %. Falls back to error/"no data" text
+  # when cclimits has no active usage window (avoids blank segment).
+  { type = "command", command = '''npx -y cclimits --claude --json --cache-ttl 170 | jq -r '.claude as $c | def mins: [scan("(\\d+)\\s*([dhm])")] | map((.[0]|tonumber) * (if .[1]=="d" then 1440 elif .[1]=="h" then 60 else 1 end)) | add; def pct: rtrimstr("%") | tonumber | round | tostring + "%"; def compact: gsub("\\s+"; ""); if ($c.five_hour and $c.seven_day) then ((if ($c.stale_age_seconds // 0) > 300 then " (stale)" else "" end) as $stale | "\($c.five_hour.used|pct) \($c.five_hour.resets_in|compact) (\(now + (($c.five_hour.resets_in|mins)*60) | strflocaltime("%H:%M"))) │ \($c.seven_day.used|pct) \($c.seven_day.resets_in|compact) (\(now + (($c.seven_day.resets_in|mins)*60) | strflocaltime("%a %H:%M")))\($stale)") elif $c.error then "Claude: \($c.error)" else "Claude: no data" end' ''', interval_seconds = 180, timeout_seconds = 10 },
   { type = "datetime", format = "%b %d %H:%M" },
 ]
 tab_bar_right_separator = " · "
