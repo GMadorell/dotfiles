@@ -1,6 +1,8 @@
 return {
   "yetone/avante.nvim",
-  build = "make",
+  -- CARGO_TARGET_DIR is set globally (see cargo config); avante's Makefile
+  -- hardcodes target/release, so unset it here or the build cp step fails.
+  build = "env -u CARGO_TARGET_DIR make",
   event = "VeryLazy",
   version = false,
   opts = {
