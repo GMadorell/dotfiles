@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Required parameters:
+# @raycast.schemaVersion 1
+# @raycast.title New Google Meet
+# @raycast.mode silent
+#
+# Optional parameters:
+# @raycast.icon 📹
+# @raycast.packageName Browser Utils
+
+set -euo pipefail
+
+osascript -e 'tell application "Google Chrome"
+  activate
+  make new tab at end of tabs of front window with properties {URL:"https://meet.google.com/new"}
+end tell' >/dev/null 2>&1
