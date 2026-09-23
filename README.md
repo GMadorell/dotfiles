@@ -26,6 +26,15 @@ Some configuration files need extra work though!
 
 After running `rcup`, test with: `zsh -i -c "echo OK"` (should not error)
 
+### Claude skills (third-party)
+Skills from other repos are installed with [skills.sh](https://skills.sh) (`npx skills`), not committed.
+Only the lock file is tracked (`agents/.skill-lock.json` -> `~/.agents/.skill-lock.json`); the installed
+skill dirs under `claude/skills/` are gitignored.
+
+- Restore all on a new machine (after `rcup`): `skills_restore`
+- Add one: `npx skills add <owner/repo> -s <skill> -g -a claude-code`, then gitignore `claude/skills/<skill>/`
+- Update: `npx skills update -g`
+
 ### Brew
 Execute `brew bundle install Brewfile`, or `brew bundle dump` for exporting.
 

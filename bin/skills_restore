@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Reinstall every global skill recorded in the skills.sh lock file (~/.agents/.skill-lock.json).
+# `npx skills update -g` only updates skills already on disk; this brings back missing ones
+# (e.g. on a fresh machine, where installed skills are gitignored and only the lock is tracked).
+set -euo pipefail
+
+lock="$HOME/.agents/.skill-lock.json"
+[[ -f "$lock" ]] || { echo "no lock file at $lock" >&2; exit 1; }
+
+jq -r '.skills | to_entries[] | "\(.value.source)\t\(.key)"' "$lock" |
+  while IFS=$'\t' read -r source skill; do
+    echo "==> $skill ($source)"
+    npx -y skills@latest add "$source" -s "$skill" -g -a claude-code -y </dev/null
+  done

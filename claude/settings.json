@@ -2,8 +2,6 @@
   "env": {
     "MAX_MCP_OUTPUT_TOKENS": "10000"
   },
-  "model": "sonnet",
-  "outputStyle": "Concise",
   "hooks": {
     "PreToolUse": [
       {
@@ -54,6 +52,7 @@
       }
     }
   },
+  "outputStyle": "Concise",
   "feedbackSurveyRate": 0,
   "effortLevel": "medium",
   "theme": "dark"

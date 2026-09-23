@@ -25,3 +25,10 @@ tags
 
 # Heist
 validation.md
+
+# Claude skills synced from claude.ai (auto-generated)
+claude/skills/synced/
+claude/skills/.trash/
+
+# Claude skills installed by skills.sh (`npx skills`); tracked via agents/.skill-lock.json, restored by bin/skills_restore
+claude/skills/handoff/
