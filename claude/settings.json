@@ -55,5 +55,10 @@
   "outputStyle": "Concise",
   "feedbackSurveyRate": 0,
   "effortLevel": "medium",
-  "theme": "dark"
+  "theme": "dark",
+  "model": "sonnet",
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  }
 }
