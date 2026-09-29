@@ -2,6 +2,10 @@
   "env": {
     "MAX_MCP_OUTPUT_TOKENS": "10000"
   },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "hooks": {
     "PreToolUse": [
       {
@@ -55,10 +59,5 @@
   "outputStyle": "Concise",
   "feedbackSurveyRate": 0,
   "effortLevel": "medium",
-  "theme": "dark",
-  "model": "sonnet",
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  }
+  "theme": "dark"
 }
