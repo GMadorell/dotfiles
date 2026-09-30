@@ -6,8 +6,18 @@ eval "$(zoxide init zsh)"
 alias cd="z"
 
 # hstr setup - improved history
-export HH_CONFIG=hicolor,keywords,rawhistory
-bindkey -s "\C-r" "\eqhh\n"
+export HSTR_CONFIG=hicolor,keywords,rawhistory
+export HSTR_TIOCSTI=n
+# Widget, not a `bindkey -s` macro: macros relying on emacs-mode keys break under vi mode
+hstr_no_tiocsti() {
+  zle -I
+  { HSTR_OUT="$( { </dev/tty hstr -- ${BUFFER}; } 2>&1 1>&3 3>&- )"; } 3>&1;
+  BUFFER="${HSTR_OUT}"
+  CURSOR=${#BUFFER}
+  zle redisplay
+}
+zle -N hstr_no_tiocsti
+bindkey -M viins '^R' hstr_no_tiocsti
 
 # broot function (file tree browser)
 # This function starts broot and executes the command it produces

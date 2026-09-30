@@ -58,6 +58,7 @@ brew "yazi"
 brew "yq"
 brew "yt-dlp"
 brew "zoxide"
+brew "zsh-vi-mode"
 
 cask "bettercmdtab"
 cask "bluesnooze"
