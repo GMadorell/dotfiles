@@ -33,7 +33,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "npx -y ccstatusline@latest",
+    "command": "~/bin/claude-statusline",
     "padding": 0,
     "refreshInterval": 20
   },

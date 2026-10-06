@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+"""Claude Code statusline: ccstatusline with responsive wrapping.
+
+ccstatusline renders line 1 (main widgets) and line 2 (cwd). If both fit in
+the terminal width, they are joined into a single line; otherwise line 2 wraps.
+Width override for testing: CCSTATUSLINE_WIDTH=<cols>.
+"""
+import os
+import re
+import subprocess
+import sys
+import unicodedata
+
+SEPARATOR = " | "  # ccstatusline renders spaces as NBSP
+MARGIN = 6  # Claude Code statusline gutter, same as ccstatusline "full" flex mode
+ANSI = re.compile(r"\x1b\[[0-9;]*m")
+
+
+def visible_width(text):
+    width = 0
+    for ch in ANSI.sub("", text):
+        if unicodedata.combining(ch) or ch in "️‍":
+            continue
+        width += 2 if unicodedata.east_asian_width(ch) in "WF" else 1
+    return width
+
+
+def tty_width():
+    override = os.environ.get("CCSTATUSLINE_WIDTH")
+    if override:
+        return int(override)
+    pid = os.getpid()
+    for _ in range(8):
+        try:
+            ppid, tty = subprocess.check_output(
+                ["ps", "-o", "ppid=,tty=", "-p", str(pid)], text=True, stderr=subprocess.DEVNULL
+            ).split()
+        except (subprocess.CalledProcessError, ValueError):
+            return None
+        if tty not in ("?", "??"):
+            try:
+                size = subprocess.check_output(
+                    ["stty", "-f", f"/dev/{tty}", "size"], text=True, stderr=subprocess.DEVNULL
+                )
+                return int(size.split()[1])
+            except (subprocess.CalledProcessError, IndexError, ValueError):
+                pass
+        pid = int(ppid)
+    return None
+
+
+def main():
+    rendered = subprocess.run(
+        ["npx", "-y", "ccstatusline@latest"], input=sys.stdin.buffer.read(), capture_output=True
+    ).stdout.decode()
+    lines = [line for line in rendered.split("\n") if ANSI.sub("", line).strip()]
+    if len(lines) == 2:
+        joined = lines[0] + SEPARATOR + lines[1]
+        width = tty_width()
+        if width is None or visible_width(joined) <= width - MARGIN:
+            lines = [joined]
+    print("\n".join(lines))
+
+
+if __name__ == "__main__":
+    main()

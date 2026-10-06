@@ -18,21 +18,32 @@
         "type": "context-percentage"
       },
       {
-        "id": "5427d6af-e9f5-4a7c-86b8-6b384a24e8a7",
-        "type": "git-branch"
+        "id": "c4a1e2f0-3b7d-4e8a-9f61-2d5c8b0a7e13",
+        "type": "cache-timer",
+        "metadata": {
+          "ttlSeconds": "3600"
+        }
       },
       {
-        "id": "77e827e8-03fb-46b3-979f-602213b6b416",
-        "type": "current-working-dir"
+        "id": "5427d6af-e9f5-4a7c-86b8-6b384a24e8a7",
+        "type": "git-branch"
       }
     ],
-    []
+    [
+      {
+        "id": "77e827e8-03fb-46b3-979f-602213b6b416",
+        "type": "current-working-dir",
+        "metadata": {
+          "abbreviateHome": "true"
+        }
+      }
+    ]
   ],
   "flexMode": "full",
   "compactThreshold": 60,
   "colorLevel": 3,
-  "defaultSeparator": "|",
-  "defaultPadding": " ",
+  "defaultSeparator": " | ",
+  "defaultPadding": "",
   "defaultPaddingSide": "both",
   "inheritSeparatorColors": false,
   "globalBold": false,
