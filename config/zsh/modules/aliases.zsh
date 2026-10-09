@@ -57,6 +57,19 @@ alias .6="cd ......."
 alias .7="cd ........"
 alias cdp="cd $PROJECTS_PATH"
 alias zp="cdp"
+function new_project() {
+  if [ $# -ne 1 ]; then
+    echo "$LOG_ERROR new_project accepts a single parameter only (project name)"
+    return 1
+  fi
+  local dir="$PROJECTS_PATH/$1"
+  if [ -e "$dir" ]; then
+    echo "$LOG_ERROR $dir already exists"
+    return 1
+  fi
+  mkdir -p "$dir" && cd "$dir"
+}
+alias newp="new_project"
 alias cddownloads="cd ~/downloads/"
 alias cdd="cddownloads"
 alias cdh="cd $HOME"
