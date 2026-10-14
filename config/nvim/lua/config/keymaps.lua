@@ -89,6 +89,13 @@ vim.keymap.set({ "n", "v" }, "<leader>yc", function()
   require("util.yank_context").yank()
 end, opts)
 
+-- Yank absolute path of current file to system clipboard
+vim.keymap.set("n", "<leader>yp", function()
+  local path = vim.fn.expand("%:p")
+  vim.fn.setreg("+", path)
+  vim.notify("Copied: " .. path)
+end, opts)
+
 -- Treesitter incremental/decremental node selection
 local function ts_select(fn)
   return function()
