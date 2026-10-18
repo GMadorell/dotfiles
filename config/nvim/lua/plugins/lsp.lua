@@ -12,6 +12,18 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
+-- rust-analyzer panics on half-typed code (e.g. partial println!) and nvim
+-- surfaces each one as a multi-line ERROR, blocking typing with a hit-enter
+-- prompt. Send those to :LspLog instead; other notifications pass through.
+local notify = vim.notify
+vim.notify = function(msg, level, opts)
+  if type(msg) == "string" and msg:find("^rust_analyzer: %-32603: request handler panicked") then
+    vim.lsp.log.warn(msg)
+    return
+  end
+  return notify(msg, level, opts)
+end
+
 -- Isolate rust-analyzer's background cargo check/build script runs from the
 -- shared CARGO_TARGET_DIR (see rust.zsh) so they don't contend on fingerprint
 -- state with manually run cargo test/build.
