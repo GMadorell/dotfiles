@@ -70,6 +70,9 @@ function new_project() {
   mkdir -p "$dir" && cd "$dir"
 }
 alias newp="new_project"
+alias mkp="new_project"
+alias mkpr="new_project"
+alias mkproject="new_project"
 alias cddownloads="cd ~/downloads/"
 alias cdd="cddownloads"
 alias cdh="cd $HOME"
