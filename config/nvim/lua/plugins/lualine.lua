@@ -5,6 +5,38 @@ local function is_wide()
 	return vim.o.columns > WIDE_THRESHOLD
 end
 
+-- Path shows up to MAX_PATH_PARTS trailing segments, dropping leading ones until it
+-- fits PATH_WIDTH_RATIO of the screen, so the bar always keeps some breathing room.
+local MAX_PATH_PARTS = 4
+local PATH_WIDTH_RATIO = 0.4
+
+local function trailing_path()
+	local name = vim.api.nvim_buf_get_name(0)
+	if name == "" then
+		return "[No Name]"
+	end
+	local parts = vim.split(vim.fn.fnamemodify(name, ":~:."), "/", { trimempty = true })
+	local budget = math.floor(vim.o.columns * PATH_WIDTH_RATIO)
+	local path = parts[#parts]
+	for count = math.min(MAX_PATH_PARTS, #parts), 2, -1 do
+		local candidate = table.concat(parts, "/", #parts - count + 1)
+		if count < #parts then
+			candidate = "…/" .. candidate
+		end
+		if vim.fn.strdisplaywidth(candidate) <= budget then
+			path = candidate
+			break
+		end
+	end
+	if vim.bo.modified then
+		path = path .. " ●"
+	end
+	if vim.bo.readonly or not vim.bo.modifiable then
+		path = path .. " "
+	end
+	return path
+end
+
 local DIAGNOSTIC_ICONS = {
 	error = "\u{f057} ", --  nf-fa-times_circle
 	warn = "\u{f529} ", --  nf-oct-alert
@@ -41,7 +73,7 @@ return {
 				},
 			},
 			lualine_c = {
-				{ "filename", symbols = { modified = " ●", readonly = " " } },
+				trailing_path,
 			},
 			lualine_x = {
 				{ "filetype", cond = is_wide },
