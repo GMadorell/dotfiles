@@ -7,3 +7,10 @@ APP="com.colliderli.iina"
 
 # Don't auto-play the next file in the folder/playlist when one finishes.
 defaults write "$APP" playlistAutoPlayNext -bool false
+
+# Load mpv config dir (~/.config/mpv, from config/mpv via rcup). Its
+# scripts/pick-tracks auto-selects Japanese audio + full English subs on anime.
+# IINA ignores the conf dir unless advanced settings are enabled.
+defaults write "$APP" enableAdvancedSettings -bool true
+defaults write "$APP" useUserDefinedConfDir -bool true
+defaults write "$APP" userDefinedConfDir -string "$HOME/.config/mpv"

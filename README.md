@@ -96,7 +96,10 @@ Run `bin/macos_video_defaults` once.
 
 ### IINA
 Key bindings: `Library/Application Support/com.colliderli.iina/input_conf/` (synced via `rcup`).
-Playback prefs: run `bin/iina_defaults`.
+Playback prefs: run `bin/iina_defaults`. It also points IINA at `~/.config/mpv` (`config/mpv`, linked by `rcup`),
+whose `scripts/pick-tracks` plays files that have Japanese audio in Japanese with full English subs (skipping
+Signs-only/dub-sync tracks). Tests: `luajit config/mpv/scripts/pick-tracks/choose_test.lua`; real files:
+`config/mpv/scripts/pick-tracks/e2e_test.sh FILE...` (needs `brew install mpv`).
 
 ### Cronjobs
 Scripts meant to run on a schedule live in `bin/cronjobs/`, symlinked undotted into `~/bin/cronjobs/`
