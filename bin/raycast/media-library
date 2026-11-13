@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# Required parameters:
+# @raycast.schemaVersion 1
+# @raycast.title Media Library
+# @raycast.mode silent
+#
+# Optional parameters:
+# @raycast.icon 🎬
+# @raycast.packageName Browser Utils
+
+set -euo pipefail
+
+URL="http://127.0.0.1:47321/"
+PORT=47321
+MEDIA_BIN="$HOME/.cargo/bin/media"
+MEDIA_DIR="$HOME/Documents/media"
+LOG="${TMPDIR:-/tmp}/media-library.log"
+
+notify() {
+  if command -v terminal-notifier >/dev/null 2>&1; then
+    terminal-notifier -title "Media Library" -message "$1" -group media-library >/dev/null 2>&1
+  else
+    osascript -e "display notification \"$1\" with title \"Media Library\"" >/dev/null 2>&1
+  fi
+}
+
+server_up() { lsof -nP -iTCP:"$PORT" -sTCP:LISTEN >/dev/null 2>&1; }
+
+if ! server_up; then
+  [[ -x "$MEDIA_BIN" ]] || { notify "media binary not found at $MEDIA_BIN"; exit 1; }
+  (cd "$MEDIA_DIR" && nohup "$MEDIA_BIN" serve --no-open >"$LOG" 2>&1 &)
+  for _ in {1..50}; do server_up && break; sleep 0.1; done
+  server_up || { notify "Server failed to start; see $LOG"; exit 1; }
+fi
+
+# Focus existing tab if any, else open a new one.
+osascript - "$URL" <<'EOF' >/dev/null
+on run argv
+  set target to item 1 of argv
+  tell application "Google Chrome"
+    activate
+    if (count of windows) is 0 then make new window
+    repeat with w in windows
+      set i to 0
+      repeat with t in tabs of w
+        set i to i + 1
+        if URL of t starts with target then
+          set active tab index of w to i
+          set index of w to 1
+          return
+        end if
+      end repeat
+    end repeat
+    tell front window to make new tab with properties {URL:target}
+  end tell
+end run
+EOF
