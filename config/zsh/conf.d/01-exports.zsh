@@ -12,6 +12,11 @@ export PATH="$HOME/.local/bin:$PATH"
 if command -v brew &>/dev/null && command -v rustup &>/dev/null; then
   export PATH="$(brew --prefix rustup)/bin:$PATH"
 fi
+# .NET global tools' apphost looks for the runtime in /usr/local/share/dotnet, not Homebrew's keg.
+if [ -d /opt/homebrew/opt/dotnet/libexec ]; then
+  export DOTNET_ROOT="/opt/homebrew/opt/dotnet/libexec"
+  export PATH="$PATH:$HOME/.dotnet/tools"
+fi
 export DOTFILES_PATH="$HOME/.dotfiles"
 export MANPATH="/usr/local/man:$MANPATH"
 export PROJECTS_PATH="$HOME/projects"
