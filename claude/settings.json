@@ -40,7 +40,8 @@
   "enabledPlugins": {
     "crit@crit": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
-    "heist@heist-marketplace": true
+    "heist@heist-marketplace": true,
+    "csharp-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "crit": {
