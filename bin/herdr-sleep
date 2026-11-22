@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # herdr-sleep: wait until no herdr-managed Claude session is working, then sleep the Mac once and exit.
 #
-#   herdr-sleep [--dry-run] [--quiet-for SECONDS] [--interval SECONDS]
+#   herdr-sleep [--after TIME] [--dry-run] [--quiet-for SECONDS] [--interval SECONDS]
 #
+# --after: don't start checking until TIME (19:10, 7:10pm, 7pm; next occurrence) or a delay (90s, 30m, 2h).
 # Sleeps only after nothing has been "working" for a continuous quiet window, so short idle gaps
 # between turns don't trigger it. "blocked" (waiting on you) counts as done. herdr errors never
 # sleep; they restart the window. Ctrl-C disarms.
@@ -11,12 +12,14 @@ set -euo pipefail
 quiet_for=45
 interval=10
 dry_run=false
+after=""
 
-usage() { sed -n '2,8s/^# \{0,1\}//p' "$0"; }
+usage() { sed -n '2,9s/^# \{0,1\}//p' "$0"; }
 
 while [ $# -gt 0 ]; do
   case "$1" in
     --dry-run) dry_run=true ;;
+    --after) after="${2:-}"; [ $# -gt 1 ] && shift ;;
     --quiet-for) quiet_for="${2:-}"; [ $# -gt 1 ] && shift ;;
     --interval) interval="${2:-}"; [ $# -gt 1 ] && shift ;;
     -h|--help) usage; exit 0 ;;
@@ -27,6 +30,37 @@ done
 
 [[ "$quiet_for" =~ ^[0-9]+$ ]] || { echo "--quiet-for needs whole seconds" >&2; exit 2; }
 [[ "$interval" =~ ^[1-9][0-9]*$ ]] || { echo "--interval needs whole seconds > 0" >&2; exit 2; }
+
+# Prints the epoch seconds of TIME, or fails if it isn't understood.
+resolve_after() {
+  local t now h m
+  t=$(tr '[:lower:]' '[:upper:]' <<<"${1// /}")
+  now=$(date +%s)
+  if [[ "$t" =~ ^([0-9]+)([SMH])$ ]]; then
+    case "${BASH_REMATCH[2]}" in S) m=1 ;; M) m=60 ;; H) m=3600 ;; esac
+    echo $((now + 10#${BASH_REMATCH[1]} * m))
+    return
+  fi
+  if [[ "$t" =~ ^([0-9]{1,2})(:([0-9]{2}))?(AM|PM)?$ ]]; then
+    h=$((10#${BASH_REMATCH[1]})); m=$((10#${BASH_REMATCH[3]:-0}))
+    case "${BASH_REMATCH[4]}" in
+      AM|PM) [ "$h" -ge 1 ] && [ "$h" -le 12 ] || return 1
+              h=$((h % 12)); [ "${BASH_REMATCH[4]}" = PM ] && h=$((h + 12)) ;;
+      *) [ -n "${BASH_REMATCH[2]}" ] && [ "$h" -le 23 ] || return 1 ;;
+    esac
+    [ "$m" -le 59 ] || return 1
+    local target
+    target=$(date -j -v"${h}"H -v"${m}"M -v0S +%s)
+    [ "$target" -gt "$now" ] || target=$(date -j -v+1d -v"${h}"H -v"${m}"M -v0S +%s)
+    echo "$target"
+    return
+  fi
+  return 1
+}
+
+if [ -n "$after" ]; then
+  start_at=$(resolve_after "$after") || { echo "--after: can't read '$after' (try 19:10, 7:10pm, 30m)" >&2; exit 2; }
+fi
 
 command -v herdr >/dev/null || { echo "herdr not found on PATH" >&2; exit 1; }
 command -v jq >/dev/null || { echo "jq not found on PATH" >&2; exit 1; }
@@ -42,6 +76,15 @@ poll() {
     | "\($s | map(select(. == "working")) | length)\t\(if $summary == "" then "no agents" else $summary end)"
   '
 }
+
+if [ -n "$after" ]; then
+  echo "waiting until $(date -r "$start_at" '+%a %H:%M') before checking (Ctrl-C to cancel)"
+  # Short naps against the wall clock: a sleeping Mac pauses `sleep` timers.
+  while [ "$(date +%s)" -lt "$start_at" ]; do
+    nap=$((start_at - $(date +%s)))
+    sleep $((nap < 30 ? nap : 30)) & wait $!
+  done
+fi
 
 echo "armed: sleeping after ${quiet_for}s with no Claude session working (Ctrl-C to disarm)"
 quiet_since=""
