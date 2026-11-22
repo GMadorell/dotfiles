@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+# herdr-sleep: wait until no herdr-managed Claude session is working, then sleep the Mac once and exit.
+#
+#   herdr-sleep [--dry-run] [--quiet-for SECONDS] [--interval SECONDS]
+#
+# Sleeps only after nothing has been "working" for a continuous quiet window, so short idle gaps
+# between turns don't trigger it. "blocked" (waiting on you) counts as done. herdr errors never
+# sleep; they restart the window. Ctrl-C disarms.
+set -euo pipefail
+
+quiet_for=45
+interval=10
+dry_run=false
+
+usage() { sed -n '2,8s/^# \{0,1\}//p' "$0"; }
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --dry-run) dry_run=true ;;
+    --quiet-for) quiet_for="${2:-}"; [ $# -gt 1 ] && shift ;;
+    --interval) interval="${2:-}"; [ $# -gt 1 ] && shift ;;
+    -h|--help) usage; exit 0 ;;
+    *) usage >&2; exit 2 ;;
+  esac
+  shift
+done
+
+[[ "$quiet_for" =~ ^[0-9]+$ ]] || { echo "--quiet-for needs whole seconds" >&2; exit 2; }
+[[ "$interval" =~ ^[1-9][0-9]*$ ]] || { echo "--interval needs whole seconds > 0" >&2; exit 2; }
+
+command -v herdr >/dev/null || { echo "herdr not found on PATH" >&2; exit 1; }
+command -v jq >/dev/null || { echo "jq not found on PATH" >&2; exit 1; }
+
+trap 'echo; echo "disarmed"; exit 130' INT
+trap 'echo "disarmed"; exit 143' TERM
+
+# Prints "<working count>\t<summary>" for claude agents, e.g. "2\t2 working, 3 idle".
+poll() {
+  herdr agent list 2>/dev/null | jq -er '
+    [.result.agents[] | select(.agent == "claude") | .agent_status] as $s
+    | ($s | group_by(.) | map("\(length) \(.[0])") | join(", ")) as $summary
+    | "\($s | map(select(. == "working")) | length)\t\(if $summary == "" then "no agents" else $summary end)"
+  '
+}
+
+echo "armed: sleeping after ${quiet_for}s with no Claude session working (Ctrl-C to disarm)"
+quiet_since=""
+last=""
+while true; do
+  now=$SECONDS
+  if ! result=$(poll); then
+    [ "$last" = error ] || echo "herdr error, retrying" >&2
+    last=error
+    quiet_since=""
+  else
+    working=${result%%$'\t'*}
+    summary=${result#*$'\t'}
+    [ "$summary" = "$last" ] || echo "$(date +%H:%M:%S) $summary"
+    last=$summary
+    if [ "$working" -gt 0 ]; then
+      quiet_since=""
+    else
+      quiet_since=${quiet_since:-$now}
+      if [ $((now - quiet_since)) -ge "$quiet_for" ]; then
+        if $dry_run; then
+          echo "all quiet for ${quiet_for}s → would sleep (dry run)"
+        else
+          echo "all quiet for ${quiet_for}s → sleeping"
+          pmset sleepnow
+        fi
+        exit 0
+      fi
+    fi
+  fi
+  sleep "$interval" & wait $!  # backgrounded so SIGTERM is handled immediately
+done
