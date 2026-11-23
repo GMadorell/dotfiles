@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Required parameters:
+# @raycast.schemaVersion 1
+# @raycast.title Restart BetterCmdTab
+# @raycast.mode silent
+#
+# Optional parameters:
+# @raycast.icon 🔁
+# @raycast.packageName System Utils
+# @raycast.description Quit and relaunch the BetterCmdTab app switcher
+
+set -euo pipefail
+
+BUNDLE_ID="pro.bettercmdtab.BetterCmdTab"
+PROC="BetterCmdTab"
+
+running() { pgrep -x "$PROC" >/dev/null 2>&1; }
+
+if running; then
+  osascript -e "tell application id \"$BUNDLE_ID\" to quit" >/dev/null 2>&1 || true
+  for _ in {1..30}; do running || break; sleep 0.1; done
+  # Hung switcher often ignores Apple Events; escalate.
+  if running; then pkill -x "$PROC" || true; sleep 0.5; fi
+  if running; then pkill -9 -x "$PROC" || true; sleep 0.3; fi
+fi
+
+open -b "$BUNDLE_ID"
+for _ in {1..50}; do running && break; sleep 0.1; done
+
+if running; then
+  echo "BetterCmdTab restarted"
+else
+  echo "BetterCmdTab failed to start"
+  exit 1
+fi
