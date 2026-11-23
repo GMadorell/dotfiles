@@ -1,6 +1,7 @@
 {
   "env": {
-    "MAX_MCP_OUTPUT_TOKENS": "10000"
+    "MAX_MCP_OUTPUT_TOKENS": "10000",
+    "DISABLE_AUTO_COMPACT": "1"
   },
   "attribution": {
     "commit": "",
